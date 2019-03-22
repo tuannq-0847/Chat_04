@@ -3,8 +3,6 @@
     <item>
         <shape>
             <solid android:color="@color/color_white" />
-            <stroke android:width="@dimen/dp_1" android:color="@color/color_grey" />
-            <solid android:color="@color/color_white" />
             <stroke android:width="@dimen/dp_2" android:color="@color/color_grey" />
             <corners android:radius="@dimen/dp_10" />
         </shape>

@@ -1,7 +1,8 @@
-package com.sun.chat_04
+package com.sun.chat_04.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.sun.chat_04.R
 
 class MainActivity : AppCompatActivity() {
 

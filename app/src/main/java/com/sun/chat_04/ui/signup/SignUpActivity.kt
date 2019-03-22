@@ -17,9 +17,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable
 import com.sun.chat_04.R
-import com.sun.chat_04.R.color
 import com.sun.chat_04.R.id
 import com.sun.chat_04.R.layout
 import com.sun.chat_04.data.model.User
@@ -143,7 +141,6 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         buttonSignUp.setOnClickListener(this)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        initProgressBar()
         toolbar.setNavigationOnClickListener {
             this.finish()
         }
@@ -162,21 +159,6 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         presenter?.signUp(user, email, password, confirmPassword)
     }
 
-    private fun initProgressBar() {
-        val bounds = progress.indeterminateDrawable.bounds
-        val progressDrawable = ChromeFloatingCirclesDrawable.Builder(this)
-            .colors(
-                intArrayOf(
-                    ContextCompat.getColor(this, color.red),
-                    ContextCompat.getColor(this, color.blue),
-                    ContextCompat.getColor(this, color.yellow),
-                    ContextCompat.getColor(this, color.green)
-                )
-            )
-            .build()
-        progress.indeterminateDrawable = progressDrawable
-        progress.indeterminateDrawable.bounds = bounds
-    }
 
     private fun showDatePicker() {
         val cal = Calendar.getInstance()
