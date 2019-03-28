@@ -1,11 +1,130 @@
+<?xml version="1.0"?>
+
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
+    <style name="Common">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="SignUpToolBar" parent="Common">
+        <item name="android:textSize">@dimen/sp_24</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="SignUpGender" parent="Common">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:layout_marginLeft">@dimen/dp_32</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="ProfileStyle" parent="Common">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SignUpField" parent="SignUpGender">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:background">@drawable/border_selector</item>
+        <item name="android:layout_marginLeft">@dimen/dp_16</item>
+        <item name="android:layout_marginRight">@dimen/dp_16</item>
+        <item name="android:paddingLeft">@dimen/dp_16</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!--Common-->
+    <style name="CommonStyle">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="CommonStyle">
+        <item name="android:textSize">@dimen/sp_24</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LogoAppStyle" parent="CommonStyle">
+        <item name="android:textSize">@dimen/sp_24</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="EmailPassLoginStyle" parent="CommonStyle">
+        <item name="android:textStyle">italic</item>
+        <item name="android:background">@drawable/border_selector</item>
+    </style>
+
+    <style name="ButtonLogin" parent="CommonStyle">
+        <item name="android:background">@color/colorRed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="ButtonBeforeLogin" parent="CommonStyle">
+        <item name="android:background">@color/colorPickLight</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="ButtonLoginFace" parent="ButtonLogin">
+        <item name="android:background">@color/colorBlueFace</item>
+    </style>
+
+    <style name="LinkSignUpStyle" parent="CommonStyle">
+
+    </style>
+
+    <style name="profileStyle" parent="CommonStyle">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/sp_22</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SearchStyle" parent="CommonStyle">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="ButtonSignUpStyle" parent="ToolbarStyle">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@color/colorBlue</item>
+    </style>
+
+    <style name="genderStyle" parent="ToolbarStyle">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:layout_marginLeft">@dimen/dp_32</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="facebookLoginStyle">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="fieldStyle" parent="genderStyle">
+        <item name="android:textStyle">italic</item>
+        <item name="android:background">@drawable/border_selector</item>
+        <item name="android:layout_marginLeft">@dimen/dp_16</item>
+        <item name="android:layout_marginRight">@dimen/dp_16</item>
+        <item name="android:paddingLeft">@dimen/dp_16</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="sp_22">22sp</dimen>
+    <color name="colorPickLight">#ed897b</color>
 </resources>

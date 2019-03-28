@@ -1,3 +1,42 @@
+<?xml version="1.0"?>
 <resources>
     <string name="app_name">Chat_04</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_full_name">Full name</string>
+    <string name="sign_up_birthday">Birthday</string>
+    <string name="sign_up_email">Example@gmail.com</string>
+    <string name="sign_up_password">Password</string>
+    <string name="sign_up_confirm_password">Confirm password</string>
+    <string name="sign_up_gender">Gender</string>
+    <string name="sign_up_male">Male</string>
+    <string name="sign_up_female">Female</string>
+    <string name="sign_up_search">Search</string>
+    <string name="sign_up_address">Address</string>
+    <string name="sign_up_age">Age: 24</string>
+    <string name="sign_up_fieldNotEmpty">Vui lòng điền đầy đủ thông tin</string>
+    <string name="sign_up_confirmPass">Mật khẩu phải giống nhau</string>
+    <string name="sign_up_lengthPass">Mật khẩu phải phải trên 8 ký tự</string>
+    <string name="sign_up_success">Đăng ký thành công</string>
+    <string name="sign_up_existed">Tài khoản đã tồn tại</string>
+    <string name="sign_up_error_sign_up">Có lỗi xảy ra. Vui lòng đăng ký lại!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <!--Login-->
+    <string name="logo_app">EZCHAT</string>
+    <string name="welcome">Welcome to EzChat</string>
+    <string name="login">Login</string>
+    <string name="or">OR</string>
+    <string name="login_with_face">Login with Facebook</string>
+    <string name="link_sign_up">Sign Up for EzChat</string>
+    <string name="login_successfully">Login Successfully</string>
+
+    <!--FacebookLogin-->
+    <string name="facebook_app_id">2402662173078831</string>
+    <string name="fb_login_protocol_scheme">fb2402662173078831</string>
+
+    <!--Login Failed-->
+    <string name="login_failed">The password you entered is incorrect. Please try again.</string>
+    <string name="login_failed_title">Incorrect Password</string>
+    <string name="login_failed_ok">OK</string>
 </resources>
