@@ -11,4 +11,6 @@
     <color name="colorBlue">#2A98EF</color>
     <color name="colorSecondBlue">#A4BDEE</color>
     <color name="colorBlueFace">#4267B2</color>
+    <color name="colorPinkLight">#ed897b</color>
+    <color name="colorPinkDark">#F35943</color>
 </resources>

@@ -5,9 +5,9 @@ data class User(
     var userName: String? = null,
     var birthday: String? = null,
     var gender: String? = null,
-    var bio: String = "",
-    var pathAvatar: String = "",
-    var pathBackground: String = "",
+    var bio: String? = null,
+    var pathAvatar: String? = null,
+    var pathBackground: String? = null,
     var isOnline: Int = 0,
     var lgn: Double = 0.0,
     var lat: Double = 0.0
