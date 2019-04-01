@@ -1,6 +1,7 @@
 package com.sun.chat_04.data.repositories
 
 import com.facebook.AccessToken
+import android.location.Location
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource.Remote
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -19,5 +20,9 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
 
     override fun insertUser(user: User, email: String?, password: String?, callback: RemoteCallback<Boolean>) {
         remoteDataSource.insertUser(user, email, password, callback)
+    }
+
+    override fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>) {
+        remoteDataSource.upgradeLocationUser(location, callback)
     }
 }
