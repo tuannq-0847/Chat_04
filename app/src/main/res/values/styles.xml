@@ -51,36 +51,24 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <!--Common-->
-    <style name="CommonStyle">
-        <item name="android:fontFamily">@font/montserrat_regular</item>
-        <item name="android:textSize">@dimen/sp_16</item>
-        <item name="android:textColor">@color/color_black</item>
-    </style>
-
-    <style name="ToolbarStyle" parent="CommonStyle">
-        <item name="android:textSize">@dimen/sp_24</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LogoAppStyle" parent="CommonStyle">
+    <style name="LogoAppStyle" parent="Common">
         <item name="android:textSize">@dimen/sp_24</item>
         <item name="android:textColor">@color/color_white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="EmailPassLoginStyle" parent="CommonStyle">
+    <style name="EmailPassLoginStyle" parent="Common">
         <item name="android:textStyle">italic</item>
         <item name="android:background">@drawable/border_selector</item>
     </style>
 
-    <style name="ButtonLogin" parent="CommonStyle">
+    <style name="ButtonLogin" parent="Common">
         <item name="android:background">@color/color_red</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/color_white</item>
     </style>
 
-    <style name="ButtonBeforeLogin" parent="CommonStyle">
+    <style name="ButtonBeforeLogin" parent="Common">
         <item name="android:background">@color/color_pink_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/color_white</item>
@@ -88,31 +76,5 @@
 
     <style name="ButtonLoginFace" parent="ButtonLogin">
         <item name="android:background">@color/color_blue_face</item>
-    </style>
-
-    <style name="LinkSignUpStyle" parent="CommonStyle">
-
-    </style>
-
-    <style name="GenderStyle" parent="ToolbarStyle">
-        <item name="android:textSize">@dimen/sp_16</item>
-        <item name="android:layout_marginLeft">@dimen/dp_32</item>
-        <item name="android:textColor">@color/color_black</item>
-    </style>
-
-    <style name="FacebookLoginStyle">
-        <item name="android:textSize">@dimen/sp_16</item>
-        <item name="android:layout_marginTop">@dimen/dp_16</item>
-        <item name="android:layout_marginBottom">@dimen/dp_16</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-    </style>
-
-    <style name="FieldStyle" parent="GenderStyle">
-        <item name="android:textStyle">italic</item>
-        <item name="android:background">@drawable/border_selector</item>
-        <item name="android:layout_marginLeft">@dimen/dp_16</item>
-        <item name="android:layout_marginRight">@dimen/dp_16</item>
-        <item name="android:paddingLeft">@dimen/dp_16</item>
-        <item name="android:gravity">center_vertical</item>
     </style>
 </resources>
