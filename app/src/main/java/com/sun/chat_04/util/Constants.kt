@@ -8,4 +8,7 @@ object Constants {
     const val NONE = ""
     const val INVALID_EMAIL = "ERROR_INVALID_EMAIL"
     const val ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND"
+    const val MIN_TIME_UPGRADE_LOCATION = 1800000L
+    const val MIN_DISTANCE_UPGRADE_LOCATION = 1000F
+    const val FRIENDS = "Friends"
 }

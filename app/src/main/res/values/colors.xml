@@ -6,7 +6,7 @@
     <color name="color_accent">#D81B60</color>
     <color name="color_white">#FFFFFF</color>
     <color name="color_red">#F35943</color>
-    <!--Use-->
+    <color name="color_green">#4cef6d</color>
     <color name="color_grey">#CBD6D0</color>
     <color name="color_black">#000000</color>
     <color name="color_blue">#2A98EF</color>
