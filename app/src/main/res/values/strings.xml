@@ -26,7 +26,6 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
 
-    <!--Login-->
     <string name="logo_app">EZCHAT</string>
     <string name="welcome">Welcome to EzChat</string>
     <string name="login">Login</string>
@@ -35,17 +34,17 @@
     <string name="link_sign_up">Sign Up for EzChat</string>
     <string name="login_successfully">Login Successfully</string>
 
-    <!--FacebookLogin-->
     <string name="facebook_app_id">2402662173078831</string>
     <string name="fb_login_protocol_scheme">fb2402662173078831</string>
 
-    <!--Login Failed-->
     <string name="login_failed">The password you entered is incorrect. Please try again.</string>
     <string name="login_failed_title">Incorrect Password</string>
     <string name="login_failed_ok">OK</string>
     <string name="bad_email">The email address is badly formatted.</string>
     <string name="user_not_found">There is no user record corresponding to this identifier. The user may have been deleted.</string>
     <string name="other_error">unknown error</string>
-    <!--Discovery-->
+
     <string name="discovery_search">Tìm kiếm bạn bè</string>
+    <string name="requireGPS">Turn on GPS and Internet</string>
+    <string name="search_message">Search</string>
 </resources>

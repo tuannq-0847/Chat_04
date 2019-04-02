@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/root"
+    android:padding="@dimen/dp_16">
+
+    <ImageView
+        android:id="@+id/imageUserLastMessage"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/textLastMessage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textUserRec" />
+
+    <TextView
+        android:id="@+id/textUserRec"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/imageUserLastMessage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textLastMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_constraintLeft_toRightOf="@+id/imageUserLastMessage"
+        app:layout_constraintTop_toBottomOf="@+id/textUserRec" />
+
+    <ImageView
+        android:id="@+id/imageStatusUser"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        app:layout_constraintBottom_toBottomOf="@+id/textLastMessage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textUserRec" />
+</android.support.constraint.ConstraintLayout>

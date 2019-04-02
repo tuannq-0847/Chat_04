@@ -1,9 +1,9 @@
 package com.sun.chat_04.ui.login
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -16,6 +16,7 @@ import com.sun.chat_04.R.id
 import com.sun.chat_04.R.layout
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.ui.home.MainActivity
 import com.sun.chat_04.ui.signup.SignUpActivity
 import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.activity_login.buttonLoginEmailPass
@@ -25,7 +26,6 @@ import kotlinx.android.synthetic.main.activity_login.editEmailLogin
 import kotlinx.android.synthetic.main.activity_login.editPassLogin
 import kotlinx.android.synthetic.main.activity_login.progressbarSignIn
 import kotlinx.android.synthetic.main.activity_login.textSignUp
-import java.lang.Exception
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.View, TextWatcher {
 
@@ -125,6 +125,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     override fun onLoginSuccessfully() {
         progressbarSignIn.visibility = View.INVISIBLE
         Toast.makeText(this, R.string.login_successfully, Toast.LENGTH_SHORT).show()
+        gotoHomeActivity()
     }
 
     override fun onLoginFailure(message: Int) {
@@ -144,6 +145,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
         super.onActivityResult(requestCode, resultCode, data)
         if (::callbackManager.isInitialized) {
             callbackManager.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun gotoHomeActivity() {
+        Intent(this@LoginActivity, MainActivity::class.java).also {
+            startActivity(it)
         }
     }
 }
