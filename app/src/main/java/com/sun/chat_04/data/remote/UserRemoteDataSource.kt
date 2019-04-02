@@ -1,12 +1,13 @@
 package com.sun.chat_04.data.remote
 
+import android.location.Location
 import com.facebook.AccessToken
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource
-import com.sun.chat_04.data.repositories.UserDataSource.Remote
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
 
@@ -69,5 +70,26 @@ class UserRemoteDataSource(private val auth: FirebaseAuth, private val database:
             .addOnFailureListener {
                 callback.onFailure(it)
             }
+    }
+
+    override fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>) {
+        if (auth.currentUser == null) {
+            return
+        }
+        try {
+            database.getReference(USERS).child(auth.currentUser?.uid.toString()).child(LATITUDE)
+                .setValue(location.latitude)
+            database.getReference(USERS).child(auth.currentUser?.uid.toString()).child(LONGITUDE)
+                .setValue(location.longitude)
+            callback.onSuccessfuly(true)
+        } catch (databaseException: DatabaseException) {
+            callback.onFailure(databaseException)
+        }
+    }
+
+    companion object {
+        private const val USERS = "Users"
+        private const val LATITUDE = "lat"
+        private const val LONGITUDE = "lgn"
     }
 }

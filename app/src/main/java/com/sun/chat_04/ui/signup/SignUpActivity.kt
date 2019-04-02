@@ -159,7 +159,6 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         presenter?.signUp(user, email, password, confirmPassword)
     }
 
-
     private fun showDatePicker() {
         val cal = Calendar.getInstance()
         val callback =
