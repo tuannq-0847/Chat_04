@@ -4,6 +4,5 @@ import java.lang.Exception
 
 interface RemoteCallback<T> {
     fun onSuccessfuly(data: T)
-
-    fun onFailure(exception: Exception)
+    fun onFailure(exception: Exception?)
 }
