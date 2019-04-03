@@ -12,4 +12,10 @@ object Constants {
     const val MIN_DISTANCE_UPGRADE_LOCATION = 1000F
     const val FRIENDS = "Friends"
     const val CONNECTED = "Connected"
+    const val CONVERT_KM = 1000
+    const val MAX_DISTANCE = 2
+    const val REQUEST_PERMISSION_CODE = 100
+    const val COLUMN = 2
+    const val INDEX_1 = 1
+    const val INDEX_2 = 2
 }
