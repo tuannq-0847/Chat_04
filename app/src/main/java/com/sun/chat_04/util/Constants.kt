@@ -11,4 +11,5 @@ object Constants {
     const val MIN_TIME_UPGRADE_LOCATION = 1800000L
     const val MIN_DISTANCE_UPGRADE_LOCATION = 1000F
     const val FRIENDS = "Friends"
+    const val CONNECTED = "Connected"
 }

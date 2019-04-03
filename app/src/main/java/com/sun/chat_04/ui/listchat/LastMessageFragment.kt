@@ -11,11 +11,13 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.LastMessage
 import com.sun.chat_04.data.remote.LastMessageRemoteDataSource
 import com.sun.chat_04.data.repositories.LastMessageRepository
+import com.sun.chat_04.ui.listchat.search.SearchFragment
 import com.sun.chat_04.util.Global
-import kotlinx.android.synthetic.main.fragment_list_chat.progressLoadFriend
-import kotlinx.android.synthetic.main.fragment_list_chat.recyclerListChat
+import kotlinx.android.synthetic.main.fragment_last_message.editSearch
+import kotlinx.android.synthetic.main.fragment_last_message.progressLoadFriend
+import kotlinx.android.synthetic.main.fragment_last_message.recyclerListChat
 
-class LastMessageFragment : Fragment(), LastMessageContract.View {
+class LastMessageFragment : Fragment(), LastMessageContract.View, View.OnClickListener {
     private lateinit var adapter: LastMessageAdapter
     private lateinit var mLastMessagePre: LastMessageContract.Presenter
     override fun onGetLastMessagesSuccessfully(lastMessages: ArrayList<LastMessage>) {
@@ -39,6 +41,19 @@ class LastMessageFragment : Fragment(), LastMessageContract.View {
         if (::mLastMessagePre.isInitialized) {
             mLastMessagePre.getLastMessages()
         }
+        editSearch.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.editSearch -> {
+                val searchFragment = SearchFragment()
+                activity?.supportFragmentManager
+                    ?.beginTransaction()
+                    ?.add(R.id.parentLayout, searchFragment)
+                    ?.commit()
+            }
+        }
     }
 
     override fun onGetLastMessagesFailed(exception: Exception?) {
@@ -49,6 +64,6 @@ class LastMessageFragment : Fragment(), LastMessageContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list_chat, container, false)
+        return inflater.inflate(R.layout.fragment_last_message, container, false)
     }
 }

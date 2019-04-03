@@ -9,9 +9,9 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.LastMessage
 import com.sun.chat_04.ui.listchat.LastMessageAdapter.ViewHolder
 import com.sun.chat_04.util.Constants
-import kotlinx.android.synthetic.main.items_list_message.view.imageStatusUser
-import kotlinx.android.synthetic.main.items_list_message.view.textLastMessage
-import kotlinx.android.synthetic.main.items_list_message.view.textUserRec
+import kotlinx.android.synthetic.main.items_last_message.view.imageStatusUser
+import kotlinx.android.synthetic.main.items_last_message.view.textLastMessage
+import kotlinx.android.synthetic.main.items_last_message.view.textUserRec
 
 class LastMessageAdapter(
     private val LastMessages: ArrayList<LastMessage>,
@@ -21,7 +21,7 @@ class LastMessageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.items_list_message, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.items_last_message, parent, false)
         )
     }
 
