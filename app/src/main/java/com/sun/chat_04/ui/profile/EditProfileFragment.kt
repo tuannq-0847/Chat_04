@@ -135,7 +135,7 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
 
     companion object {
         @JvmStatic
-        fun newIntance(user: User) = EditProfileFragment().apply {
+        fun newInstance(user: User) = EditProfileFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(Constants.ARGUMENT_USER, user)
             }

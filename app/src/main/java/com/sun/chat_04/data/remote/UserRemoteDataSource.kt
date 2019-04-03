@@ -3,6 +3,7 @@ package com.sun.chat_04.data.remote
 import android.location.Location
 import android.net.Uri
 import com.facebook.AccessToken
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

@@ -137,46 +137,6 @@
                 android:id="@+id/toolbarProfile"
                 layout="@layout/toolbar_profile" />
 
-            <Button
-                android:id="@+id/buttonChat"
-                android:layout_width="0dp"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_margin="@dimen/dp_16"
-                android:background="@color/color_blue"
-                android:text="@string/profile_back"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/buttonAddFriend"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <Button
-                android:id="@+id/buttonAddFriend"
-                android:layout_width="0dp"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_margin="@dimen/dp_16"
-                android:background="@color/color_red"
-                android:text="@string/profile_add_friend"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/buttonChat"
-                app:layout_goneMarginLeft="@dimen/dp_16" />
-
-            <android.support.constraint.Group
-                android:id="@+id/groupButtonProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="buttonChat, buttonAddFriend" />
-
-            <android.support.constraint.Group
-                android:id="@+id/groupInfoUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:constraint_referenced_ids="textNameProfile, textAgeProfile, textGenderProfile" />
-
             <android.support.constraint.Guideline
                 android:id="@+id/gl1"
                 android:layout_width="wrap_content"
@@ -202,4 +162,3 @@
 
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
-

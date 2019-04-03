@@ -179,7 +179,7 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     private fun handleEditUserProfile() {
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.add(R.id.parentLayout, EditProfileFragment.newIntance(user))
+            ?.add(R.id.parentLayout, EditProfileFragment.newInstance(user))
             ?.addToBackStack("")
             ?.commit()
     }
