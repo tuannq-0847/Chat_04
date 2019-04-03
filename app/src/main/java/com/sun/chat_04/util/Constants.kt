@@ -28,8 +28,6 @@ object Constants {
     const val INTENT_GALLERY = "image/*"
     const val REQUEST_CODE_AVATAR = 10
     const val REQUEST_CODE_COVER = 11
-    const val MALE = "0"
-    const val FEMALE = "1"
     const val USER_NAME = "userName"
     const val USER_AGE = "birthday"
     const val USER_GENDER = "gender"
@@ -37,9 +35,11 @@ object Constants {
     const val GENDER_INVALID = "-1"
     const val MAX_ADDRESS = 1
     const val ARGUMENT_USER = "ARGUMENT_USER"
-    const val IMAGE_GALERY = "image/*"
     const val TEXT_MESSAGE = "text"
     const val IMAGE_MESSAGE = "image"
     const val TYPE = "type"
     const val IMAGE_QUALITY = 10
+    const val MALE = "0"
+    const val FEMALE = "1"
+    const val REQUEST_FRIEND = "Requests"
 }

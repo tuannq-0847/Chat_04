@@ -29,5 +29,13 @@ interface UserDataSource {
         fun insertUserImagePath(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>)
 
         fun editUserProfile(user: User, callback: RemoteCallback<Boolean>)
+
+        fun checkIsFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
+
+        fun checkInvitedMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
+
+        fun inviteMoreFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
+
+        fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
     }
 }

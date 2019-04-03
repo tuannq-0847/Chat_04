@@ -3,7 +3,6 @@ package com.sun.chat_04.data.remote
 import android.location.Location
 import android.net.Uri
 import com.facebook.AccessToken
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -144,9 +143,6 @@ class UserRemoteDataSource(
                         callback.onFailure(it)
                     }
             }
-            .addOnFailureListener {
-                callback.onFailure(it)
-            }
     }
 
     override fun insertUserImagePath(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>) {
@@ -184,6 +180,67 @@ class UserRemoteDataSource(
         } catch (databaseException: DatabaseException) {
             callback.onFailure(databaseException)
         }
+    }
+
+    override fun checkIsFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
+        database.getReference(Constants.FRIENDS)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.onFailure(databaseError.toException())
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    when {
+                        !dataSnapshot.child(userId).exists() -> callback.onSuccessfuly(false)
+                        !dataSnapshot.child(userId).child(friendId).exists() -> callback.onSuccessfuly(false)
+                        else -> callback.onSuccessfuly(true)
+                    }
+                }
+            })
+    }
+
+    override fun checkInvitedMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
+        database.getReference(Constants.REQUEST_FRIEND)
+            .child(userId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.onFailure(databaseError.toException())
+                }
+
+                override fun onDataChange(databasSnapshot: DataSnapshot) {
+                    if (!databasSnapshot.child(friendId).exists()) {
+                        callback.onSuccessfuly(false)
+                    } else {
+                        callback.onSuccessfuly(true)
+                    }
+                }
+            })
+    }
+
+    override fun inviteMoreFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
+        database.getReference(Constants.REQUEST_FRIEND)
+            .child(friendId)
+            .child(userId)
+            .setValue(userId)
+            .addOnSuccessListener {
+                callback.onSuccessfuly(true)
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
+    }
+
+    override fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
+        database.getReference(Constants.REQUEST_FRIEND)
+            .child(friendId)
+            .child(userId)
+            .removeValue()
+            .addOnSuccessListener {
+                callback.onSuccessfuly(true)
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
     }
 
     companion object {

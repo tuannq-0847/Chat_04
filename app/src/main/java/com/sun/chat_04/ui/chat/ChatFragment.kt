@@ -68,7 +68,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
             R.id.imageAdd -> {
                 val intent = Intent()
                 intent.action = android.content.Intent.ACTION_GET_CONTENT
-                intent.type = Constants.IMAGE_GALERY
+                intent.type = Constants.INTENT_GALLERY
                 startActivityForResult(
                     Intent.createChooser(
                         intent,

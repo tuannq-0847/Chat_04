@@ -26,7 +26,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
     private lateinit var presenter: DiscoveryContract.Presenter
     private var users = ArrayList<User>()
-    private var adapter: DiscoveryAdapter? = null
+    private lateinit var adapter: DiscoveryAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_discovery, container, false)
@@ -41,7 +41,9 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
     }
 
     override fun onFindUsersSuccess(users: List<User>) {
-        adapter?.refreshUsers(users)
+        ::adapter.isInitialized.let {
+            adapter.refreshUsers(users)
+        }
         hideProgress()
         hideIconSearchAroundHere()
     }
@@ -63,7 +65,9 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
         adapter = DiscoveryAdapter(users) { user -> userClickListener(user) }
         recyclerDiscovery.layoutManager = GridLayoutManager(context, Constants.COLUMN)
         recyclerDiscovery.addItemDecoration(SpacesItemDecoration(spacingInPixels))
-        recyclerDiscovery.adapter = adapter
+        ::adapter.isInitialized.let {
+            recyclerDiscovery.adapter = adapter
+        }
     }
 
     private fun initPresenter() {

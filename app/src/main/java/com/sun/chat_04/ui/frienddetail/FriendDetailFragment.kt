@@ -11,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.sun.chat_04.R
+import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
@@ -23,6 +25,9 @@ import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
 import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
 import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
+import kotlinx.android.synthetic.main.fragment_user_information.buttonAddFriend
+import kotlinx.android.synthetic.main.fragment_user_information.buttonBack
+import kotlinx.android.synthetic.main.toolbar_profile.imageBackProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
@@ -42,28 +47,33 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        initComponent()
         displayUserProfile()
+        checkIsFriend()
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.buttonAddFriend -> ::presenter.isInitialized.let { presenter.inviteMoreFriends(user.idUser) }
-            R.id.buttonBack -> handleBackPrevios()
-            R.id.imageBackProfile -> handleBackPrevios()
+            R.id.buttonAddFriend -> handleButtonAddFriend()
+            R.id.buttonBack -> handleBackPrevious()
+            R.id.imageBackProfile -> handleBackPrevious()
         }
     }
 
     override fun showButtonChat() {
+        buttonAddFriend.text = resources.getString(R.string.button_chat)
     }
 
     override fun showButtonInviteMoreFriends() {
+        buttonAddFriend.text = resources.getString(R.string.invite_more_friends)
     }
 
     override fun showButtonCancelInviteMoreFriends() {
+        buttonAddFriend.text = resources.getString(R.string.cancel_invite_more_friends)
     }
 
     override fun onFailure(exception: Exception?) {
-        // fail
+        Global.showMessage(context, resources.getString(R.string.no_internet))
     }
 
     private fun initPresenter() {
@@ -71,6 +81,12 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
             this,
             UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase, Global.firebaseStorage))
         )
+    }
+
+    private fun initComponent() {
+        buttonAddFriend.setOnClickListener(this)
+        buttonBack.setOnClickListener(this)
+        imageBackProfile.setOnClickListener(this)
     }
 
     private fun displayUserProfile() {
@@ -86,9 +102,8 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
         }
         context?.let {
             Geocoder(it, Locale.getDefault())
-                .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
-                .get(0).locality.let {
-                textAddressProfile.text = it
+                .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0].locality.let { it1 ->
+                textAddressProfile.text = it1
             }
         }
     }
@@ -101,8 +116,45 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
             .into(imageView)
     }
 
-    private fun handleBackPrevios() {
-        // Back previos
+    private fun checkIsFriend() {
+        ::presenter.isInitialized.let {
+            presenter.checkIsFriend(user.idUser)
+        }
+    }
+
+    private fun handleButtonAddFriend() {
+        when (buttonAddFriend.text) {
+            resources.getString(R.string.button_chat) -> handleChat()
+            resources.getString(R.string.invite_more_friends) -> handleInviteMoreFriends()
+            resources.getString(R.string.cancel_invite_more_friends) -> handleCancelInviteMoreFriends()
+        }
+    }
+
+    private fun handleBackPrevious() {
+        fragmentManager?.popBackStack()
+    }
+
+    private fun handleChat() {
+        user.userName?.let {
+            val friend = Friend(user.idUser, user.pathAvatar, user.isOnline, userName = it)
+            activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.add(R.id.parentLayout, ChatFragment.newInstance(friend))
+                ?.addToBackStack("")
+                ?.commit()
+        }
+    }
+
+    private fun handleInviteMoreFriends() {
+        ::presenter.isInitialized.let {
+            presenter.inviteMoreFriends(user.idUser)
+        }
+    }
+
+    private fun handleCancelInviteMoreFriends() {
+        ::presenter.isInitialized.let {
+            presenter.cancelInviteMoreFriends(user.idUser)
+        }
     }
 
     companion object {

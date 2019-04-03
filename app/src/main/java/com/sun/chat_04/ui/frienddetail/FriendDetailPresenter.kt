@@ -1,23 +1,79 @@
 package com.sun.chat_04.ui.frienddetail
 
+import com.google.firebase.database.DatabaseException
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.ui.signup.RemoteCallback
+import com.sun.chat_04.util.Global
 
 class FriendDetailPresenter(private val view: FriendDetailContract.View, private val repository: UserRepository) :
     FriendDetailContract.Presenter {
 
     override fun checkIsFriend(friendId: String) {
-        // Check is friend
+        val userId = Global.firebaseAuth.currentUser?.uid.toString()
+        if (!userId.isEmpty()) {
+            repository.checkIsFriend(userId, friendId, object : RemoteCallback<Boolean> {
+                override fun onSuccessfuly(data: Boolean) {
+                    when {
+                        data -> view.showButtonChat()
+                        else -> checkInvitedMoreFriends(userId, friendId)
+                    }
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    view.onFailure(exception)
+                }
+            })
+            return
+        }
+        view.onFailure(DatabaseException(""))
     }
 
-    override fun checkInvitedMoreFriends(friendId: String) {
-        // Check invite more friends
+    override fun checkInvitedMoreFriends(userId: String, friendId: String) {
+        repository.checkInvitedMoreFriends(userId, friendId, object : RemoteCallback<Boolean> {
+            override fun onSuccessfuly(data: Boolean) {
+                when {
+                    data -> view.showButtonCancelInviteMoreFriends()
+                    else -> view.showButtonInviteMoreFriends()
+                }
+            }
+
+            override fun onFailure(exception: Exception?) {
+                view.onFailure(exception)
+            }
+        })
     }
 
     override fun cancelInviteMoreFriends(friendId: String) {
-        // Cancel invite more friend
+        val userId = Global.firebaseAuth.currentUser?.uid.toString()
+        if (!userId.isEmpty()) {
+            repository.cancelInviteMoreFriends(userId, friendId, object : RemoteCallback<Boolean> {
+                override fun onSuccessfuly(data: Boolean) {
+                    view.showButtonInviteMoreFriends()
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    view.onFailure(exception)
+                }
+            })
+            return
+        }
+        view.onFailure(DatabaseException(""))
     }
 
     override fun inviteMoreFriends(friendId: String) {
-        // invite add friend
+        val userId = Global.firebaseAuth.currentUser?.uid.toString()
+        if (!userId.isEmpty()) {
+            repository.inviteMoreFriend(userId, friendId, object : RemoteCallback<Boolean> {
+                override fun onSuccessfuly(data: Boolean) {
+                    view.showButtonCancelInviteMoreFriends()
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    view.onFailure(exception)
+                }
+            })
+            return
+        }
+        view.onFailure(DatabaseException(""))
     }
 }
