@@ -10,5 +10,6 @@ data class User(
     var pathBackground: String = "",
     var isOnline: Int = 0,
     var lgn: Double = 0.0,
-    var lat: Double = 0.0
+    var lat: Double = 0.0,
+    var devicetoken: String? = ""
 )

@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
 import com.sun.chat_04.R
 import com.sun.chat_04.R.id
 import com.sun.chat_04.R.layout
@@ -31,10 +32,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
 
     private lateinit var presenter: LoginContract.Presenter
     private lateinit var callbackManager: CallbackManager
+    private var deviceToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_login)
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
+            if (!it.isSuccessful) {
+                return@addOnCompleteListener
+            }
+            deviceToken = it.result?.token
+        }
         initComponents()
         initLoginFacebook()
     }
@@ -151,6 +159,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     private fun gotoHomeActivity() {
         Intent(this@LoginActivity, MainActivity::class.java).also {
             startActivity(it)
+            this.finish()
         }
     }
 }

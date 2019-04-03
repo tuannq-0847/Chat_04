@@ -11,13 +11,16 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.LastMessage
 import com.sun.chat_04.data.remote.LastMessageRemoteDataSource
 import com.sun.chat_04.data.repositories.LastMessageRepository
+import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.listchat.search.SearchFragment
+import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_last_message.editSearch
 import kotlinx.android.synthetic.main.fragment_last_message.progressLoadFriend
 import kotlinx.android.synthetic.main.fragment_last_message.recyclerListChat
 
-class LastMessageFragment : Fragment(), LastMessageContract.View, View.OnClickListener {
+class LastMessageFragment() : Fragment(), LastMessageContract.View, View.OnClickListener {
+
     private lateinit var adapter: LastMessageAdapter
     private lateinit var mLastMessagePre: LastMessageContract.Presenter
     override fun onGetLastMessagesSuccessfully(lastMessages: ArrayList<LastMessage>) {
@@ -61,6 +64,15 @@ class LastMessageFragment : Fragment(), LastMessageContract.View, View.OnClickLi
     }
 
     private fun onClick(lastMessage: LastMessage) {
+        val chatFragment = ChatFragment()
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.add(R.id.parentLayout, chatFragment)
+            ?.addToBackStack(null)
+            ?.commit()
+        val bundle = Bundle()
+        bundle.putSerializable(Constants.LAST_MESSAGE, lastMessage)
+        chatFragment.arguments = bundle
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -48,13 +48,13 @@ class SearchFragment : Fragment(), SearchConstract.View {
         )
 
         searchMessage.setOnQueryTextListener(object : OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
+            override fun onQueryTextSubmit(text: String?): Boolean {
                 return true
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                if (p0 != null) {
-                    presenter.getListUserFromSearcjQuerry(p0)
+            override fun onQueryTextChange(text: String?): Boolean {
+                if (text != null) {
+                    presenter.getListUserFromSearcjQuerry(text)
                 }
                 return true
             }

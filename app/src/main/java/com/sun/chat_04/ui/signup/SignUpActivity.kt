@@ -17,6 +17,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
 import com.sun.chat_04.R
 import com.sun.chat_04.R.id
 import com.sun.chat_04.R.layout
@@ -41,6 +42,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
     private var email = ""
     private var password = ""
     private var confirmPassword = ""
+    private var deviceToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,12 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         val firebaseAuth = FirebaseAuth.getInstance()
         val firebaseDatabase = FirebaseDatabase.getInstance()
         presenter = SignUpPresenter(this, UserRepository(UserRemoteDataSource(firebaseAuth, firebaseDatabase)))
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
+            if (!it.isSuccessful) {
+                return@addOnCompleteListener
+            }
+            deviceToken = it.result?.token
+        }
         initComponents()
         requirePermissions()
     }
@@ -155,7 +163,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         email = editEmail.text.toString()
         password = editPassword.text.toString()
         confirmPassword = editConfirmPassword.text.toString()
-        user = User(userName = name, birthday = birth, gender = gender)
+        user = User(userName = name, birthday = birth, gender = gender, devicetoken = deviceToken)
         presenter?.signUp(user, email, password, confirmPassword)
     }
 

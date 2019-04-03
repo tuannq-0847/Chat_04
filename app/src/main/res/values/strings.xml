@@ -43,7 +43,8 @@
     <string name="bad_email">The email address is badly formatted.</string>
     <string name="user_not_found">There is no user record corresponding to this identifier. The user may have been deleted.</string>
     <string name="other_error">unknown error</string>
-
+    <string name="default_notification_channel_id">Firebase Message Channel</string>
+    <string name="channel_description">notification</string>
     <string name="discovery_search">Tìm kiếm bạn bè</string>
     <string name="requireGPS">Turn on GPS and Internet</string>
     <string name="search_message">Search</string>

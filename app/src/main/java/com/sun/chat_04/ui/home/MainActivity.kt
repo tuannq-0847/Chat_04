@@ -15,7 +15,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
+import com.google.firebase.iid.FirebaseInstanceId
 import com.sun.chat_04.R
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
@@ -48,6 +50,15 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener {
+                if (!it.isSuccessful) {
+                    Log.d("TAG", "fail")
+                    return@addOnCompleteListener
+                }
+                val token = it.result?.token
+                Log.d("TAG", token.toString())
+            }
         initComponents()
         initPresenter()
         checkPermissions()

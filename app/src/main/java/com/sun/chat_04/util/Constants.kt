@@ -12,4 +12,12 @@ object Constants {
     const val MIN_DISTANCE_UPGRADE_LOCATION = 1000F
     const val FRIENDS = "Friends"
     const val CONNECTED = "Connected"
+    const val MESSAGES = "Messages"
+    const val FROM = "from"
+    const val CONTENTS = "contents"
+    const val ID_MSG = "idmsg"
+    const val LAST_MESSAGE = "last_message"
+    const val USER_REC = 1
+    const val USER_SEND = 0
+    const val NOTIFICATIONS = "Notifications"
 }
