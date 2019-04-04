@@ -46,4 +46,5 @@
 
     <string name="discovery_search">Tìm kiếm bạn bè</string>
     <string name="requireGPS">Turn on GPS and Internet</string>
+    <string name="search_message">Search</string>
 </resources>

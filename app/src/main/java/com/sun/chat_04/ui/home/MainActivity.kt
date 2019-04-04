@@ -19,8 +19,8 @@ import android.widget.Toast
 import com.sun.chat_04.R
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
-import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.discovery.DiscoveryFragment
+import com.sun.chat_04.ui.friend.FriendFragment
 import com.sun.chat_04.ui.profile.ProfileFragment
 import com.sun.chat_04.ui.request.FriendRequestFragment
 import com.sun.chat_04.util.Constants
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     }
 
     private fun initComponents() {
-        fragments.add(ChatFragment())
+        fragments.add(FriendFragment())
         fragments.add(FriendRequestFragment())
         fragments.add(DiscoveryFragment())
         fragments.add(ProfileFragment())

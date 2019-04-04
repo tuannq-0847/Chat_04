@@ -1,9 +1,8 @@
 package com.sun.chat_04.data.repositories
 
-import com.facebook.AccessToken
 import android.location.Location
+import com.facebook.AccessToken
 import com.sun.chat_04.data.model.User
-import com.sun.chat_04.data.repositories.UserDataSource.Remote
 import com.sun.chat_04.ui.signup.RemoteCallback
 
 class UserRepository(private val remoteDataSource: UserDataSource.Remote) : UserDataSource.Remote {

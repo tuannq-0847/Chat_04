@@ -60,16 +60,15 @@ class UserRemoteDataSource(private val auth: FirebaseAuth, private val database:
                         callback.onFailure(it.exception!!)
                         return@addOnCompleteListener
                     }
+                    database.reference.child(Constants.USERS)
+                        .child(user.idUser)
+                        .setValue(user)
+                        .addOnSuccessListener { callback.onSuccessfuly(true) }
+                        .addOnFailureListener {
+                            callback.onFailure(it)
+                        }
                 }
         }
-
-        database.reference.child(Constants.USERS)
-            .child(user.idUser)
-            .setValue(user)
-            .addOnSuccessListener { callback.onSuccessfuly(true) }
-            .addOnFailureListener {
-                callback.onFailure(it)
-            }
     }
 
     override fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>) {
