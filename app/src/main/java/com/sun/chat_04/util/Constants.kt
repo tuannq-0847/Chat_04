@@ -18,4 +18,10 @@ object Constants {
     const val COLUMN = 2
     const val INDEX_PERMISSION_ACCESS_COARSE_LOCATION = 0
     const val INDEX_PERMISSION_ACCESS_FINE_LOCATION = 1
+    const val MESSAGES = "Messages"
+    const val FROM = "from"
+    const val CONTENTS = "contents"
+    const val ID_MESSAGE = "idmessage"
+    const val USER_REC = 1
+    const val USER_SEND = 0
 }

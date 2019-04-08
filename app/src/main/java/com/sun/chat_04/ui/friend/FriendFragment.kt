@@ -3,7 +3,6 @@ package com.sun.chat_04.ui.friend
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,9 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.remote.FriendRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRepository
+import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.friend.search.SearchFragment
+import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_friends.editSearch
 import kotlinx.android.synthetic.main.fragment_friends.progressLoadFriend
@@ -44,6 +45,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         if (::presenter.isInitialized) {
             presenter.getFriends()
         }
+        editSearch.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -60,13 +62,25 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     override fun onGetFriendsFailed(exception: Exception?) {
         progressLoadFriend.visibility = View.INVISIBLE
-        Toast.makeText(context, exception?.message.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun listener(friend: Friend) {
+        val chatFragment = ChatFragment()
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.add(R.id.parentLayout, chatFragment)
+            ?.addToBackStack(null)
+            ?.commit()
+        val bundle = Bundle()
+        bundle.putSerializable(Constants.FRIENDS, friend)
+        chatFragment.arguments = bundle
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_friends, container, false)
     }
 }

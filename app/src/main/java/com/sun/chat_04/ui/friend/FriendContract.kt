@@ -13,5 +13,7 @@ interface FriendContract {
 
     interface Presenter : BasePresenter {
         fun getFriends()
+        fun onGetFriendsSuccessfully(friends: ArrayList<Friend>)
+        fun onGetFriendsFailed(exception: Exception?)
     }
 }
