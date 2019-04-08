@@ -21,6 +21,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarMessage" />
 
+    <ImageView
+        android:id="@+id/imageEmptyChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/empty"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/editMessage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMessage" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerChat"
         android:layout_width="0dp"
