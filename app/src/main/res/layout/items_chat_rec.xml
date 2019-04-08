@@ -8,29 +8,42 @@
     android:paddingStart="@dimen/dp_16"
     android:paddingTop="@dimen/dp_8">
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <ImageView
-        android:id="@+id/imvAvtUserRec"
+        android:id="@+id/imageAvatarUserReceiver"
         android:layout_width="@dimen/dp_48"
         android:layout_height="@dimen/dp_48"
         android:src="@drawable/avatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/edtMsgRec"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="@dimen/dp_8"
-        android:background="@drawable/background_searchview"
-        android:gravity="center"
-        android:maxWidth="@dimen/dp_325"
-        android:padding="@dimen/dp_8"
-        android:textColor="@color/color_black"
-        android:textSize="@dimen/sp_20"
-        app:layout_constraintBottom_toBottomOf="@+id/imvAvtUserRec"
-        app:layout_constraintLeft_toRightOf="@+id/imvAvtUserRec"
-        app:layout_constraintStart_toEndOf="@id/imvAvtUserRec"
-        app:layout_constraintTop_toTopOf="@+id/imvAvtUserRec" />
+        android:gravity="start"
+        app:layout_constraintBottom_toBottomOf="@+id/imageAvatarUserReceiver"
+        app:layout_constraintLeft_toRightOf="@+id/imageAvatarUserReceiver"
+        app:layout_constraintRight_toLeftOf="@+id/guideLine2"
+        app:layout_constraintTop_toTopOf="@+id/imageAvatarUserReceiver">
 
+        <TextView
+            android:id="@+id/editMessageReceiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/dp_8"
+            android:background="@drawable/background_searchview"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_20" />
+    </LinearLayout>
+    
 </android.support.constraint.ConstraintLayout>
