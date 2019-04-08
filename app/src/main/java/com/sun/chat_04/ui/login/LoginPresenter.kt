@@ -50,9 +50,11 @@ class LoginPresenter(
     override fun onSuccess(result: LoginResult?) {
         repository.handleFbLogin(result?.accessToken, object : RemoteCallback<Boolean> {
             override fun onSuccessfuly(data: Boolean) {
+                view.onLoginSuccessfully()
             }
 
             override fun onFailure(exception: Exception?) {
+                checkErrorLogin(exception)
             }
         })
     }
