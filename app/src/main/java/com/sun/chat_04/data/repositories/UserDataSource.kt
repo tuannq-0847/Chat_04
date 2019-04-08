@@ -18,7 +18,7 @@ interface UserDataSource {
 
         fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>)
 
-        fun getAllUser(callback: RemoteCallback<List<User>>)
+        fun getUsers(callback: RemoteCallback<List<User>>)
 
         fun getUserInfo(userId: String, callback: RemoteCallback<User>)
     }

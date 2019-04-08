@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_discovery.imageAroundHere
 import kotlinx.android.synthetic.main.fragment_discovery.progressLoading
 import kotlinx.android.synthetic.main.fragment_discovery.recyclerDiscovery
 import kotlinx.android.synthetic.main.fragment_discovery.searchDiscovery
+import java.lang.Exception
 
 class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
@@ -40,8 +41,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
     }
 
     override fun onFindUsersSuccess(users: List<User>) {
-        adapter?.refreshAllUsers(users)
-        adapter?.notifyDataSetChanged()
+        adapter?.refreshUsers(users)
         hideProgress()
         hideIconSearchAroundHere()
     }
@@ -53,7 +53,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
         ::presenter.isInitialized.let { presenter.findUserAroundHere(locationUser) }
     }
 
-    override fun onFindUserFailure() {
+    override fun onFindUserFailure(exception: Exception?) {
         hideProgress()
         Global.showMessage(context, resources.getString(R.string.user_not_found))
     }
@@ -103,8 +103,8 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
     private fun checkPermissions() {
         context?.let {
-            if (Global.checkGrantedPermission(it, Constants.INDEX_1) &&
-                Global.checkGrantedPermission(it, Constants.INDEX_2)) {
+            if (Global.checkGrantedPermission(it, Constants.INDEX_0) &&
+                Global.checkGrantedPermission(it, Constants.INDEX_1)) {
                 hideIconSearchAroundHere()
                 showProgress()
                 ::presenter.isInitialized.let { presenter.getUserInfo() }

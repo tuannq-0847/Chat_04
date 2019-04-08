@@ -89,7 +89,7 @@ class UserRemoteDataSource(private val auth: FirebaseAuth, private val database:
         }
     }
 
-    override fun getAllUser(callback: RemoteCallback<List<User>>) {
+    override fun getUsers(callback: RemoteCallback<List<User>>) {
         database.getReference(USERS).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 callback.onFailure(error.toException())

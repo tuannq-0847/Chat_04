@@ -1,6 +1,7 @@
 package com.sun.chat_04.ui.discovery
 
 import android.location.Location
+import com.google.firebase.database.DatabaseException
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -11,7 +12,7 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val userRepository: U
     DiscoveryContract.Presenter {
 
     override fun findUserByName(userName: String) {
-        userRepository.getAllUser(object : RemoteCallback<List<User>> {
+        userRepository.getUsers(object : RemoteCallback<List<User>> {
             override fun onSuccessfuly(data: List<User>) {
                 val users = ArrayList<User>()
                 for (user in data) {
@@ -22,29 +23,29 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val userRepository: U
             }
 
             override fun onFailure(exception: Exception?) {
-                view.onFindUserFailure()
+                view.onFindUserFailure(exception)
             }
         })
     }
 
     override fun findUserAroundHere(location: Location?) {
-        userRepository.getAllUser(object : RemoteCallback<List<User>> {
+        userRepository.getUsers(object : RemoteCallback<List<User>> {
             override fun onSuccessfuly(data: List<User>) {
                 val users = ArrayList<User>()
                 for (user in data) {
-                    if (checkDistanceBetweenUsers(location, user))
+                    if (isNearbyUser(location, user))
                         users.add(user)
                 }
                 view.onFindUsersSuccess(users)
             }
 
             override fun onFailure(exception: Exception?) {
-                view.onFindUserFailure()
+                view.onFindUserFailure(exception)
             }
         })
     }
 
-    override fun checkDistanceBetweenUsers(location: Location?, user: User): Boolean {
+    override fun isNearbyUser(location: Location?, user: User): Boolean {
         val locationB = Location("")
         locationB.latitude = user.lat
         locationB.longitude = user.lgn
@@ -62,12 +63,12 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val userRepository: U
                     view.onGetInfoUserSuccess(data)
                 }
 
-                override fun onFailure(exception: java.lang.Exception?) {
-                    view.onFindUserFailure()
+                override fun onFailure(exception: Exception?) {
+                    view.onFindUserFailure(exception)
                 }
             })
             return
         }
-        view.onFindUserFailure()
+        view.onFindUserFailure(DatabaseException(""))
     }
 }

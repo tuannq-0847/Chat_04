@@ -11,8 +11,9 @@ import kotlinx.android.synthetic.main.item_discovery.view.textNameUserDiscovery
 class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User) -> Unit) :
     RecyclerView.Adapter<DiscoveryAdapter.DiscoveryViewHoler>() {
 
-    fun refreshAllUsers(user: List<User>) {
+    fun refreshUsers(user: List<User>) {
         users = user
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): DiscoveryViewHoler {

@@ -61,8 +61,8 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     }
 
     private fun checkPermissions() {
-        if (!Global.checkGrantedPermission(this, Constants.INDEX_1) ||
-            !Global.checkGrantedPermission(this, Constants.INDEX_2)) {
+        if (!Global.checkGrantedPermission(this, Constants.INDEX_0) ||
+            !Global.checkGrantedPermission(this, Constants.INDEX_1)) {
             ActivityCompat.requestPermissions(this, Global.PERMISSIONS, Constants.REQUEST_PERMISSION_CODE)
         } else {
             upgradeLocationUser()

@@ -26,8 +26,8 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
         remoteDataSource.upgradeLocationUser(location, callback)
     }
 
-    override fun getAllUser(callback: RemoteCallback<List<User>>) {
-        remoteDataSource.getAllUser(callback)
+    override fun getUsers(callback: RemoteCallback<List<User>>) {
+        remoteDataSource.getUsers(callback)
     }
 
     override fun getUserInfo(userId: String, callback: RemoteCallback<User>) {

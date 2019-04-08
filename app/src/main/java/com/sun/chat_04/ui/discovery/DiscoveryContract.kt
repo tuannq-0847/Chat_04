@@ -7,7 +7,7 @@ interface DiscoveryContract {
     interface View {
         fun onFindUsersSuccess(users: List<User>)
 
-        fun onFindUserFailure()
+        fun onFindUserFailure(exception: Exception?)
 
         fun onGetInfoUserSuccess(user: User)
     }
@@ -19,6 +19,6 @@ interface DiscoveryContract {
 
         fun findUserAroundHere(location: Location?)
 
-        fun checkDistanceBetweenUsers(location: Location?, user: User) : Boolean
+        fun isNearbyUser(location: Location?, user: User): Boolean
     }
 }

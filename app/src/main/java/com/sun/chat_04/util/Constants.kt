@@ -16,6 +16,6 @@ object Constants {
     const val MAX_DISTANCE = 2
     const val REQUEST_PERMISSION_CODE = 100
     const val COLUMN = 2
+    const val INDEX_0 = 0
     const val INDEX_1 = 1
-    const val INDEX_2 = 2
 }
