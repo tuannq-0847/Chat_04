@@ -45,6 +45,7 @@
     <string name="other_error">unknown error</string>
 
     <string name="discovery_search">Tìm kiếm bạn bè</string>
+    <string name="discovery_around_here">Tìm kiếm xung quanh</string>
     <string name="requireGPS">Turn on GPS and Internet</string>
     <string name="search_message">Search</string>
 </resources>

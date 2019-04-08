@@ -6,6 +6,7 @@ import com.sun.chat_04.data.model.User
 import com.sun.chat_04.ui.signup.RemoteCallback
 
 class UserRepository(private val remoteDataSource: UserDataSource.Remote) : UserDataSource.Remote {
+
     override fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>) {
         remoteDataSource.loginByEmailAndPassword(email, password, callback)
     }
@@ -14,7 +15,7 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
         token: AccessToken?,
         callbackLogin: RemoteCallback<Boolean>
     ) {
-        remoteDataSource.handleFbLogin(token,callbackLogin)
+        remoteDataSource.handleFbLogin(token, callbackLogin)
     }
 
     override fun insertUser(user: User, email: String?, password: String?, callback: RemoteCallback<Boolean>) {
@@ -23,5 +24,13 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
 
     override fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>) {
         remoteDataSource.upgradeLocationUser(location, callback)
+    }
+
+    override fun getUsers(callback: RemoteCallback<List<User>>) {
+        remoteDataSource.getUsers(callback)
+    }
+
+    override fun getUserInfo(userId: String, callback: RemoteCallback<User>) {
+        remoteDataSource.getUserInfo(userId, callback)
     }
 }

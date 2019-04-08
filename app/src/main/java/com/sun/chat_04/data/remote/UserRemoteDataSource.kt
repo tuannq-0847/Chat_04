@@ -4,8 +4,11 @@ import android.location.Location
 import com.facebook.AccessToken
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -86,8 +89,44 @@ class UserRemoteDataSource(private val auth: FirebaseAuth, private val database:
         }
     }
 
+    override fun getUsers(callback: RemoteCallback<List<User>>) {
+        database.getReference(USERS).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                callback.onFailure(error.toException())
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.run {
+                    val users = ArrayList<User>()
+                    for (data in children) {
+                        val user = data.getValue(User::class.java)
+                        if (user?.idUser.equals(auth.currentUser?.uid))
+                            continue
+                        user?.let { users.add(user) }
+                    }
+                    callback.onSuccessfuly(users)
+                }
+            }
+        })
+    }
+
+    override fun getUserInfo(userId: String, callback: RemoteCallback<User>) {
+        database.getReference(USERS).child(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    callback.onFailure(error.toException())
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val user = dataSnapshot.getValue(User::class.java)
+                    user?.let { callback.onSuccessfuly(user) }
+                }
+            })
+    }
+
     companion object {
         private const val USERS = "Users"
+        private const val USER_NAME = "userName"
         private const val LATITUDE = "lat"
         private const val LONGITUDE = "lgn"
     }

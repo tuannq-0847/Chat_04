@@ -1,7 +1,5 @@
 package com.sun.chat_04.ui.home
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -13,7 +11,6 @@ import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.sun.chat_04.R
@@ -39,7 +36,6 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         R.drawable.ic_seach_selected, R.drawable.ic_profile_selected
     )
 
-    private val PERMISSIONS = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
     private var homePresenter: HomeContract.Presenter? = null
     private var homeAdapter: HomeAdapter? = null
     private var locationManager: LocationManager? = null
@@ -55,9 +51,9 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            MainActivity.REQUEST_PERMISSION_CODE -> {
+            Constants.REQUEST_PERMISSION_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    getLocation()
+                    upgradeLocationUser()
                 }
                 return
             }
@@ -65,12 +61,11 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     }
 
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED ||
-            (ContextCompat.checkSelfPermission(this, PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED)
-        ) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, MainActivity.REQUEST_PERMISSION_CODE)
+        if (!Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) ||
+            !Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this, Global.PERMISSIONS, Constants.REQUEST_PERMISSION_CODE)
         } else {
-            getLocation()
+            upgradeLocationUser()
         }
     }
 
@@ -120,7 +115,7 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLocation() {
+    private fun upgradeLocationUser() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         locationManager?.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
@@ -152,6 +147,5 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         const val TAB_REQUEST_FRIEND = 1
         const val TAB_DISCOVERY = 2
         const val TAB_PROFILE = 3
-        const val REQUEST_PERMISSION_CODE = 100
     }
 }

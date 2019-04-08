@@ -17,5 +17,9 @@ interface UserDataSource {
         fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>)
 
         fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>)
+
+        fun getUsers(callback: RemoteCallback<List<User>>)
+
+        fun getUserInfo(userId: String, callback: RemoteCallback<User>)
     }
 }
