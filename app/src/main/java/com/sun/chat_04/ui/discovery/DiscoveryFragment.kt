@@ -103,8 +103,8 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
     private fun checkPermissions() {
         context?.let {
-            if (Global.checkGrantedPermission(it, Constants.INDEX_0) &&
-                Global.checkGrantedPermission(it, Constants.INDEX_1)) {
+            if (Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
+                Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
                 hideIconSearchAroundHere()
                 showProgress()
                 ::presenter.isInitialized.let { presenter.getUserInfo() }
