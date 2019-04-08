@@ -1,5 +1,6 @@
 package com.sun.chat_04.ui.chat
 
+import android.graphics.Bitmap
 import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.data.repositories.MessageRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -22,13 +23,16 @@ class ChatPresenter(
     }
 
     override fun handleSendMessage(
-        message: Message
+        message: Message,
+        bitmap: Bitmap?
     ) {
-        repository.insertMessage(message, object : RemoteCallback<Boolean> {
+        repository.insertMessage(message, bitmap, object : RemoteCallback<Boolean> {
             override fun onSuccessfuly(data: Boolean) {
+                view.insertMessageSuccessfully()
             }
 
             override fun onFailure(exception: Exception?) {
+                view.insertMessageFailure(exception)
             }
         })
     }

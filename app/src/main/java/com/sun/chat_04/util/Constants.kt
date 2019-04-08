@@ -39,4 +39,10 @@ object Constants {
     const val GENDER_INVALID = "-1"
     const val MAX_ADDRESS = 1
     const val ARGUMENT_USER = "ARGUMENT_USER"
+    const val IMAGE_GALERY = "image/*"
+    const val TEXT_MESSAGE = "text"
+    const val IMAGE_MESSAGE = "image"
+    const val IMAGE_USER_REC = 2
+    const val IMAGE_USER_SEND = 3
+    const val TYPE = "type"
 }

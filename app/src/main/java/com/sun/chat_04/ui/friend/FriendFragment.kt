@@ -24,7 +24,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
         progressLoadFriend.visibility = View.INVISIBLE
-        adapter = FriendAdapter(friends) { friend -> onFriendSeletectedListener(friend) }
+        adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
         recyclerListChat.layoutManager = LinearLayoutManager(context)
         if (::adapter.isInitialized) {
             recyclerListChat.adapter = adapter
@@ -37,6 +37,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         presenter = FriendPresenter(
             this, FriendRepository(
                 FriendRemoteDataSource(
+                    Global.firebaseAuth,
                     Global.firebaseDatabase
                 )
             )
@@ -44,6 +45,13 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         if (::presenter.isInitialized) {
             presenter.getFriends()
         }
+        presenter = FriendPresenter(
+            this, FriendRepository(
+                FriendRemoteDataSource(
+                    Global.firebaseAuth, Global.firebaseDatabase
+                )
+            )
+        )
         editSearch.setOnClickListener(this)
     }
 
@@ -63,7 +71,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         progressLoadFriend.visibility = View.INVISIBLE
     }
 
-    private fun onFriendSeletectedListener(friend: Friend) {
+    private fun onFriendSelectedListener(friend: Friend) {
         val chatFragment = ChatFragment.newInstance(friend)
         activity?.supportFragmentManager
             ?.beginTransaction()

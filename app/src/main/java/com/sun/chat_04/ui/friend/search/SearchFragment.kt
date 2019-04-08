@@ -28,7 +28,7 @@ class SearchFragment : Fragment(), SearchConstract.View, View.OnClickListener, O
     }
 
     override fun onGetUsersSuccessfully(friends: ArrayList<Friend>) {
-        searchAdapter = SearchAdapter(friends) { friend -> listener(friend) }
+        searchAdapter = SearchAdapter(friends) { friend -> onFriendSelectedListener(friend) }
         recyclerSearch.layoutManager = LinearLayoutManager(context)
         if (::searchAdapter.isInitialized) {
             recyclerSearch.adapter = searchAdapter
@@ -41,7 +41,7 @@ class SearchFragment : Fragment(), SearchConstract.View, View.OnClickListener, O
             this,
             FriendRepository(
                 FriendRemoteDataSource(
-                    Global.firebaseDatabase
+                    Global.firebaseAuth, Global.firebaseDatabase
                 )
             )
         )
@@ -73,7 +73,7 @@ class SearchFragment : Fragment(), SearchConstract.View, View.OnClickListener, O
         }
     }
 
-    fun listener(friend: Friend) {
+    fun onFriendSelectedListener(friend: Friend) {
         val chatFragment = ChatFragment.newInstance(friend)
         activity?.supportFragmentManager
             ?.beginTransaction()
