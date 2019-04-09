@@ -1,12 +1,10 @@
 package com.sun.chat_04.ui.signup
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
+
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils
@@ -49,7 +47,6 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         val firebaseDatabase = FirebaseDatabase.getInstance()
         presenter = SignUpPresenter(this, UserRepository(UserRemoteDataSource(firebaseAuth, firebaseDatabase)))
         initComponents()
-        requirePermissions()
     }
 
     override fun onClick(v: View?) {
@@ -107,33 +104,6 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
     override fun onCofirmPasswordInvalid() {
         this.notification(resources.getString(R.string.sign_up_confirm_password))
         hideProgess()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_PERMISSION_CODE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    //Granted
-                } else {
-                    requirePermissions()
-                }
-                return
-            }
-        }
-    }
-
-    private fun requirePermissions() {
-        if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-            (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION),
-                REQUEST_PERMISSION_CODE
-            )
-        } else {
-            //Granted
-        }
     }
 
     private fun initComponents() {

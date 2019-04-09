@@ -8,7 +8,6 @@ class HomePresenter(val view: HomeContract.View, val userRepository: UserReposit
 
     override fun upgradeLocationUser(location: Location) {
         userRepository.upgradeLocationUser(location, object : RemoteCallback<Boolean> {
-
             override fun onSuccessfuly(data: Boolean) {
                 view.onUpgradeLocationSuccessful()
             }
