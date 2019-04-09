@@ -1,8 +1,6 @@
 package com.sun.chat_04.ui.discovery
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,13 +36,13 @@ class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User
     inner class DiscoveryViewHoler(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(user: User) {
             with(itemView) {
-                setUserAvatar(user.pathAvatar, imageUserDiscovery)
+                displayUserAvatar(user.pathAvatar, imageUserDiscovery)
                 textNameUserDiscovery.setText(user.userName)
                 setOnClickListener { userClickListener(user) }
             }
         }
 
-        fun setUserAvatar(pathImage: String, imageView: ImageView) {
+        fun displayUserAvatar(pathImage: String, imageView: ImageView) {
             Glide.with(imageView)
                 .load(pathImage)
                 .centerCrop()
