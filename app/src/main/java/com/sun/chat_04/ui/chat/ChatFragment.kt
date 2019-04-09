@@ -66,7 +66,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
         buttonSend.setOnClickListener(this)
         val bundle = arguments
         bundle?.let {
-            val friend = it.getParcelable<Friend>(Constants.BUNDLE_FRIENDS)
+            val friend = it.getParcelable<Friend>(Constants.ARGUMENT_FRIENDS)
             friend?.let { friends ->
                 presenter =
                     ChatPresenter(

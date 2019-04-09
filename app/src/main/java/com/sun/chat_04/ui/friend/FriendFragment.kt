@@ -71,7 +71,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
             ?.addToBackStack(null)
             ?.commit()
         val bundle = Bundle()
-        bundle.putParcelable(Constants.BUNDLE_FRIENDS, friend)
+        bundle.putParcelable(Constants.ARGUMENT_FRIENDS, friend)
         chatFragment.arguments = bundle
     }
 
