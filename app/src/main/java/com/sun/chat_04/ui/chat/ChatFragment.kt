@@ -21,15 +21,28 @@ import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
 
 class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     private lateinit var adapter: ChatAdapter
-    private lateinit var presenter: ChatPresenter
+    private lateinit var presenter: ChatContract.Presenter
+
+    companion object {
+        @JvmStatic
+        fun newInstance(friend: Friend) = ChatFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(Constants.ARGUMENT_FRIENDS, friend)
+            }
+        }
+
+        const val INDEX_MESSAGES_1 = 1
+    }
 
     override fun onGetMessagesSuccessfully(messages: ArrayList<Message>) {
         val linearLayoutManager = LinearLayoutManager(context)
-        recyclerChat.layoutManager = linearLayoutManager
-        adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, messages)
-        if (::adapter.isInitialized) {
-            recyclerChat.adapter = adapter
-            recyclerChat.scrollToPosition(messages.size - INDEX_MESSAGES_1)
+        recyclerChat?.let {
+            it.layoutManager = linearLayoutManager
+            adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, messages)
+            if (::adapter.isInitialized) {
+                it.adapter = adapter
+                it.scrollToPosition(messages.size - INDEX_MESSAGES_1)
+            }
         }
     }
 
@@ -85,9 +98,5 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
             }
 
         }
-    }
-
-    companion object {
-        const val INDEX_MESSAGES_1 = 1
     }
 }

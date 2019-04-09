@@ -64,15 +64,12 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
     }
 
     private fun onFriendSeletectedListener(friend: Friend) {
-        val chatFragment = ChatFragment()
+        val chatFragment = ChatFragment.newInstance(friend)
         activity?.supportFragmentManager
             ?.beginTransaction()
             ?.add(R.id.parentLayout, chatFragment)
             ?.addToBackStack(null)
             ?.commit()
-        val bundle = Bundle()
-        bundle.putParcelable(Constants.ARGUMENT_FRIENDS, friend)
-        chatFragment.arguments = bundle
     }
 
     override fun onCreateView(
