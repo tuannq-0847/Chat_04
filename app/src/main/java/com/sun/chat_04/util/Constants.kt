@@ -25,4 +25,19 @@ object Constants {
     const val USER_REC = 1
     const val USER_SEND = 0
     const val FRIENDS = "Friends"
+    const val PATH_AVATAR = "pathAvatar"
+    const val PATH_COVER = "pathBackground"
+    const val INTENT_GALLERY = "image/*"
+    const val TITLE_GALLERY = "Select Picture"
+    const val RESULT_CODE_AVATAR = 10
+    const val RESULT_CODE_COVER = 11
+    const val MALE = "0"
+    const val FEMALE = "1"
+    const val USER_NAME = "userName"
+    const val USER_AGE = "birthday"
+    const val USER_GENDER = "gender"
+    const val GENDER_INVALID = "-1"
+    const val MAX_ADDRESS = 1
+    const val YES = "Yes"
+    const val NO = "No"
 }

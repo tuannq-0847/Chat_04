@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_discovery.imageAroundHere
 import kotlinx.android.synthetic.main.fragment_discovery.progressLoading
 import kotlinx.android.synthetic.main.fragment_discovery.recyclerDiscovery
 import kotlinx.android.synthetic.main.fragment_discovery.searchDiscovery
-import java.lang.Exception
 
 class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
@@ -70,7 +69,13 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
         presenter =
             DiscoveryPresenter(
                 this,
-                UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase))
+                UserRepository(
+                    UserRemoteDataSource(
+                        Global.firebaseAuth,
+                        Global.firebaseDatabase,
+                        Global.firebaseStorage
+                    )
+                )
             )
     }
 
@@ -104,7 +109,8 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
     private fun checkPermissions() {
         context?.let {
             if (Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
-                Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
+                Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)
+            ) {
                 hideIconSearchAroundHere()
                 showProgress()
                 ::presenter.isInitialized.let { presenter.getUserInfo() }
