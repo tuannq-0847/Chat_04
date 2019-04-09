@@ -9,9 +9,9 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.ui.friend.FriendAdapter.ViewHolder
 import com.sun.chat_04.util.Constants
-import kotlinx.android.synthetic.main.items_last_message.view.imageStatusUser
-import kotlinx.android.synthetic.main.items_last_message.view.textLastMessage
-import kotlinx.android.synthetic.main.items_last_message.view.textUserRec
+import kotlinx.android.synthetic.main.items_friends.view.imageStatusUser
+import kotlinx.android.synthetic.main.items_friends.view.textLastMessage
+import kotlinx.android.synthetic.main.items_friends.view.textUserRec
 
 class FriendAdapter(
     private val friends: ArrayList<Friend>,
@@ -21,7 +21,7 @@ class FriendAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.items_last_message, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.items_friends, parent, false)
         )
     }
 

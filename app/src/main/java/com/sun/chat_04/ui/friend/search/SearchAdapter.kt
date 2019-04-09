@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.item_search_chat.view.textConnected
 import kotlinx.android.synthetic.main.item_search_chat.view.textNameSearch
 
 class SearchAdapter(
-    private val friends: ArrayList<Friend>
+    private val friends: ArrayList<Friend>,
+    private val listener: (friend: Friend) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -34,6 +35,7 @@ class SearchAdapter(
             with(itemView) {
                 textNameSearch.text = friend.userName
                 textConnected.text = Constants.CONNECTED
+                itemView.setOnClickListener { listener(friend) }
             }
         }
     }

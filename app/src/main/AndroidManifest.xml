@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.home.MainActivity" />
+        <activity
+            android:name=".ui.home.MainActivity"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity android:name=".ui.signup.SignUpActivity" />
 
