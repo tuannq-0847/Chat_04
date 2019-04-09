@@ -2,6 +2,7 @@ package com.sun.chat_04.ui.profile
 
 import android.net.Uri
 import com.sun.chat_04.data.model.User
+import java.lang.Exception
 
 interface ProfileContract {
     interface View {

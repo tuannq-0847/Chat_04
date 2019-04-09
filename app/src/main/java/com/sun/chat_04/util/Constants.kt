@@ -35,6 +35,8 @@ object Constants {
     const val USER_NAME = "userName"
     const val USER_AGE = "birthday"
     const val USER_GENDER = "gender"
+    const val USER_BIO = "bio"
     const val GENDER_INVALID = "-1"
     const val MAX_ADDRESS = 1
+    const val ARGUMENT_USER = "ARGUMENT_USER"
 }
