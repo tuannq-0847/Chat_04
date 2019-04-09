@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -76,6 +77,16 @@
 
     <style name="ButtonLoginFace" parent="ButtonLogin">
         <item name="android:background">@color/color_blue_face</item>
+    </style>
+
+    <style name="ProfileToolbar" parent="Common">
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProfileFullName" parent="Common">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp_20</item>
     </style>
 </resources>
 
