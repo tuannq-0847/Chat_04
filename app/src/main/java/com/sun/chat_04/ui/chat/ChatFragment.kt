@@ -20,13 +20,13 @@ import kotlinx.android.synthetic.main.fragment_chat_message.recyclerChat
 import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
 
 class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
-    private lateinit var adapter: AdapterChat
+    private lateinit var adapter: ChatAdapter
     private lateinit var presenter: ChatPresenter
 
     override fun onGetMessagesSuccessfully(messages: ArrayList<Message>) {
         val linearLayoutManager = LinearLayoutManager(context)
         recyclerChat.layoutManager = linearLayoutManager
-        adapter = AdapterChat(messages)
+        adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, messages)
         if (::adapter.isInitialized) {
             recyclerChat.adapter = adapter
             recyclerChat.scrollToPosition(messages.size - INDEX_MESSAGES_1)
@@ -66,21 +66,24 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
         buttonSend.setOnClickListener(this)
         val bundle = arguments
         bundle?.let {
-            val friend = it.getSerializable(Constants.FRIENDS)
-            presenter =
-                ChatPresenter(
-                    this,
-                    MessageRepository(
-                        MessageRemoteDataSource(
-                            Global.firebaseAuth,
-                            Global.firebaseDatabase, friend as Friend
+            val friend = it.getParcelable<Friend>(Constants.BUNDLE_FRIENDS)
+            friend?.let { friends ->
+                presenter =
+                    ChatPresenter(
+                        this,
+                        MessageRepository(
+                            MessageRemoteDataSource(
+                                Global.firebaseAuth,
+                                Global.firebaseDatabase, friends
+                            )
                         )
                     )
-                )
-            toolbarMessage.title = friend.userName
-            if (::presenter.isInitialized) {
-                presenter.getMessages()
+                toolbarMessage.title = friends.userName
+                if (::presenter.isInitialized) {
+                    presenter.getMessages()
+                }
             }
+
         }
     }
 

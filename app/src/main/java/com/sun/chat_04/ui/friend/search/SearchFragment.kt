@@ -81,7 +81,7 @@ class SearchFragment : Fragment(), SearchConstract.View, View.OnClickListener, O
             ?.addToBackStack(null)
             ?.commit()
         val bundle = Bundle()
-        bundle.putSerializable(Constants.FRIENDS, friend)
+        bundle.putParcelable(Constants.BUNDLE_FRIENDS, friend)
         chatFragment.arguments = bundle
     }
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.remote.FriendRemoteDataSource
@@ -25,7 +24,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
         progressLoadFriend.visibility = View.INVISIBLE
-        adapter = FriendAdapter(friends) { lastMessage -> listener(lastMessage) }
+        adapter = FriendAdapter(friends) { friend -> onFriendSeletectedListener(friend) }
         recyclerListChat.layoutManager = LinearLayoutManager(context)
         if (::adapter.isInitialized) {
             recyclerListChat.adapter = adapter
@@ -64,7 +63,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         progressLoadFriend.visibility = View.INVISIBLE
     }
 
-    private fun listener(friend: Friend) {
+    private fun onFriendSeletectedListener(friend: Friend) {
         val chatFragment = ChatFragment()
         activity?.supportFragmentManager
             ?.beginTransaction()
@@ -72,7 +71,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
             ?.addToBackStack(null)
             ?.commit()
         val bundle = Bundle()
-        bundle.putSerializable(Constants.FRIENDS, friend)
+        bundle.putParcelable(Constants.BUNDLE_FRIENDS, friend)
         chatFragment.arguments = bundle
     }
 

@@ -41,6 +41,7 @@ class MessageRemoteDataSource(
         database.reference.child(Constants.MESSAGES).child(uid).child(uidUserRec)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
+                    callback.onFailure(error.toException())
                 }
 
                 override fun onDataChange(data: DataSnapshot) {

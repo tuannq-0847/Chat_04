@@ -10,7 +10,7 @@ object Constants {
     const val ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND"
     const val MIN_TIME_UPGRADE_LOCATION = 1800000L
     const val MIN_DISTANCE_UPGRADE_LOCATION = 1000F
-    const val FRIENDS = "Friends"
+    const val BUNDLE_FRIENDS = "Friends"
     const val CONNECTED = "Connected"
     const val CONVERT_KM = 1000
     const val MAX_DISTANCE = 2
@@ -24,4 +24,5 @@ object Constants {
     const val ID_MESSAGE = "idmessage"
     const val USER_REC = 1
     const val USER_SEND = 0
+    const val FRIENDS = "Friends"
 }

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_search_chat.view.textNameSearch
 
 class SearchAdapter(
     private val friends: ArrayList<Friend>,
-    private val listener: (massage: Friend) -> Unit
+    private val listener: (friend: Friend) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
