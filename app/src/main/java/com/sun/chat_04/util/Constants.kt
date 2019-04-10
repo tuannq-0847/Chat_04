@@ -28,9 +28,8 @@ object Constants {
     const val PATH_AVATAR = "pathAvatar"
     const val PATH_COVER = "pathBackground"
     const val INTENT_GALLERY = "image/*"
-    const val TITLE_GALLERY = "Select Picture"
-    const val RESULT_CODE_AVATAR = 10
-    const val RESULT_CODE_COVER = 11
+    const val REQUEST_CODE_AVATAR = 10
+    const val REQUEST_CODE_COVER = 11
     const val MALE = "0"
     const val FEMALE = "1"
     const val USER_NAME = "userName"

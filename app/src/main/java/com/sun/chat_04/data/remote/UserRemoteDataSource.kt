@@ -149,7 +149,10 @@ class UserRemoteDataSource(
     }
 
     override fun insertUserImagePath(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>) {
-        database.getReference(Constants.USERS).child(userId).child(field).setValue(uri.toString())
+        database.getReference(Constants.USERS)
+            .child(userId)
+            .child(field)
+            .setValue(uri.toString())
             .addOnSuccessListener {
                 callback.onSuccessfuly(uri)
             }

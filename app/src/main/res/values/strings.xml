@@ -61,4 +61,5 @@
     <string name="edit_profile_fail">Có lỗi xảy ra!</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_out_notify">Bạn có chắc chắn muốn thoát không?</string>
+    <string name="select_image">Chọn ảnh</string>
 </resources>

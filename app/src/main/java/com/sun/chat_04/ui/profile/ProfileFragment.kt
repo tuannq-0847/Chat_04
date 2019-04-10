@@ -47,8 +47,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getUserProfile()
-        handleUpdateUserImage(imageEditAvatar, Constants.RESULT_CODE_AVATAR)
-        handleUpdateUserImage(imageEditCover, Constants.RESULT_CODE_COVER)
+        handleUpdateUserImage(imageEditAvatar, Constants.REQUEST_CODE_AVATAR)
+        handleUpdateUserImage(imageEditCover, Constants.REQUEST_CODE_COVER)
     }
 
     override fun onGetUserProfileSuccess(user: User) {
@@ -77,8 +77,8 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             if (resultCode == RESULT_OK) {
                 var field = ""
                 when (requestCode) {
-                    Constants.RESULT_CODE_AVATAR -> field = Constants.PATH_AVATAR
-                    Constants.RESULT_CODE_COVER -> field = Constants.PATH_COVER
+                    Constants.REQUEST_CODE_AVATAR -> field = Constants.PATH_AVATAR
+                    Constants.REQUEST_CODE_COVER -> field = Constants.PATH_COVER
                 }
                 if (!field.isEmpty())
                     ::presenter.isInitialized.let {
@@ -106,26 +106,27 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     private fun displayUserProfile() {
-        if (!::user.isInitialized) return
-        displayUserImage(Uri.parse(user.pathAvatar), imageAvatarProfile)
-        displayUserImage(Uri.parse(user.pathBackground), imageCover)
-        textNameProfile.text = user.userName.toString()
-        textAgeProfile.text = user.birthday.toString()
-        textUserBioProfile.text = user.bio
-        textNameToolbarProfile.text = user.userName.toString()
-        when {
-            user.gender.equals(Constants.MALE) -> textGenderProfile.text = resources.getString(R.string.male)
-            user.gender.equals(Constants.FEMALE) -> textGenderProfile.text = resources.getString(R.string.female)
-        }
-        activity?.let {
-            Geocoder(it, Locale.getDefault())
-                .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
-                .get(0)
-                .locality.let {
-                textAddressProfile.text = it
+        ::user.isInitialized.let {
+            displayUserImage(Uri.parse(user.pathAvatar), imageAvatarProfile)
+            displayUserImage(Uri.parse(user.pathBackground), imageCover)
+            textNameProfile.text = user.userName.toString()
+            textAgeProfile.text = user.birthday.toString()
+            textUserBioProfile.text = user.bio
+            textNameToolbarProfile.text = user.userName.toString()
+            when {
+                user.gender.equals(Constants.MALE) -> textGenderProfile.text = resources.getString(R.string.male)
+                user.gender.equals(Constants.FEMALE) -> textGenderProfile.text = resources.getString(R.string.female)
             }
+            activity?.let {
+                Geocoder(it, Locale.getDefault())
+                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
+                    .get(0)
+                    .locality.let {
+                    textAddressProfile.text = it
+                }
+            }
+            hideSwipeRefreshUserProfile()
         }
-        hideSwipeRefreshUserProfile()
     }
 
     private fun displayUserImage(uri: Uri, imageView: ImageView) {
@@ -136,12 +137,15 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             .into(imageView)
     }
 
-    private fun handleUpdateUserImage(imageView: ImageView, resultCode: Int) {
+    private fun handleUpdateUserImage(imageView: ImageView, requestCode: Int) {
         imageView.setOnClickListener {
             val intent = Intent()
             intent.type = Constants.INTENT_GALLERY
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, Constants.TITLE_GALLERY), resultCode)
+            startActivityForResult(
+                Intent.createChooser(intent, resources.getString(R.string.select_image)),
+                requestCode
+            )
         }
     }
 
