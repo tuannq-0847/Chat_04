@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Message
+import com.sun.chat_04.ui.chat.ChatAdapter.Companion.BaseViewHolder
 import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.items_chat_rec.view.textMessageReceiver
 import kotlinx.android.synthetic.main.items_chat_send.view.textMessageSend
@@ -18,27 +19,29 @@ class ChatAdapter(
     private val idUser: String?,
     private val messages: ArrayList<Message>
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<BaseViewHolder>() {
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_rec, parent, false)
-        when (viewType) {
-            Constants.USER_REC -> return RecViewHolder(view)
+        return when (viewType) {
             Constants.USER_SEND -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_send, parent, false)
-                return SendViewHolder(view)
+                SendViewHolder(view)
             }
             Constants.IMAGE_USER_SEND -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_image_send, parent, false)
-                return SendViewHolderImage(view)
+                SendViewHolderImage(view)
             }
             Constants.IMAGE_USER_REC -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_image_rec, parent, false)
-                return RecViewHolderImage(view)
+                RecViewHolderImage(view)
             }
+            Constants.USER_REC -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_rec, parent, false)
+                RecViewHolder(view)
+            }
+            else -> return BaseViewHolder(view)
         }
-        return SendViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -46,47 +49,63 @@ class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when {
+        return when {
             messages[position].from == idUser
                     && messages[position].type == Constants.TEXT_MESSAGE
-            -> return Constants.USER_SEND
+            -> Constants.USER_SEND
             messages[position].from != idUser
                     && messages[position].type == Constants.TEXT_MESSAGE
-            -> return Constants.USER_REC
+            -> Constants.USER_REC
             messages[position].from != idUser
                     && messages[position].type == Constants.IMAGE_MESSAGE
-            -> return Constants.IMAGE_USER_REC
+            -> Constants.IMAGE_USER_REC
             messages[position].from == idUser
                     && messages[position].type == Constants.IMAGE_MESSAGE
-            -> return Constants.IMAGE_USER_SEND
+            -> Constants.IMAGE_USER_SEND
+            else
+            -> Constants.USER_REC
         }
-        return Constants.USER_SEND
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val message = messages[position]
-        when {
-            holder.itemViewType == Constants.USER_SEND -> {
-                val holderSend = holder as SendViewHolder
-                holderSend.onBind(message)
-            }
-            holder.itemViewType == Constants.USER_REC -> {
-                val holderRec = holder as RecViewHolder
-                holderRec.onBind(message)
-            }
-            holder.itemViewType == Constants.IMAGE_USER_REC -> {
-                val holderImageRec = holder as RecViewHolderImage
-                holderImageRec.onBind(message)
-            }
-            holder.itemViewType == Constants.IMAGE_USER_SEND -> {
-                val holderImageSend = holder as SendViewHolderImage
-                holderImageSend.onBind(message)
+        holder.onBind(message)
+    }
+
+    inner class SendViewHolder(itemView: View) : BaseViewHolder(itemView) {
+        override fun onBind(message: Message) {
+            super.onBind(message)
+            with(itemView) {
+                textMessageSend.text = message.contents
             }
         }
     }
 
-    inner class RecViewHolderImage(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun onBind(message: Message) {
+    inner class RecViewHolder(itemView: View) : BaseViewHolder(itemView) {
+        override fun onBind(message: Message) {
+            super.onBind(message)
+            with(itemView) {
+                textMessageReceiver.text = message.contents
+            }
+        }
+    }
+
+    inner class SendViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
+        override fun onBind(message: Message) {
+            super.onBind(message)
+            with(itemView) {
+                com.bumptech.glide.Glide.with(context)
+                    .load(message.contents)
+                    .centerCrop()
+                    .placeholder(com.sun.chat_04.R.drawable.ic_launcher_background)
+                    .into(imageSend)
+            }
+        }
+    }
+
+    inner class RecViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
+        override fun onBind(message: Message) {
+            super.onBind(message)
             with(itemView) {
                 Glide.with(context)
                     .load(message.contents)
@@ -98,30 +117,9 @@ class ChatAdapter(
         }
     }
 
-    inner class RecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun onBind(message: Message) {
-            with(itemView) {
-                textMessageReceiver.text = message.contents
-            }
-        }
-    }
-
-    inner class SendViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun onBind(message: Message) {
-            with(itemView) {
-                textMessageSend.text = message.contents
-            }
-        }
-    }
-
-    inner class SendViewHolderImage(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun onBind(message: Message) {
-            with(itemView) {
-                Glide.with(context)
-                    .load(message.contents)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imageSend)
+    companion object {
+        open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            open fun onBind(message: Message) {
             }
         }
     }

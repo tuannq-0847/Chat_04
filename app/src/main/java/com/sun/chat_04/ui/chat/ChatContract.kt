@@ -17,6 +17,6 @@ interface ChatContract {
 
     interface Presenter : BasePresenter {
         fun getMessages()
-        fun handleSendMessage(message: Message,bitmap: Bitmap?)
+        fun handleSendMessage(message: Message, bitmap: Bitmap?)
     }
 }

@@ -26,7 +26,7 @@ class ChatPresenter(
         message: Message,
         bitmap: Bitmap?
     ) {
-        repository.insertMessage(message, bitmap, object : RemoteCallback<Boolean> {
+        repository.handleMessage(message, bitmap, object : RemoteCallback<Boolean> {
             override fun onSuccessfuly(data: Boolean) {
                 view.insertMessageSuccessfully()
             }

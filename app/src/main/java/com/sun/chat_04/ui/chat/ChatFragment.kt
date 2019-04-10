@@ -105,7 +105,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                     val inputStream = activity?.contentResolver?.openInputStream(it)
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val message = Message(Constants.NONE, type = Constants.IMAGE_MESSAGE, contents = it.toString())
-                    presenter.handleSendMessage(message, bitmap)
+                    presenter.handleSendMessage(message,bitmap)
                 }
             }
     }

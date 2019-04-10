@@ -9,13 +9,12 @@ class MessageRepository(
     private val remoteDataSource: MessageRemoteDataSource
 ) : MessageDataSource.Remote {
 
-
     override fun getMessages(callback: RemoteCallback<ArrayList<Message>>) {
         remoteDataSource.getMessages(callback)
     }
 
-    override fun insertMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>) {
-        remoteDataSource.insertMessage(message,bitmap, callback)
+    override fun handleMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>) {
+        remoteDataSource.handleMessage(message, bitmap, callback)
     }
 }
 

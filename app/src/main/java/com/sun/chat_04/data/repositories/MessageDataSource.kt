@@ -6,7 +6,7 @@ import com.sun.chat_04.ui.signup.RemoteCallback
 
 interface MessageDataSource {
     interface Remote {
-        fun insertMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>)
+        fun handleMessage(message: Message,bitmap: Bitmap?, callback: RemoteCallback<Boolean>)
         fun getMessages(callback: RemoteCallback<ArrayList<Message>>)
     }
 }

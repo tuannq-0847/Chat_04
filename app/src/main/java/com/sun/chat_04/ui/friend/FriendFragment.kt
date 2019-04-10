@@ -23,11 +23,13 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
     private lateinit var presenter: FriendContract.Presenter
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
-        progressLoadFriend.visibility = View.INVISIBLE
-        adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
-        recyclerListChat.layoutManager = LinearLayoutManager(context)
-        if (::adapter.isInitialized) {
-            recyclerListChat.adapter = adapter
+        progressLoadFriend?.let {
+            progressLoadFriend.visibility = View.INVISIBLE
+            adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
+            recyclerListChat.layoutManager = LinearLayoutManager(context)
+            if (::adapter.isInitialized) {
+                recyclerListChat.adapter = adapter
+            }
         }
     }
 

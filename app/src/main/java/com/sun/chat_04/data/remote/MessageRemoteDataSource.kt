@@ -1,7 +1,6 @@
 package com.sun.chat_04.data.remote
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,6 +13,7 @@ import com.sun.chat_04.data.repositories.MessageDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.text.DateFormat
 import java.util.Date
 
@@ -30,54 +30,64 @@ class MessageRemoteDataSource(
     private val userSendRef = "${Constants.MESSAGES}/$uid/$uidUserRec"
     private val userRecRef = "${Constants.MESSAGES}/$uidUserRec/$uid"
 
-    override fun insertMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>) {
+    override fun handleMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>) {
         val idMessage = database.reference.child(userSendRef)
             .child(userRecRef).push().key
         if (message.type == Constants.TEXT_MESSAGE) {
-            updateMessageDetail(null, Constants.TEXT_MESSAGE, message, idMessage.toString())
-        } else {
-            val uriImage = Uri.parse(message.contents)
-            val outputStream = ByteArrayOutputStream()
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
-            val byteArray = outputStream.toByteArray()
-            val pathImage = DateFormat.getDateTimeInstance().format(Date())
-            uriImage?.let {
-                storage.reference.child(Constants.MESSAGES)
-                    .child(pathImage)
-                    .putBytes(byteArray)
-                    .addOnSuccessListener {
-                        outputStream.close()
-                        callback.onSuccessfuly(true)
-                        storage.reference.child(Constants.MESSAGES)
-                            .child(pathImage).downloadUrl
-                            .addOnSuccessListener { uri ->
-                            updateMessageDetail(uri.toString(), Constants.IMAGE_MESSAGE, message, idMessage.toString())
-                        }
-                            .addOnFailureListener { callback.onFailure(it) }
-                    }
-                    .addOnFailureListener { callback.onFailure(it) }
+            insertMessages(
+                idMessage?.let {
+                    Message(it, message.contents, uid, Constants.TEXT_MESSAGE)
+                }
 
-            }
+            )
+        } else {
+            uploadImage(bitmap, object : RemoteCallback<String> {
+                override fun onSuccessfuly(data: String) {
+                    insertMessages(
+                        idMessage?.let {
+                            Message(it, data, uid, Constants.IMAGE_MESSAGE)
+                        }
+                    )
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    callback.onFailure(exception)
+                }
+            })
         }
     }
 
-    private fun updateMessageDetail(uri: String?, type: String, message: Message, idMessage: String) {
-        val bodyMessage = HashMap<String, String>()
-        bodyMessage[Constants.FROM] = uid
-        bodyMessage[Constants.ID_MESSAGE] = idMessage
-        when (type) {
-            Constants.IMAGE_MESSAGE -> {
-                bodyMessage[Constants.CONTENTS] = uri.toString()
+    private fun uploadImage(bitmap: Bitmap?, callback: RemoteCallback<String>) {
+        val pathImage = DateFormat.getDateTimeInstance().format(Date())
+        val outputStream = ByteArrayOutputStream()
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
+        val bytes = outputStream.toByteArray()
+        val ref = storage.reference.child(Constants.MESSAGES)
+            .child(pathImage)
+        ref.putBytes(bytes)
+            .addOnSuccessListener {
+                outputStream.close()
+                ref.downloadUrl
+                    .addOnSuccessListener { uri ->
+                        callback.onSuccessfuly(uri.toString())
+                    }
+                    .addOnFailureListener { callback.onFailure(it) }
             }
-            Constants.TEXT_MESSAGE -> {
-                bodyMessage[Constants.CONTENTS] = message.contents
-            }
+            .addOnFailureListener { callback.onFailure(it) }
+    }
+
+    private fun insertMessages(message: Message?) {
+        message?.let {
+            val bodyMessage = HashMap<String, String>()
+            bodyMessage[Constants.FROM] = uid
+            bodyMessage[Constants.ID_MESSAGE] = it.id
+            bodyMessage[Constants.CONTENTS] = it.contents
+            bodyMessage[Constants.TYPE] = it.type
+            val detailMessage = HashMap<String, Any>()
+            detailMessage["$userRecRef/${it.id}"] = bodyMessage
+            detailMessage["$userSendRef/${it.id}"] = bodyMessage
+            database.reference.updateChildren(detailMessage)
         }
-        bodyMessage[Constants.TYPE] = type
-        val detailMessage = HashMap<String, Any>()
-        detailMessage["$userRecRef/$idMessage"] = bodyMessage
-        detailMessage["$userSendRef/$idMessage"] = bodyMessage
-        database.reference.updateChildren(detailMessage)
     }
 
     override fun getMessages(callback: RemoteCallback<ArrayList<Message>>) {
@@ -93,7 +103,7 @@ class MessageRemoteDataSource(
                     for (dataSnapshot in data.children) {
                         val messaage = dataSnapshot.getValue(Message::class.java)
                         messaage?.let {
-                            messages.add(messaage)
+                            messages.add(it)
                             callback.onSuccessfuly(messages)
                         }
                     }
