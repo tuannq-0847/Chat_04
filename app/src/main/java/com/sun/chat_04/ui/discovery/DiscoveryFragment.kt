@@ -81,7 +81,6 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
 
     private fun handleFindUserByName() {
         searchDiscovery.setIconifiedByDefault(false)
-        searchDiscovery.onActionViewExpanded()
         searchDiscovery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(string: String?): Boolean {
                 showProgress()

@@ -37,6 +37,4 @@ object Constants {
     const val USER_GENDER = "gender"
     const val GENDER_INVALID = "-1"
     const val MAX_ADDRESS = 1
-    const val YES = "Yes"
-    const val NO = "No"
 }

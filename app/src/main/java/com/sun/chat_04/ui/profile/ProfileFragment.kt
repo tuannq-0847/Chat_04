@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -19,8 +20,6 @@ import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageCover
-import kotlinx.android.synthetic.main.fragment_profile.imageEditAvatar
-import kotlinx.android.synthetic.main.fragment_profile.imageEditCover
 import kotlinx.android.synthetic.main.fragment_profile.swipeRefreshUserProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
@@ -30,7 +29,7 @@ import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
-class ProfileFragment : Fragment(), ProfileContract.View {
+class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
 
     private lateinit var presenter: ProfileContract.Presenter
     private lateinit var user: User
@@ -46,9 +45,13 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        initComponent()
         getUserProfile()
-        handleUpdateUserImage(imageEditAvatar, Constants.REQUEST_CODE_AVATAR)
-        handleUpdateUserImage(imageEditCover, Constants.REQUEST_CODE_COVER)
+    }
+
+    private fun initComponent() {
+        imageAvatarProfile.setOnClickListener(this)
+        imageCover.setOnClickListener(this)
     }
 
     override fun onGetUserProfileSuccess(user: User) {
@@ -61,30 +64,31 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         Global.showMessage(context, resources.getString(R.string.no_internet))
     }
 
-    override fun onUpdateUserImageSuccess(uri: Uri, field: String) {
-        var imageView: ImageView? = null
-        when (field) {
-            Constants.PATH_AVATAR -> imageView = imageAvatarProfile
-            Constants.PATH_COVER -> imageView = imageCover
-        }
-        imageView?.let {
-            displayUserImage(uri, it)
-        }
+    override fun onUpdateUserAvatarSuccess(uri: Uri) {
+        displayUserImage(uri, imageAvatarProfile)
+        Global.showMessage(context, resources.getString(R.string.update_avatar_success))
+    }
+
+    override fun onUpdateUserCoverSuccess(uri: Uri) {
+        displayUserImage(uri, imageCover)
+        Global.showMessage(context, resources.getString(R.string.update_cover_success))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
         resultIntent?.data?.let { uri ->
             if (resultCode == RESULT_OK) {
-                var field = ""
                 when (requestCode) {
-                    Constants.REQUEST_CODE_AVATAR -> field = Constants.PATH_AVATAR
-                    Constants.REQUEST_CODE_COVER -> field = Constants.PATH_COVER
+                    Constants.REQUEST_CODE_AVATAR -> ::presenter.isInitialized.let { presenter.updateUserAvatar(uri) }
+                    Constants.REQUEST_CODE_COVER -> ::presenter.isInitialized.let { presenter.updateUserCover(uri) }
                 }
-                if (!field.isEmpty())
-                    ::presenter.isInitialized.let {
-                        presenter.updateUserImage(uri, field)
-                    }
             }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.imageAvatarProfile -> handleUpdateUserAvatar()
+            R.id.imageCover -> handleUpdateUserCover()
         }
     }
 
@@ -113,11 +117,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             textAgeProfile.text = user.birthday.toString()
             textUserBioProfile.text = user.bio
             textNameToolbarProfile.text = user.userName.toString()
-            when {
-                user.gender.equals(Constants.MALE) -> textGenderProfile.text = resources.getString(R.string.male)
-                user.gender.equals(Constants.FEMALE) -> textGenderProfile.text = resources.getString(R.string.female)
+            textGenderProfile.text = when (user.gender) {
+                Constants.MALE -> resources.getString(R.string.male)
+                else -> resources.getString(R.string.female)
             }
-            activity?.let {
+            context?.let {
                 Geocoder(it, Locale.getDefault())
                     .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
                     .get(0)
@@ -137,16 +141,24 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             .into(imageView)
     }
 
-    private fun handleUpdateUserImage(imageView: ImageView, requestCode: Int) {
-        imageView.setOnClickListener {
-            val intent = Intent()
-            intent.type = Constants.INTENT_GALLERY
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(
-                Intent.createChooser(intent, resources.getString(R.string.select_image)),
-                requestCode
-            )
-        }
+    private fun handleUpdateUserAvatar() {
+        val intent = Intent()
+        intent.type = Constants.INTENT_GALLERY
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(intent, resources.getString(R.string.select_image)),
+            Constants.REQUEST_CODE_AVATAR
+        )
+    }
+
+    private fun handleUpdateUserCover() {
+        val intent = Intent()
+        intent.type = Constants.INTENT_GALLERY
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(intent, resources.getString(R.string.select_image)),
+            Constants.REQUEST_CODE_COVER
+        )
     }
 
     private fun hideSwipeRefreshUserProfile() {
