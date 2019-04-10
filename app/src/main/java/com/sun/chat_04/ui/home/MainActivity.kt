@@ -62,7 +62,8 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
 
     private fun checkPermissions() {
         if (!Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) ||
-            !Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
+            !Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)
+        ) {
             ActivityCompat.requestPermissions(this, Global.PERMISSIONS, Constants.REQUEST_PERMISSION_CODE)
         } else {
             upgradeLocationUser()
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     private fun initPresenter() {
         homePresenter = HomePresenter(
             this,
-            UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase))
+            UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase, Global.firebaseStorage))
         )
     }
 

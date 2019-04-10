@@ -19,6 +19,7 @@ import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.home.MainActivity
 import com.sun.chat_04.ui.signup.SignUpActivity
 import com.sun.chat_04.util.Constants
+import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.activity_login.buttonLoginEmailPass
 import kotlinx.android.synthetic.main.activity_login.buttonLoginFace
 import kotlinx.android.synthetic.main.activity_login.buttonLoginFb
@@ -42,7 +43,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     private fun initComponents() {
         val auth = FirebaseAuth.getInstance()
         val firebaseDatabase = FirebaseDatabase.getInstance()
-        presenter = LoginPresenter(UserRepository(UserRemoteDataSource(auth, firebaseDatabase)), this)
+        presenter =
+            LoginPresenter(UserRepository(UserRemoteDataSource(auth, firebaseDatabase, Global.firebaseStorage)), this)
         buttonLoginFace.setOnClickListener(this)
         buttonLoginEmailPass.setOnClickListener(this)
         editPassLogin.addTextChangedListener(this)

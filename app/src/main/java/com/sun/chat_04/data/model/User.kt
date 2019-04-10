@@ -1,5 +1,9 @@
 package com.sun.chat_04.data.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class User(
     var idUser: String = "",
     var userName: String? = null,
@@ -11,4 +15,4 @@ data class User(
     var isOnline: Int = 0,
     var lgn: Double = 0.0,
     var lat: Double = 0.0
-)
+) : Parcelable

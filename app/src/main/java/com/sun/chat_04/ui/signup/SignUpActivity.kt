@@ -2,10 +2,7 @@ package com.sun.chat_04.ui.signup
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.pm.PackageManager
-
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.view.View
@@ -21,6 +18,7 @@ import com.sun.chat_04.R.layout
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.sign_up_screen.buttonSignUp
 import kotlinx.android.synthetic.main.sign_up_screen.editConfirmPassword
 import kotlinx.android.synthetic.main.sign_up_screen.editEmail
@@ -45,7 +43,10 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         setContentView(layout.sign_up_screen)
         val firebaseAuth = FirebaseAuth.getInstance()
         val firebaseDatabase = FirebaseDatabase.getInstance()
-        presenter = SignUpPresenter(this, UserRepository(UserRemoteDataSource(firebaseAuth, firebaseDatabase)))
+        presenter = SignUpPresenter(
+            this,
+            UserRepository(UserRemoteDataSource(firebaseAuth, firebaseDatabase, Global.firebaseStorage))
+        )
         initComponents()
     }
 

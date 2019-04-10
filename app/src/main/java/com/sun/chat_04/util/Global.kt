@@ -7,10 +7,12 @@ import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 object Global {
     val firebaseAuth = FirebaseAuth.getInstance()
     val firebaseDatabase = FirebaseDatabase.getInstance()
+    val firebaseStorage = FirebaseStorage.getInstance()
     val PERMISSIONS = arrayOf(permission.ACCESS_COARSE_LOCATION, permission.ACCESS_FINE_LOCATION)
 
     fun checkGrantedPermission(context: Context, index: Int): Boolean =

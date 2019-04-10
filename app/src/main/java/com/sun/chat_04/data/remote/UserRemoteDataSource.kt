@@ -1,8 +1,8 @@
 package com.sun.chat_04.data.remote
 
 import android.location.Location
+import android.net.Uri
 import com.facebook.AccessToken
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -10,12 +10,17 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
 
-class UserRemoteDataSource(private val auth: FirebaseAuth, private val database: FirebaseDatabase) :
+class UserRemoteDataSource(
+    private val auth: FirebaseAuth,
+    private val database: FirebaseDatabase,
+    private val firebaseStorage: FirebaseStorage
+) :
     UserDataSource.Remote {
 
     override fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>) {
@@ -125,10 +130,62 @@ class UserRemoteDataSource(private val auth: FirebaseAuth, private val database:
             })
     }
 
+    override fun insertUserImage(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>) {
+        val pathImage = "${userId}/${uri.path}"
+        val storageRef = firebaseStorage.getReference(pathImage)
+        storageRef.putFile(uri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl
+                    .addOnSuccessListener {
+                        insertUserImagePath(userId, it, field, callback)
+                    }
+                    .addOnFailureListener {
+                        callback.onFailure(it)
+                    }
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
+    }
+
+    override fun insertUserImagePath(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>) {
+        database.getReference(Constants.USERS)
+            .child(userId)
+            .child(field)
+            .setValue(uri.toString())
+            .addOnSuccessListener {
+                callback.onSuccessfuly(uri)
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
+    }
+
+    override fun editUserProfile(user: User, callback: RemoteCallback<Boolean>) {
+        try {
+            database.getReference(Constants.USERS)
+                .child(user.idUser)
+                .child(Constants.USER_NAME)
+                .setValue(user.userName)
+            database.getReference(Constants.USERS)
+                .child(user.idUser)
+                .child(Constants.USER_AGE)
+                .setValue(user.birthday)
+            database.getReference(Constants.USERS)
+                .child(user.idUser)
+                .child(Constants.USER_GENDER)
+                .setValue(user.gender)
+            callback.onSuccessfuly(true)
+        } catch (databaseException: DatabaseException) {
+            callback.onFailure(databaseException)
+        }
+    }
+
     companion object {
         private const val USERS = "Users"
         private const val USER_NAME = "userName"
         private const val LATITUDE = "lat"
         private const val LONGITUDE = "lgn"
+        private const val USER_ID = "idUser"
     }
 }
