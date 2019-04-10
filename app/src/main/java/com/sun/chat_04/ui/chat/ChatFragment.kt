@@ -22,8 +22,6 @@ import kotlinx.android.synthetic.main.fragment_chat_message.editMessage
 import kotlinx.android.synthetic.main.fragment_chat_message.imageAdd
 import kotlinx.android.synthetic.main.fragment_chat_message.recyclerChat
 import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
-import kotlinx.android.synthetic.main.items_image_rec.progressImageRec
-import kotlinx.android.synthetic.main.items_image_send.progressImageSend
 
 class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
 
@@ -38,8 +36,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
             }
         }
 
-        const val PICK_IMAGE = 3000
-        const val CHOOSE_IMAGE = "Choose Image"
+        const val REQUEST_CODE_PICK_IMAGE = 3000
         const val INDEX_MESSAGES_1 = 1
     }
 
@@ -72,7 +69,13 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                 val intent = Intent()
                 intent.action = android.content.Intent.ACTION_GET_CONTENT
                 intent.type = Constants.IMAGE_GALERY
-                startActivityForResult(Intent.createChooser(intent, CHOOSE_IMAGE), PICK_IMAGE)
+                startActivityForResult(
+                    Intent.createChooser(
+                        intent,
+                        resources.getString(R.string.choose_image)
+                    ),
+                    REQUEST_CODE_PICK_IMAGE
+                )
             }
         }
     }
@@ -92,16 +95,18 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
         initComponents()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        data ?: return
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultIntent)
+        resultIntent ?: return
         if (resultCode == RESULT_OK)
-            if (requestCode == PICK_IMAGE) {
-                val uriImage = data.data
-                val inputStream = activity?.contentResolver?.openInputStream(uriImage)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                val message = Message(Constants.NONE, type = Constants.IMAGE_MESSAGE, contents = uriImage.toString())
-                presenter.handleSendMessage(message, bitmap)
+            if (requestCode == REQUEST_CODE_PICK_IMAGE) {
+                val uriImage = resultIntent.data
+                uriImage?.let {
+                    val inputStream = activity?.contentResolver?.openInputStream(it)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val message = Message(Constants.NONE, type = Constants.IMAGE_MESSAGE, contents = it.toString())
+                    presenter.handleSendMessage(message, bitmap)
+                }
             }
     }
 

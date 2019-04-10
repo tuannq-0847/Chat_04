@@ -34,25 +34,26 @@ class MessageRemoteDataSource(
         val idMessage = database.reference.child(userSendRef)
             .child(userRecRef).push().key
         if (message.type == Constants.TEXT_MESSAGE) {
-            updateDatabase(null, Constants.TEXT_MESSAGE, message, idMessage.toString())
+            updateMessageDetail(null, Constants.TEXT_MESSAGE, message, idMessage.toString())
         } else {
             val uriImage = Uri.parse(message.contents)
-            val baos = ByteArrayOutputStream()
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, baos)
-            val byteArray = baos.toByteArray()
+            val outputStream = ByteArrayOutputStream()
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
+            val byteArray = outputStream.toByteArray()
             val pathImage = DateFormat.getDateTimeInstance().format(Date())
             uriImage?.let {
                 storage.reference.child(Constants.MESSAGES)
                     .child(pathImage)
                     .putBytes(byteArray)
                     .addOnSuccessListener {
-                        baos.close()
+                        outputStream.close()
                         callback.onSuccessfuly(true)
                         storage.reference.child(Constants.MESSAGES)
-                            .child(pathImage).downloadUrl.addOnSuccessListener { uri ->
-
-                            updateDatabase(uri.toString(), Constants.IMAGE_MESSAGE, message, idMessage.toString())
+                            .child(pathImage).downloadUrl
+                            .addOnSuccessListener { uri ->
+                            updateMessageDetail(uri.toString(), Constants.IMAGE_MESSAGE, message, idMessage.toString())
                         }
+                            .addOnFailureListener { callback.onFailure(it) }
                     }
                     .addOnFailureListener { callback.onFailure(it) }
 
@@ -60,7 +61,7 @@ class MessageRemoteDataSource(
         }
     }
 
-    private fun updateDatabase(uri: String?, type: String, message: Message, idMessage: String) {
+    private fun updateMessageDetail(uri: String?, type: String, message: Message, idMessage: String) {
         val bodyMessage = HashMap<String, String>()
         bodyMessage[Constants.FROM] = uid
         bodyMessage[Constants.ID_MESSAGE] = idMessage

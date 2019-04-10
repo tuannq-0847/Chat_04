@@ -37,7 +37,6 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         presenter = FriendPresenter(
             this, FriendRepository(
                 FriendRemoteDataSource(
-                    Global.firebaseAuth,
                     Global.firebaseDatabase
                 )
             )
@@ -45,13 +44,6 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
         if (::presenter.isInitialized) {
             presenter.getFriends()
         }
-        presenter = FriendPresenter(
-            this, FriendRepository(
-                FriendRemoteDataSource(
-                    Global.firebaseAuth, Global.firebaseDatabase
-                )
-            )
-        )
         editSearch.setOnClickListener(this)
     }
 
