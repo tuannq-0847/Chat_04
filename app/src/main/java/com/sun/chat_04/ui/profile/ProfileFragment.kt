@@ -6,6 +6,8 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -20,16 +22,20 @@ import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageCover
+import kotlinx.android.synthetic.main.fragment_profile.imageEditAvatar
+import kotlinx.android.synthetic.main.fragment_profile.imageEditCover
+import kotlinx.android.synthetic.main.fragment_profile.imageEditProfile
 import kotlinx.android.synthetic.main.fragment_profile.swipeRefreshUserProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
 import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
 import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
+import kotlinx.android.synthetic.main.toolbar_profile.imageSignOutProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
-class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
+class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRefreshListener {
 
     private lateinit var presenter: ProfileContract.Presenter
     private lateinit var user: User
@@ -50,8 +56,11 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
     }
 
     private fun initComponent() {
-        imageAvatarProfile.setOnClickListener(this)
-        imageCover.setOnClickListener(this)
+        imageEditAvatar.setOnClickListener(this)
+        imageEditCover.setOnClickListener(this)
+        imageEditProfile.setOnClickListener(this)
+        imageSignOutProfile.setOnClickListener(this)
+        swipeRefreshUserProfile.setOnRefreshListener(this)
     }
 
     override fun onGetUserProfileSuccess(user: User) {
@@ -87,9 +96,15 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.imageAvatarProfile -> handleUpdateUserAvatar()
-            R.id.imageCover -> handleUpdateUserCover()
+            R.id.imageEditAvatar -> handleUpdateUserAvatar()
+            R.id.imageEditCover -> handleUpdateUserCover()
+            R.id.imageSignOutProfile -> handleSignOut()
+            R.id.imageEditProfile -> handleEditUserProfile()
         }
+    }
+
+    override fun onRefresh() {
+        getUserProfile()
     }
 
     private fun initPresenter() {
@@ -159,6 +174,28 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
             Intent.createChooser(intent, resources.getString(R.string.select_image)),
             Constants.REQUEST_CODE_COVER
         )
+    }
+
+    private fun handleEditUserProfile() {
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.add(R.id.parentLayout, EditProfileFragment.newIntance(user))
+            ?.addToBackStack("")
+            ?.commit()
+    }
+
+    private fun handleSignOut() {
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle(resources.getString(R.string.sign_out))
+                .setMessage(resources.getString(R.string.sign_out_notify))
+                .setPositiveButton(resources.getString(R.string.yes)) { dialog, which ->
+                    Global.firebaseAuth.signOut()
+                    activity?.finish()
+                }
+                .setNeutralButton(resources.getString(R.string.no)) { dialog, which -> }
+                .show()
+        }
     }
 
     private fun hideSwipeRefreshUserProfile() {

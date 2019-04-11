@@ -199,6 +199,7 @@
                 app:layout_constraintGuide_percent="0.35" />
 
         </android.support.constraint.ConstraintLayout>
+
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
 

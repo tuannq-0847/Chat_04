@@ -175,6 +175,10 @@ class UserRemoteDataSource(
                 .child(user.idUser)
                 .child(Constants.USER_GENDER)
                 .setValue(user.gender)
+            database.getReference(Constants.USERS)
+                .child(user.idUser)
+                .child(Constants.USER_BIO)
+                .setValue(user.bio)
             callback.onSuccessfuly(true)
         } catch (databaseException: DatabaseException) {
             callback.onFailure(databaseException)

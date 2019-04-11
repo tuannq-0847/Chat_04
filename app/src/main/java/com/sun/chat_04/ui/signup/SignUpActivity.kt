@@ -2,6 +2,7 @@ package com.sun.chat_04.ui.signup
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils
