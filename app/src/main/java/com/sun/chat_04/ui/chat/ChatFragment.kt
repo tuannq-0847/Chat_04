@@ -2,7 +2,6 @@ package com.sun.chat_04.ui.chat
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -59,9 +58,10 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.buttonSend -> {
-                val message = Message(Constants.NONE, editMessage.text.toString(), type = Constants.TEXT_MESSAGE)
+                val message =
+                    Message(Constants.NONE, contents = editMessage.text.toString(), type = Constants.TEXT_MESSAGE)
                 if (::presenter.isInitialized) {
-                    presenter.handleSendMessage(message, null)
+                    presenter.handleMessage(message)
                     editMessage.setText(Constants.NONE)
                 }
             }
@@ -103,9 +103,15 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                 val uriImage = resultIntent.data
                 uriImage?.let {
                     val inputStream = activity?.contentResolver?.openInputStream(it)
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    val message = Message(Constants.NONE, type = Constants.IMAGE_MESSAGE, contents = it.toString())
-                    presenter.handleSendMessage(message,bitmap)
+                    if (::presenter.isInitialized) {
+                        val message = Message(
+                            Constants.NONE,
+                            type = Constants.IMAGE_MESSAGE,
+                            contents = it.toString(),
+                            bytes = presenter.compressBitmap(inputStream)
+                        )
+                        presenter.handleMessage(message)
+                    }
                 }
             }
     }
@@ -137,7 +143,6 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                     presenter.getMessages()
                 }
             }
-
         }
     }
 }

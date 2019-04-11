@@ -1,11 +1,9 @@
 package com.sun.chat_04.ui.chat
 
-import android.graphics.Bitmap
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.ui.BasePresenter
 import com.sun.chat_04.ui.BaseView
+import java.io.InputStream
 
 interface ChatContract {
     interface View : BaseView {
@@ -16,7 +14,8 @@ interface ChatContract {
     }
 
     interface Presenter : BasePresenter {
+        fun compressBitmap(inputStream: InputStream?): ByteArray
         fun getMessages()
-        fun handleSendMessage(message: Message, bitmap: Bitmap?)
+        fun handleMessage(message: Message)
     }
 }

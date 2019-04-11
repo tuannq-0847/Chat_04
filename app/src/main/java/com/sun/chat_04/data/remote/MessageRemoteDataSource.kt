@@ -1,6 +1,5 @@
 package com.sun.chat_04.data.remote
 
-import android.graphics.Bitmap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,8 +11,6 @@ import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.data.repositories.MessageDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
-import java.io.ByteArrayOutputStream
-import java.lang.Exception
 import java.text.DateFormat
 import java.util.Date
 
@@ -30,53 +27,72 @@ class MessageRemoteDataSource(
     private val userSendRef = "${Constants.MESSAGES}/$uid/$uidUserRec"
     private val userRecRef = "${Constants.MESSAGES}/$uidUserRec/$uid"
 
-    override fun handleMessage(message: Message, bitmap: Bitmap?, callback: RemoteCallback<Boolean>) {
-        val idMessage = database.reference.child(userSendRef)
-            .child(userRecRef).push().key
-        if (message.type == Constants.TEXT_MESSAGE) {
-            insertMessages(
-                idMessage?.let {
-                    Message(it, message.contents, uid, Constants.TEXT_MESSAGE)
-                }
-
-            )
-        } else {
-            uploadImage(bitmap, object : RemoteCallback<String> {
-                override fun onSuccessfuly(data: String) {
-                    insertMessages(
-                        idMessage?.let {
-                            Message(it, data, uid, Constants.IMAGE_MESSAGE)
+    override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
+        val idMessage = generateIdMesasge()
+        val bytes = message.bytes
+        uploadImage(bytes, object : RemoteCallback<String> {
+            override fun onSuccessfuly(data: String) {
+                insertMessages(
+                    idMessage?.let {
+                        Message(it, data, uid, Constants.IMAGE_MESSAGE)
+                    }, object : RemoteCallback<Boolean> {
+                        override fun onSuccessfuly(data: Boolean) {
+                            callback.onSuccessfuly(true)
                         }
-                    )
+
+                        override fun onFailure(exception: Exception?) {
+                            callback.onFailure(exception)
+                        }
+                    }
+                )
+            }
+
+            override fun onFailure(exception: Exception?) {
+                callback.onFailure(exception)
+            }
+        })
+    }
+
+    private fun generateIdMesasge(): String? {
+        return database.reference.child(userSendRef)
+            .child(userRecRef).push().key
+    }
+
+    override fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>) {
+        val idMessage = generateIdMesasge()
+        insertMessages(
+            idMessage?.let {
+                Message(it, message.contents, uid, Constants.TEXT_MESSAGE)
+            }, object : RemoteCallback<Boolean> {
+                override fun onSuccessfuly(data: Boolean) {
+                    callback.onSuccessfuly(true)
                 }
 
                 override fun onFailure(exception: Exception?) {
                     callback.onFailure(exception)
                 }
-            })
+            }
+        )
+    }
+
+    private fun uploadImage(bytes: ByteArray?, callback: RemoteCallback<String>) {
+        val pathImage = DateFormat.getDateTimeInstance().format(Date())
+        val ref = storage.reference.child(Constants.MESSAGES)
+            .child(pathImage)
+        bytes?.let {
+            ref.putBytes(bytes)
+                .addOnSuccessListener {
+                    ref.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            callback.onSuccessfuly(uri.toString())
+                        }
+                        .addOnFailureListener { callback.onFailure(it) }
+                }
+                .addOnFailureListener { callback.onFailure(it) }
         }
     }
 
-    private fun uploadImage(bitmap: Bitmap?, callback: RemoteCallback<String>) {
-        val pathImage = DateFormat.getDateTimeInstance().format(Date())
-        val outputStream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
-        val bytes = outputStream.toByteArray()
-        val ref = storage.reference.child(Constants.MESSAGES)
-            .child(pathImage)
-        ref.putBytes(bytes)
-            .addOnSuccessListener {
-                outputStream.close()
-                ref.downloadUrl
-                    .addOnSuccessListener { uri ->
-                        callback.onSuccessfuly(uri.toString())
-                    }
-                    .addOnFailureListener { callback.onFailure(it) }
-            }
-            .addOnFailureListener { callback.onFailure(it) }
-    }
-
-    private fun insertMessages(message: Message?) {
+    private fun insertMessages(message: Message?, callback: RemoteCallback<Boolean>) {
         message?.let {
             val bodyMessage = HashMap<String, String>()
             bodyMessage[Constants.FROM] = uid
@@ -87,6 +103,8 @@ class MessageRemoteDataSource(
             detailMessage["$userRecRef/${it.id}"] = bodyMessage
             detailMessage["$userSendRef/${it.id}"] = bodyMessage
             database.reference.updateChildren(detailMessage)
+                .addOnSuccessListener { callback.onSuccessfuly(true) }
+                .addOnFailureListener { callback.onFailure(it) }
         }
     }
 
@@ -109,9 +127,5 @@ class MessageRemoteDataSource(
                     }
                 }
             })
-    }
-
-    companion object {
-        const val IMAGE_QUALITY = 10
     }
 }

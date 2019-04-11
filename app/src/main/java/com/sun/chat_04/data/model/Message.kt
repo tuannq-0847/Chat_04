@@ -4,5 +4,6 @@ data class Message(
     val id: String = "",
     var contents: String = "",
     var from: String = "",
-    var type: String = ""
+    var type: String = "",
+    var bytes: ByteArray? = null
 )

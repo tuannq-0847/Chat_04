@@ -45,4 +45,5 @@ object Constants {
     const val IMAGE_USER_REC = 2
     const val IMAGE_USER_SEND = 3
     const val TYPE = "type"
+    const val IMAGE_QUALITY = 10
 }
