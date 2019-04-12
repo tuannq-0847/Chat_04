@@ -97,23 +97,22 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultIntent)
-        resultIntent ?: return
-        if (resultCode == RESULT_OK)
-            if (requestCode == REQUEST_CODE_PICK_IMAGE) {
-                val uriImage = resultIntent.data
-                uriImage?.let {
-                    val inputStream = activity?.contentResolver?.openInputStream(it)
-                    if (::presenter.isInitialized) {
-                        val message = Message(
-                            Constants.NONE,
-                            type = Constants.IMAGE_MESSAGE,
-                            contents = it.toString(),
-                            bytes = presenter.compressBitmap(inputStream)
-                        )
-                        presenter.handleMessage(message)
-                    }
-                }
+        if (resultCode != RESULT_OK || requestCode != REQUEST_CODE_PICK_IMAGE || resultIntent == null) {
+            return
+        }
+        val uriImage = resultIntent.data
+        uriImage?.let {
+            val inputStream = activity?.contentResolver?.openInputStream(it)
+            if (::presenter.isInitialized) {
+                val message = Message(
+                    Constants.NONE,
+                    type = Constants.IMAGE_MESSAGE,
+                    contents = it.toString(),
+                    bytes = presenter.compressBitmap(inputStream)
+                )
+                presenter.handleMessage(message)
             }
+        }
     }
 
     private fun initComponents() {

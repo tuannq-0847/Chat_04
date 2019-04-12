@@ -35,15 +35,7 @@ class MessageRemoteDataSource(
                 insertMessages(
                     idMessage?.let {
                         Message(it, data, uid, Constants.IMAGE_MESSAGE)
-                    }, object : RemoteCallback<Boolean> {
-                        override fun onSuccessfuly(data: Boolean) {
-                            callback.onSuccessfuly(true)
-                        }
-
-                        override fun onFailure(exception: Exception?) {
-                            callback.onFailure(exception)
-                        }
-                    }
+                    }, callback
                 )
             }
 
@@ -63,15 +55,7 @@ class MessageRemoteDataSource(
         insertMessages(
             idMessage?.let {
                 Message(it, message.contents, uid, Constants.TEXT_MESSAGE)
-            }, object : RemoteCallback<Boolean> {
-                override fun onSuccessfuly(data: Boolean) {
-                    callback.onSuccessfuly(true)
-                }
-
-                override fun onFailure(exception: Exception?) {
-                    callback.onFailure(exception)
-                }
-            }
+            }, callback
         )
     }
 

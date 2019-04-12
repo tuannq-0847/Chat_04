@@ -36,26 +36,29 @@ class ChatPresenter(
     override fun handleMessage(
         message: Message
     ) {
-        if (message.type == Constants.TEXT_MESSAGE) {
-            repository.updateTextMessage(message, object : RemoteCallback<Boolean> {
-                override fun onSuccessfuly(data: Boolean) {
-                    view.insertMessageSuccessfully()
-                }
+        when (message.type) {
+            Constants.TEXT_MESSAGE -> repository.updateTextMessage(
+                message,
+                object : RemoteCallback<Boolean> {
+                    override fun onSuccessfuly(data: Boolean) {
+                        view.insertMessageSuccessfully()
+                    }
 
-                override fun onFailure(exception: Exception?) {
-                    view.insertMessageFailure(exception)
-                }
-            })
-        } else if (message.type == Constants.IMAGE_MESSAGE) {
-            repository.updateImageMessage(message, object : RemoteCallback<Boolean> {
-                override fun onSuccessfuly(data: Boolean) {
-                    view.insertMessageSuccessfully()
-                }
+                    override fun onFailure(exception: Exception?) {
+                        view.insertMessageFailure(exception)
+                    }
+                })
+            Constants.IMAGE_MESSAGE -> repository.updateImageMessage(
+                message,
+                object : RemoteCallback<Boolean> {
+                    override fun onSuccessfuly(data: Boolean) {
+                        view.insertMessageSuccessfully()
+                    }
 
-                override fun onFailure(exception: Exception?) {
-                    view.insertMessageFailure(exception)
-                }
-            })
+                    override fun onFailure(exception: Exception?) {
+                        view.insertMessageFailure(exception)
+                    }
+                })
         }
     }
 }

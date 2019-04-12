@@ -24,23 +24,23 @@ class ChatAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_rec, parent, false)
         return when (viewType) {
-            Constants.USER_SEND -> {
+            USER_SEND -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_send, parent, false)
                 SendViewHolder(view)
             }
-            Constants.IMAGE_USER_SEND -> {
+            IMAGE_USER_SEND -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_image_send, parent, false)
                 SendViewHolderImage(view)
             }
-            Constants.IMAGE_USER_REC -> {
+            IMAGE_USER_REC -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_image_rec, parent, false)
                 RecViewHolderImage(view)
             }
-            Constants.USER_REC -> {
+            USER_REC -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.items_chat_rec, parent, false)
                 RecViewHolder(view)
             }
-            else -> return BaseViewHolder(view)
+            else -> return RecViewHolder(view)
         }
     }
 
@@ -52,18 +52,18 @@ class ChatAdapter(
         return when {
             messages[position].from == idUser
                     && messages[position].type == Constants.TEXT_MESSAGE
-            -> Constants.USER_SEND
+            -> USER_SEND
             messages[position].from != idUser
                     && messages[position].type == Constants.TEXT_MESSAGE
-            -> Constants.USER_REC
+            -> USER_REC
             messages[position].from != idUser
                     && messages[position].type == Constants.IMAGE_MESSAGE
-            -> Constants.IMAGE_USER_REC
+            -> IMAGE_USER_REC
             messages[position].from == idUser
                     && messages[position].type == Constants.IMAGE_MESSAGE
-            -> Constants.IMAGE_USER_SEND
+            -> IMAGE_USER_SEND
             else
-            -> Constants.USER_REC
+            -> USER_REC
         }
     }
 
@@ -74,7 +74,6 @@ class ChatAdapter(
 
     inner class SendViewHolder(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
-            super.onBind(message)
             with(itemView) {
                 textMessageSend.text = message.contents
             }
@@ -83,7 +82,6 @@ class ChatAdapter(
 
     inner class RecViewHolder(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
-            super.onBind(message)
             with(itemView) {
                 textMessageReceiver.text = message.contents
             }
@@ -92,12 +90,11 @@ class ChatAdapter(
 
     inner class SendViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
-            super.onBind(message)
             with(itemView) {
-                com.bumptech.glide.Glide.with(context)
+                Glide.with(context)
                     .load(message.contents)
                     .centerCrop()
-                    .placeholder(com.sun.chat_04.R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.ic_launcher_background)
                     .into(imageSend)
             }
         }
@@ -105,7 +102,6 @@ class ChatAdapter(
 
     inner class RecViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
-            super.onBind(message)
             with(itemView) {
                 Glide.with(context)
                     .load(message.contents)
@@ -118,9 +114,13 @@ class ChatAdapter(
     }
 
     companion object {
-        open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            open fun onBind(message: Message) {
-            }
+        const val USER_REC = 1
+        const val USER_SEND = 0
+        const val IMAGE_USER_REC = 2
+        const val IMAGE_USER_SEND = 3
+
+        abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            abstract fun onBind(message: Message)
         }
     }
 }
