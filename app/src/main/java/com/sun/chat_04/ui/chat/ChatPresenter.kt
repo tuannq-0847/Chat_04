@@ -1,8 +1,13 @@
 package com.sun.chat_04.ui.chat
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.data.repositories.MessageRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
+import com.sun.chat_04.util.Constants
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class ChatPresenter(
     private val view: ChatContract.View,
@@ -21,15 +26,39 @@ class ChatPresenter(
         })
     }
 
-    override fun handleSendMessage(
+    override fun compressBitmap(inputStream: InputStream?): ByteArray {
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val outputStream = ByteArrayOutputStream()
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, Constants.IMAGE_QUALITY, outputStream)
+        return outputStream.toByteArray()
+    }
+
+    override fun handleMessage(
         message: Message
     ) {
-        repository.insertMessage(message, object : RemoteCallback<Boolean> {
-            override fun onSuccessfuly(data: Boolean) {
-            }
+        when (message.type) {
+            Constants.TEXT_MESSAGE -> repository.updateTextMessage(
+                message,
+                object : RemoteCallback<Boolean> {
+                    override fun onSuccessfuly(data: Boolean) {
+                        view.insertMessageSuccessfully()
+                    }
 
-            override fun onFailure(exception: Exception?) {
-            }
-        })
+                    override fun onFailure(exception: Exception?) {
+                        view.insertMessageFailure(exception)
+                    }
+                })
+            Constants.IMAGE_MESSAGE -> repository.updateImageMessage(
+                message,
+                object : RemoteCallback<Boolean> {
+                    override fun onSuccessfuly(data: Boolean) {
+                        view.insertMessageSuccessfully()
+                    }
+
+                    override fun onFailure(exception: Exception?) {
+                        view.insertMessageFailure(exception)
+                    }
+                })
+        }
     }
 }

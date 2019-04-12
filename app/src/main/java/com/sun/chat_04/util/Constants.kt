@@ -22,8 +22,6 @@ object Constants {
     const val FROM = "from"
     const val CONTENTS = "contents"
     const val ID_MESSAGE = "idmessage"
-    const val USER_REC = 1
-    const val USER_SEND = 0
     const val FRIENDS = "Friends"
     const val PATH_AVATAR = "pathAvatar"
     const val PATH_COVER = "pathBackground"
@@ -39,4 +37,9 @@ object Constants {
     const val GENDER_INVALID = "-1"
     const val MAX_ADDRESS = 1
     const val ARGUMENT_USER = "ARGUMENT_USER"
+    const val IMAGE_GALERY = "image/*"
+    const val TEXT_MESSAGE = "text"
+    const val IMAGE_MESSAGE = "image"
+    const val TYPE = "type"
+    const val IMAGE_QUALITY = 10
 }

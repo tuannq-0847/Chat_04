@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.items_friends.view.textUserRec
 
 class FriendAdapter(
     private val friends: ArrayList<Friend>,
-    private val listener: (massage: Friend) -> Unit
+    private val listener: (friend: Friend) -> Unit
 ) :
     Adapter<ViewHolder>() {
 

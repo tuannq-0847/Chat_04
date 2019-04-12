@@ -8,12 +8,16 @@ class MessageRepository(
     private val remoteDataSource: MessageRemoteDataSource
 ) : MessageDataSource.Remote {
 
+    override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
+        remoteDataSource.updateImageMessage(message, callback)
+    }
+
+    override fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>) {
+        remoteDataSource.updateTextMessage(message, callback)
+    }
 
     override fun getMessages(callback: RemoteCallback<ArrayList<Message>>) {
         remoteDataSource.getMessages(callback)
     }
-
-    override fun insertMessage(message: Message, callback: RemoteCallback<Boolean>) {
-        remoteDataSource.insertMessage(message, callback)
-    }
 }
+

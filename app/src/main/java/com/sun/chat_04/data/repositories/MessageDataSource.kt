@@ -5,7 +5,8 @@ import com.sun.chat_04.ui.signup.RemoteCallback
 
 interface MessageDataSource {
     interface Remote {
-        fun insertMessage(message: Message, callback: RemoteCallback<Boolean>)
+        fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>)
+        fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>)
         fun getMessages(callback: RemoteCallback<ArrayList<Message>>)
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dp_8">
+
+    <ImageView
+        android:id="@+id/imageUserRec"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
+        android:src="@drawable/avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageRec"
+        android:layout_width="@dimen/dp_140"
+        android:layout_height="@dimen/dp_200"
+        android:layout_marginStart="@dimen/dp_8"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toRightOf="@+id/imageUserRec"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

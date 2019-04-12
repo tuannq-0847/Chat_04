@@ -43,7 +43,7 @@
     <string name="bad_email">The email address is badly formatted.</string>
     <string name="user_not_found">There is no user record corresponding to this identifier. The user may have been deleted.</string>
     <string name="other_error">unknown error</string>
-
+    <string name="choose_image">Choose Image</string>
     <string name="discovery_search">Tìm kiếm bạn bè</string>
     <string name="discovery_around_here">Tìm kiếm xung quanh</string>
     <string name="requireGPS">Turn on GPS and Internet</string>
