@@ -68,4 +68,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="bio">Giới thiệu</string>
+    <string name="cancel">Quay lại</string>
+    <string name="invite_more_friends">Kết bạn</string>
+    <string name="button_chat">Nhắn tin</string>
+    <string name="cancel_invite_more_friends">Hủy</string>
 </resources>

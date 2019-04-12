@@ -14,7 +14,7 @@ interface FriendDetailContract {
     interface Presenter {
         fun checkIsFriend(friendId: String)
 
-        fun checkInvitedMoreFriends(friendId: String)
+        fun checkInvitedMoreFriends(userId: String, friendId: String)
 
         fun inviteMoreFriends(friendId: String)
 
