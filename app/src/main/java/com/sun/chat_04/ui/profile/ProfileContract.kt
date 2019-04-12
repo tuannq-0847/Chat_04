@@ -21,5 +21,7 @@ interface ProfileContract {
         fun updateUserAvatar(uri: Uri)
 
         fun updateUserCover(uri: Uri)
+
+        fun updateUserStatus(online: Int)
     }
 }

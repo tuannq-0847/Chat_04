@@ -9,7 +9,6 @@ import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 
 class ProfilePresenter(val view: ProfileContract.View, val repository: UserRepository) : ProfileContract.Presenter {
-
     override fun getUserProfile() {
         val userId = Global.firebaseAuth.currentUser?.uid.toString()
         if (!userId.isEmpty()) {
@@ -59,5 +58,12 @@ class ProfilePresenter(val view: ProfileContract.View, val repository: UserRepos
             return
         }
         view.onFailure(DatabaseException(""))
+    }
+
+    override fun updateUserStatus(online: Int) {
+        val userId = Global.firebaseAuth.currentUser?.uid.toString()
+        if (!userId.isEmpty()) {
+            repository.updateUserStatus(userId, online)
+        }
     }
 }

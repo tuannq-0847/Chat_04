@@ -87,7 +87,17 @@ class MessageRemoteDataSource(
             detailMessage["$userRecRef/${it.id}"] = bodyMessage
             detailMessage["$userSendRef/${it.id}"] = bodyMessage
             database.reference.updateChildren(detailMessage)
-                .addOnSuccessListener { callback.onSuccessfuly(true) }
+                .addOnSuccessListener {
+                    callback.onSuccessfuly(true)
+                    val friendSendRef = "${Constants.FRIENDS}/$uid/$uidUserRec"
+                    val friendRecRef = "${Constants.FRIENDS}/$uidUserRec/$uid"
+                    database.reference.child(friendSendRef)
+                        .child(Constants.CONTENTS)
+                        .setValue(message.contents)
+                    database.reference.child(friendRecRef)
+                        .child(Constants.CONTENTS)
+                        .setValue(message.contents)
+                }
                 .addOnFailureListener { callback.onFailure(it) }
         }
     }

@@ -37,5 +37,7 @@ interface UserDataSource {
         fun inviteMoreFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
 
         fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
+
+        fun updateUserStatus(userId: String, isOnline: Int)
     }
 }

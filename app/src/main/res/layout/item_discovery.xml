@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/textNameUserDiscovery"
-        style="@style/SignUpToolBar"
+        style="@style/ProfileStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/color_white"

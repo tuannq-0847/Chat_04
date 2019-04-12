@@ -137,12 +137,14 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 else -> resources.getString(R.string.female)
             }
             context?.let {
-                Geocoder(it, Locale.getDefault())
-                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
-                    .get(0)
-                    .locality.let {
-                    textAddressProfile.text = it
+                if (user.lat != 0.0 && user.lgn != 0.0) {
+                    Geocoder(it, Locale.getDefault())
+                        .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0]
+                        .locality.let {
+                        textAddressProfile.text = it
+                    }
                 }
+
             }
             hideSwipeRefreshUserProfile()
         }
@@ -191,6 +193,8 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 .setMessage(resources.getString(R.string.sign_out_notify))
                 .setPositiveButton(resources.getString(R.string.yes)) { dialog, which ->
                     Global.firebaseAuth.signOut()
+                    if (::presenter.isInitialized)
+                    presenter.updateUserStatus(Constants.OFFLINE)
                     activity?.finish()
                 }
                 .setNeutralButton(resources.getString(R.string.no)) { dialog, which -> }

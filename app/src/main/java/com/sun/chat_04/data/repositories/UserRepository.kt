@@ -62,4 +62,8 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
     override fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
         remoteDataSource.cancelInviteMoreFriends(userId, friendId, callback)
     }
+
+    override fun updateUserStatus(userId: String, isOnline: Int) {
+        remoteDataSource.updateUserStatus(userId, isOnline)
+    }
 }

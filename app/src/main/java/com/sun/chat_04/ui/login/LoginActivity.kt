@@ -37,7 +37,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_login)
         initComponents()
+        checkLoginOrNot()
         initLoginFacebook()
+    }
+
+    private fun checkLoginOrNot() {
+        val user = Global.firebaseAuth.currentUser
+        if (user != null) {
+            gotoHomeActivity()
+        }
     }
 
     private fun initComponents() {

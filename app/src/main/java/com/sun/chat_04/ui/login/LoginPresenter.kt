@@ -1,26 +1,12 @@
 package com.sun.chat_04.ui.login
 
-import android.app.usage.ConfigurationStats
-import android.util.Log
-import com.facebook.AccessToken
-import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import com.sun.chat_04.R
-import com.sun.chat_04.data.model.User
-import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
-import com.sun.chat_04.ui.signup.SignUpContract
 import com.sun.chat_04.util.Constants
-import java.lang.Exception
 
 class LoginPresenter(
     private val repository: UserRepository,
