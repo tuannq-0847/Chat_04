@@ -1,4 +1,4 @@
-package com.sun.chat_04.ui.userdetail
+package com.sun.chat_04.ui.frienddetail
 
 import android.location.Geocoder
 import android.net.Uri
@@ -26,9 +26,9 @@ import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
-class UserDetailFragment : Fragment(), UserDetailContract.View, OnClickListener {
+class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListener {
 
-    private lateinit var presenter: UserDetailContract.Presenter
+    private lateinit var presenter: FriendDetailContract.Presenter
     private val user: User by lazy { arguments?.getParcelable(Constants.ARGUMENT_FRIENDS) as User }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,30 +47,27 @@ class UserDetailFragment : Fragment(), UserDetailContract.View, OnClickListener 
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.buttonAddFriend -> ::presenter.isInitialized.let { presenter.inviteAddFriend(user.idUser) }
+            R.id.buttonAddFriend -> ::presenter.isInitialized.let { presenter.inviteMoreFriends(user.idUser) }
             R.id.buttonBack -> handleBackPrevios()
             R.id.imageBackProfile -> handleBackPrevios()
         }
     }
 
-    override fun isFriend(result: Boolean) {
-        // is friend
+    override fun showButtonChat() {
     }
 
-    override fun isInvitedAddFriend(result: Boolean) {
-        // Invited
+    override fun showButtonInviteMoreFriends() {
+    }
+
+    override fun showButtonCancelInviteMoreFriends() {
     }
 
     override fun onFailure(exception: Exception?) {
         // fail
     }
 
-    override fun onCancelInviteAddFriendSuccess() {
-        // Cancel invite add friend
-    }
-
     private fun initPresenter() {
-        presenter = UserDetailPresenter(
+        presenter = FriendDetailPresenter(
             this,
             UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase, Global.firebaseStorage))
         )
@@ -110,7 +107,7 @@ class UserDetailFragment : Fragment(), UserDetailContract.View, OnClickListener 
 
     companion object {
         @JvmStatic
-        fun newInstance(user: User) = UserDetailFragment().apply {
+        fun newInstance(user: User) = FriendDetailFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(Constants.ARGUMENT_FRIENDS, user)
             }

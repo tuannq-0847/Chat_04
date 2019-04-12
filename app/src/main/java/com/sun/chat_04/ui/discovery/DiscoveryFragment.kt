@@ -13,7 +13,7 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
-import com.sun.chat_04.ui.userdetail.UserDetailFragment
+import com.sun.chat_04.ui.frienddetail.FriendDetailFragment
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_discovery.groupAroundHere
@@ -105,7 +105,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
     private fun userClickListener(user: User) {
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.add(R.id.parentLayout, UserDetailFragment.newInstance(user))
+            ?.add(R.id.parentLayout, FriendDetailFragment.newInstance(user))
             ?.addToBackStack("")
             ?.commit()
     }
