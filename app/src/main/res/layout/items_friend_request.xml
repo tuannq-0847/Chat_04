@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageAvatarUserRequest"
+        android:layout_width="@dimen/dp_135"
+        android:layout_height="@dimen/dp_135"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textNameUserRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginStart="@dimen/dp_16"
+        android:textColor="@color/color_black"
+        app:layout_constraintBottom_toTopOf="@+id/textGender"
+        app:layout_constraintLeft_toRightOf="@+id/imageAvatarUserRequest"
+        app:layout_constraintTop_toTopOf="@+id/imageAvatarUserRequest"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/textGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAccept"
+        app:layout_constraintLeft_toRightOf="@+id/imageAvatarUserRequest"
+        app:layout_constraintTop_toBottomOf="@+id/textNameUserRequest" />
+
+    <Button
+        android:id="@+id/buttonAccept"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_4"
+        android:background="@drawable/background_button_accept"
+        android:text="@string/accept_request"
+        android:textColor="@color/color_white"
+        app:layout_constraintBottom_toBottomOf="@+id/imageAvatarUserRequest"
+        app:layout_constraintLeft_toRightOf="@+id/imageAvatarUserRequest"
+        app:layout_constraintRight_toLeftOf="@+id/buttonCancel"
+        app:layout_constraintTop_toBottomOf="@+id/textGender" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@drawable/background_button_cancel"
+        android:text="@string/cancel_request"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonAccept"
+        app:layout_constraintLeft_toRightOf="@+id/buttonAccept"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textGender" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_3"
+        android:background="@color/color_light_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageAvatarUserRequest" />
+
+</android.support.constraint.ConstraintLayout>

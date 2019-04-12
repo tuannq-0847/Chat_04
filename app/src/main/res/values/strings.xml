@@ -72,4 +72,7 @@
     <string name="invite_more_friends">Kết bạn</string>
     <string name="button_chat">Nhắn tin</string>
     <string name="cancel_invite_more_friends">Hủy</string>
+    <string name="friend_request">Friend Request</string>
+    <string name="accept_request">Accept</string>
+    <string name="cancel_request">Cancel</string>
 </resources>

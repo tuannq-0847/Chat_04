@@ -14,4 +14,5 @@
     <color name="color_blue_face">#4267B2</color>
     <color name="color_pink_light">#ed897b</color>
     <color name="color_pink_dark">#F35943</color>
+    <color name="color_light_grey">#DDDDDD</color>
 </resources>
