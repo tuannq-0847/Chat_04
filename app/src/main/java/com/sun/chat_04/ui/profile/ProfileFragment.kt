@@ -22,7 +22,6 @@ import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.login.LoginActivity
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
-import kotlinx.android.synthetic.main.fragment_edit_user_profile.textBioProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageCover
 import kotlinx.android.synthetic.main.fragment_profile.imageEditAvatar
@@ -35,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
 import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
+import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
 import kotlinx.android.synthetic.main.fragment_profile.toolbarUserProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
@@ -161,7 +161,7 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
             textAgeProfile?.let {
                 it.text = user.birthday.toString()
             }
-            textBioProfile?.let {
+            textUserBioProfile?.let {
                 it.text = user.bio
             }
             textNameToolbarProfile?.let {
@@ -181,16 +181,17 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                         textAddressProfile.text = it
                     }
                 }
-
             }
         }
     }
 
     private fun displayUserImage(uri: Uri, imageView: ImageView) {
+        var resourceId = R.drawable.gradient_header_background
+        if (imageView == imageAvatarProfile) resourceId = R.drawable.avatar
         Glide.with(imageView)
             .load(uri)
             .centerCrop()
-            .placeholder(R.drawable.image_avatar)
+            .placeholder(resourceId)
             .into(imageView)
     }
 

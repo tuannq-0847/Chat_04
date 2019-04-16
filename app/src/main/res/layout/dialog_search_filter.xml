@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dp_8">
+
+    <TextView
+        android:id="@+id/textTitleDialog"
+        style="@style/ProfileFullName"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/color_white"
+        android:gravity="center"
+        android:text="@string/dialog_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/imageCloseDialog"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageCloseDialog"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/border_item_click"
+        android:src="@drawable/ic_exit"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewSeparate"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/color_green"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageCloseDialog" />
+
+    <TextView
+        android:id="@+id/textGenderDialog"
+        style="@style/Common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:text="@string/sign_up_gender"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewSeparate" />
+
+    <Button
+        android:id="@+id/buttonMaleDialog"
+        android:layout_width="@dimen/dp_56"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:background="@drawable/border_selector"
+        android:text="@string/male"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/textGenderDialog"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textGenderDialog" />
+
+    <Button
+        android:id="@+id/buttonFemaleDialog"
+        android:layout_width="@dimen/dp_56"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:background="@drawable/border_selector"
+        android:text="@string/female"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/textGenderDialog"
+        app:layout_constraintRight_toLeftOf="@+id/buttonMaleDialog"
+        app:layout_constraintTop_toTopOf="@+id/textGenderDialog" />
+
+    <Button
+        android:id="@+id/buttonAllGenderDialog"
+        android:layout_width="@dimen/dp_56"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:background="@drawable/border_button_selected"
+        android:text="@string/dialog_all_gender"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@id/textGenderDialog"
+        app:layout_constraintRight_toLeftOf="@+id/buttonFemaleDialog"
+        app:layout_constraintTop_toTopOf="@+id/textGenderDialog" />
+
+    <TextView
+        android:id="@+id/textAgeDialog"
+        style="@style/Common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_48"
+        android:text="@string/dialog_age"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMaleDialog" />
+
+    <EditText
+        android:id="@+id/editToAge"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_48"
+        android:focusable="false"
+        android:inputType="number"
+        android:maxLength="@integer/length_max_two"
+        android:minWidth="@dimen/dp_48"
+        app:layout_constraintBottom_toBottomOf="@+id/textAgeDialog"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textAgeDialog" />
+
+    <TextView
+        android:id="@+id/textSeparateAgeDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_48"
+        android:gravity="center"
+        android:text="@string/dialog_age_separate"
+        app:layout_constraintBottom_toBottomOf="@+id/editToAge"
+        app:layout_constraintRight_toLeftOf="@+id/editToAge"
+        app:layout_constraintTop_toTopOf="@+id/editToAge" />
+
+    <EditText
+        android:id="@+id/editFromAge"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_48"
+        android:focusable="false"
+        android:inputType="number"
+        android:maxLength="@integer/length_max_two"
+        android:minWidth="@dimen/dp_48"
+        app:layout_constraintBottom_toBottomOf="@+id/textSeparateAgeDialog"
+        app:layout_constraintRight_toLeftOf="@+id/textSeparateAgeDialog"
+        app:layout_constraintTop_toTopOf="@+id/textSeparateAgeDialog" />
+
+    <TextView
+        android:id="@+id/textDistanceDialog"
+        style="@style/Common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_48"
+        android:text="@string/dialog_distance"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editToAge" />
+
+    <SeekBar
+        android:id="@+id/seekBarDistance"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_24"
+        android:layout_marginTop="@dimen/dp_16"
+        android:max="@integer/max_distance"
+        android:padding="@dimen/dp_8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDistanceDialog" />
+
+    <TextView
+        android:id="@+id/textFromDistance"
+        style="@style/Common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:text="@string/dialog_from_distance"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekBarDistance" />
+
+    <TextView
+        android:id="@+id/textToDistance"
+        style="@style/Common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:text="@string/dialog_to_distance"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekBarDistance" />
+
+    <TextView
+        android:id="@+id/textCurrentDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        app:layout_constraintEnd_toStartOf="@+id/textUnitDistance"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/textFromDistance"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarDistance" />
+
+    <TextView
+        android:id="@+id/textUnitDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:text="@string/dialog_unit_distance"
+        app:layout_constraintEnd_toStartOf="@+id/textToDistance"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textCurrentDistance"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarDistance" />
+
+    <Button
+        android:id="@+id/buttonApplyDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/border_item_click"
+        android:text="@string/dialog_apply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textCurrentDistance" />
+
+</android.support.constraint.ConstraintLayout>

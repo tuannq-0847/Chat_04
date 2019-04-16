@@ -4,6 +4,7 @@ import android.location.Location
 import android.support.annotation.NonNull
 import com.google.firebase.database.DatabaseException
 import com.sun.chat_04.data.model.User
+import com.sun.chat_04.data.model.UserDistanceWrapper
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
@@ -20,7 +21,14 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val repository: UserR
                 val users = data.filter {
                     it.userName.toLowerCase().contains(userName.toLowerCase())
                 }
-                view.onFindUsersSuccess(users)
+                val userDistanceWrappers = users.map {
+                    UserDistanceWrapper(it, Constants.DISTANCE_NOT_EXIST)
+                }
+                view.onFindUsersSuccess(userDistanceWrappers)
+                when {
+                    userDistanceWrappers.isNullOrEmpty() -> view.showImageEmpty()
+                    else -> view.hideImageEmpty()
+                }
                 view.hideSwipeRefreshDiscovery()
                 view.hideProgress()
             }
@@ -33,38 +41,47 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val repository: UserR
         })
     }
 
-    override fun findUserAroundHere(@NonNull user: User) {
+    override fun findUserAroundHere(@NonNull user: User, @NonNull distance: Int) {
+        view.showProgress()
+        view.showTitleSuggestFriends()
+        repository.getUsers(object : RemoteCallback<List<User>> {
+            override fun onSuccessfuly(data: List<User>) {
+                val userDistanceWrappers = ArrayList<UserDistanceWrapper>()
+                for (friend in data) {
+                    val dis = distanceBetweenUser(user, friend)
+                    if (dis <= distance.toFloat()) {
+                        userDistanceWrappers.add(UserDistanceWrapper(friend, dis))
+                    }
+                }
+                userDistanceWrappers.sort()
+                view.onFindUsersSuccess(userDistanceWrappers)
+                when {
+                    userDistanceWrappers.isNullOrEmpty() -> view.showImageEmpty()
+                    else -> view.hideImageEmpty()
+                }
+                view.hideSwipeRefreshDiscovery()
+                view.hideProgress()
+            }
+
+            override fun onFailure(exception: Exception?) {
+                view.onFindUserFailure(exception)
+                view.hideProgress()
+                view.hideSwipeRefreshDiscovery()
+            }
+        })
+    }
+
+    override fun distanceBetweenUser(@NonNull user: User, @NonNull friend: User): Float {
         val locationUser = Location("")
         locationUser.latitude = user.lat
         locationUser.longitude = user.lgn
-        repository.getUsers(object : RemoteCallback<List<User>> {
-            override fun onSuccessfuly(data: List<User>) {
-                val users = ArrayList<User>()
-                for (friend in data) {
-                    if (isNearByUser(locationUser, friend)) {
-                        users.add(friend)
-                    }
-                }
-                view.onFindUsersSuccess(users)
-                view.hideSwipeRefreshDiscovery()
-                view.hideProgress()
-            }
 
-            override fun onFailure(exception: Exception?) {
-                view.onFindUserFailure(exception)
-                view.hideProgress()
-                view.hideSwipeRefreshDiscovery()
-            }
-        })
-    }
+        val locationFriend = Location("")
+        locationFriend.latitude = friend.lat
+        locationFriend.longitude = friend.lgn
 
-    override fun isNearByUser(location: Location?, @NonNull friend: User): Boolean {
-        val locationB = Location("")
-        locationB.latitude = friend.lat
-        locationB.longitude = friend.lgn
-        val distance = location?.distanceTo(locationB)?.div(Constants.CONVERT_KM) ?: return false
-        if (distance <= Constants.MAX_DISTANCE) return true
-        return false
+        val distance = locationUser.distanceTo(locationFriend).div(Constants.CONVERT_KM)
+        return (Math.round(distance * Constants.ROUNDING) / Constants.ROUNDING).toFloat()
     }
 
     override fun getUserInfo() {

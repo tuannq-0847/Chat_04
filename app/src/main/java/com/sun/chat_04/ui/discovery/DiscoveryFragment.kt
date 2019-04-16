@@ -1,5 +1,7 @@
 package com.sun.chat_04.ui.discovery
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
@@ -8,26 +10,34 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
+import com.sun.chat_04.data.model.UserDistanceWrapper
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.frienddetail.FriendDetailFragment
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
+import kotlinx.android.synthetic.main.fragment_discovery.imageEmptyDiscovery
+import kotlinx.android.synthetic.main.fragment_discovery.imageSearchFilter
 import kotlinx.android.synthetic.main.fragment_discovery.progressLoading
 import kotlinx.android.synthetic.main.fragment_discovery.recyclerDiscovery
 import kotlinx.android.synthetic.main.fragment_discovery.searchDiscovery
 import kotlinx.android.synthetic.main.fragment_discovery.swipeRefreshDiscovery
 import kotlinx.android.synthetic.main.fragment_discovery.textNotifyResult
 
-class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQueryTextListener, OnRefreshListener {
+class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQueryTextListener, OnRefreshListener,
+    OnClickListener {
 
     private lateinit var presenter: DiscoveryContract.Presenter
-    private var users = ArrayList<User>()
     private lateinit var adapter: DiscoveryAdapter
+    private val searchFilterDialog by lazy { SearchFilterDialog() }
+    private lateinit var user: User
+    private val userDistanceWrappers = ArrayList<UserDistanceWrapper>()
+    private var distance = Constants.MIN_DISTANCE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_discovery, container, false)
@@ -37,19 +47,18 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         super.onActivityCreated(savedInstanceState)
         initComponents()
         initPresenter()
-        findUsersAroundHere()
+        suggestUsersAroundHere()
     }
 
-    override fun onFindUsersSuccess(users: List<User>) {
+    override fun onFindUsersSuccess(userDistanceWrappers: List<UserDistanceWrapper>) {
         if (::adapter.isInitialized) {
-            adapter.refreshUsers(users)
+            adapter.refreshUsers(userDistanceWrappers)
         }
     }
 
     override fun onGetUserInfoSuccess(user: User) {
-        if (::presenter.isInitialized) {
-            presenter.findUserAroundHere(user)
-        }
+        this.user = user
+        findUserAroundHere()
     }
 
     override fun onFindUserFailure(exception: Exception?) {
@@ -58,23 +67,23 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
-            findUsersbyName(query)
+            findUsersByName(query)
         }
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         when {
-            !newText.isNullOrEmpty() -> findUsersbyName(newText)
-            else -> findUsersAroundHere()
+            !newText.isNullOrEmpty() -> findUsersByName(newText)
+            else -> suggestUsersAroundHere()
         }
         return true
     }
 
     override fun onRefresh() {
         when {
-            !searchDiscovery.query.isNullOrEmpty() -> findUsersbyName(searchDiscovery.query.toString())
-            else -> findUsersAroundHere()
+            !searchDiscovery.query.isNullOrEmpty() -> findUsersByName(searchDiscovery.query.toString())
+            else -> findUserAroundHere()
         }
     }
 
@@ -90,10 +99,39 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Constants.REQUEST_CODE_DIALOG && resultCode == RESULT_OK && data != null) {
+            val dataFilter = data.extras?.getInt(Constants.BUNDLE_FILTER_DIALOG)
+            dataFilter ?: return
+            when (dataFilter) {
+                Constants.CANCEL -> {
+                    searchFilterDialog.dismiss()
+                }
+                else -> {
+                    this.distance = dataFilter
+                    findUserAroundHere()
+                    searchFilterDialog.dismiss()
+                }
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.imageSearchFilter -> showDiaLogSearchFilter()
+        }
+    }
+
+    private fun showDiaLogSearchFilter() {
+        searchFilterDialog.setTargetFragment(this, Constants.REQUEST_CODE_DIALOG)
+        searchFilterDialog.show(activity?.supportFragmentManager, "")
+    }
+
     private fun initComponents() {
         searchDiscovery.setIconifiedByDefault(false)
         searchDiscovery.setOnQueryTextListener(this)
         swipeRefreshDiscovery.setOnRefreshListener(this)
+        imageSearchFilter.setOnClickListener(this)
         displayUsers()
     }
 
@@ -113,7 +151,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
 
     private fun displayUsers() {
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.dp_8)
-        adapter = DiscoveryAdapter(users) { user -> userClickListener(user) }
+        adapter = DiscoveryAdapter(userDistanceWrappers) { user -> userClickListener(user) }
         recyclerDiscovery.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerDiscovery.addItemDecoration(SpacesItemDecoration(spacingInPixels))
         if (::adapter.isInitialized) {
@@ -121,25 +159,7 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         }
     }
 
-    private fun findUsersAroundHere() {
-        checkPermissions()
-    }
-
-    private fun findUsersbyName(query: String) {
-        if (::presenter.isInitialized) {
-            presenter.findUserByName(query)
-        }
-    }
-
-    private fun userClickListener(user: User) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.add(R.id.parentLayout, FriendDetailFragment.newInstance(user))
-            ?.addToBackStack("")
-            ?.commit()
-    }
-
-    private fun checkPermissions() {
+    private fun suggestUsersAroundHere() {
         context?.apply {
             if (Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
                 Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)
@@ -155,6 +175,26 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         }
     }
 
+    private fun findUserAroundHere() {
+        if (::presenter.isInitialized) {
+            presenter.findUserAroundHere(user, this.distance)
+        }
+    }
+
+    private fun findUsersByName(query: String) {
+        if (::presenter.isInitialized) {
+            presenter.findUserByName(query)
+        }
+    }
+
+    private fun userClickListener(user: User) {
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.add(R.id.parentLayout, FriendDetailFragment.newInstance(user))
+            ?.addToBackStack("")
+            ?.commit()
+    }
+
     override fun hideSwipeRefreshDiscovery() {
         swipeRefreshDiscovery?.let {
             it.isRefreshing = false
@@ -163,13 +203,27 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
 
     override fun showTitleSuggestFriends() {
         textNotifyResult?.let {
-            textNotifyResult.text = resources.getString(R.string.discovery_title_suggest)
+            val title = "${resources.getString(R.string.discovery_title_suggest)} ${this.distance}" +
+                    " ${resources.getString(R.string.dialog_unit_distance)}"
+            textNotifyResult.text = title
         }
     }
 
     override fun showTitleFindFriendsByName() {
         textNotifyResult?.let {
             textNotifyResult.text = resources.getString(R.string.result_search)
+        }
+    }
+
+    override fun showImageEmpty() {
+        imageEmptyDiscovery?.let {
+            it.visibility = View.VISIBLE
+        }
+    }
+
+    override fun hideImageEmpty() {
+        imageEmptyDiscovery?.let {
+            it.visibility = View.GONE
         }
     }
 }
