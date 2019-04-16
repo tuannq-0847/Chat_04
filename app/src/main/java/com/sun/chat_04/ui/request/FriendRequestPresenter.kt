@@ -12,7 +12,7 @@ class FriendRequestPresenter(
     override fun approveFriendRequest(user: User) {
         repository.approveFriendRequest(user, object : RemoteCallback<Boolean> {
             override fun onSuccessfuly(data: Boolean) {
-                view.onApproveSuccessfully()
+                view.onApproveSuccessfully(user.userName)
             }
 
             override fun onFailure(exception: Exception?) {

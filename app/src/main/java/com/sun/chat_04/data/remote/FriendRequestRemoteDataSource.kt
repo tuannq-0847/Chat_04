@@ -90,7 +90,7 @@ class FriendRequestRemoteDataSource(
         user.userName?.let {
             val friend = Friend(
                 user.idUser, user.pathAvatar, user.isOnline
-                , Constants.NONE, it
+                , contents = Constants.CONNECTED_MESSAGE, userName = it
             )
             insertFriend(friend, callback)
             getInformationUser(user, callback)
@@ -113,7 +113,7 @@ class FriendRequestRemoteDataSource(
                             userMain.userName?.let {
                                 val friendInvert = Friend(
                                     mainUser.idUser, mainUser.pathAvatar, mainUser.isOnline
-                                    , Constants.NONE, it
+                                    , contents = Constants.CONNECTED_MESSAGE, userName = it
                                 )
                                 insertInvertFriend(user.idUser, friendInvert, callback)
                             }

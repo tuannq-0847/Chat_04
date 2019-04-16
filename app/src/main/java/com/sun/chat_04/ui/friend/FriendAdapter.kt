@@ -13,6 +13,7 @@ import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.items_friends.view.imageStatusUser
 import kotlinx.android.synthetic.main.items_friends.view.imageUserLastMessage
 import kotlinx.android.synthetic.main.items_friends.view.textLastMessage
+import kotlinx.android.synthetic.main.items_friends.view.textNewFriend
 import kotlinx.android.synthetic.main.items_friends.view.textUserRec
 
 class FriendAdapter(
@@ -52,6 +53,9 @@ class FriendAdapter(
                 }
                 if (friend.seen == Constants.NOT_SEEN) {
                     textLastMessage.setTextColor(resources.getColor(R.color.color_black))
+                }
+                if (friend.contents == Constants.CONNECTED_MESSAGE) {
+                    textNewFriend.visibility = View.VISIBLE
                 }
                 setOnClickListener { listener(friend) }
 

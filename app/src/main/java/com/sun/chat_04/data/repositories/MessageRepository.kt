@@ -24,4 +24,3 @@ class MessageRepository(
         remoteDataSource.getMessages(callback)
     }
 }
-

@@ -7,7 +7,7 @@ interface FriendRequestContract {
     interface View {
         fun onFriendRequestsAvailable(friendRequests: ArrayList<User>)
         fun onFailure(exception: Exception?)
-        fun onApproveSuccessfully()
+        fun onApproveSuccessfully(userName: String?)
         fun onCancelSuccessfully()
     }
 
