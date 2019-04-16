@@ -2,7 +2,9 @@ package com.sun.chat_04.ui.login
 
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseUser
 import com.sun.chat_04.R
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -13,7 +15,7 @@ class LoginPresenter(
     private val view: LoginContract.View
 ) : LoginContract.Presenter {
 
-    override fun loginByEmailAndPassword(email: String, password: String) {
+    override fun loginByEmailAndPassword(email: String?, password: String?) {
         repository.loginByEmailAndPassword(email, password, object : RemoteCallback<Boolean> {
             override fun onSuccessfuly(data: Boolean) {
                 view.onLoginSuccessfully()
@@ -50,6 +52,10 @@ class LoginPresenter(
 
     override fun onError(error: FacebookException?) {
         view.onGetTokenFail(error)
+    }
+
+    override fun isLogin(currentUser: FirebaseUser?): Boolean {
+        return currentUser != null
     }
 
     private fun checkErrorLogin(exception: Exception?) {

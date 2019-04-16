@@ -42,9 +42,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     }
 
     private fun checkLoginOrNot() {
-        val user = Global.firebaseAuth.currentUser
-        if (user != null) {
-            gotoHomeActivity()
+        if (::presenter.isInitialized) {
+            val isLogin = presenter.isLogin(Global.firebaseAuth.currentUser)
+            if (isLogin) {
+                gotoHomeActivity()
+            }
         }
     }
 

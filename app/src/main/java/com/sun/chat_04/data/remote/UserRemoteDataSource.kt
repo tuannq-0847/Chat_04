@@ -23,14 +23,20 @@ class UserRemoteDataSource(
 ) :
     UserDataSource.Remote {
 
-    override fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                callback.onSuccessfuly(true)
-            }
-            .addOnFailureListener {
-                callback.onFailure(it)
-            }
+    override fun loginByEmailAndPassword(email: String?, password: String?, callback: RemoteCallback<Boolean>) {
+        if (!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    val userId = auth.currentUser?.uid
+                    userId?.let {
+                        updateUserStatus(it, Constants.ONLINE, callback)
+                    }
+
+                }
+                .addOnFailureListener {
+                    callback.onFailure(it)
+                }
+        }
     }
 
     override fun handleFbLogin(
@@ -244,11 +250,13 @@ class UserRemoteDataSource(
             }
     }
 
-    override fun updateUserStatus(userId: String, isOnline: Int) {
+    override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
         database.reference.child(Constants.USERS)
             .child(userId)
             .child(ONLINE)
             .setValue(isOnline)
+            .addOnSuccessListener { callback.onSuccessfuly(true) }
+            .addOnFailureListener { callback.onFailure(it) }
     }
 
     companion object {

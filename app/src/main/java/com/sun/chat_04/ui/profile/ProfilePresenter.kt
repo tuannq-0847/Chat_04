@@ -1,6 +1,7 @@
 package com.sun.chat_04.ui.profile
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.database.DatabaseException
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserRepository
@@ -62,8 +63,19 @@ class ProfilePresenter(val view: ProfileContract.View, val repository: UserRepos
 
     override fun updateUserStatus(online: Int) {
         val userId = Global.firebaseAuth.currentUser?.uid.toString()
-        if (!userId.isEmpty()) {
-            repository.updateUserStatus(userId, online)
+        Log.d("TAG", userId)
+        if (userId.isNotEmpty()) {
+            repository.updateUserStatus(userId, online, object : RemoteCallback<Boolean> {
+                override fun onSuccessfuly(data: Boolean) {
+                    view.onSignOutSuccessfully()
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    view.onFailure(exception)
+                }
+            })
+            return
         }
+        view.onFailure(DatabaseException(""))
     }
 }

@@ -8,7 +8,7 @@ import com.sun.chat_04.ui.signup.RemoteCallback
 
 class UserRepository(private val remoteDataSource: UserDataSource.Remote) : UserDataSource.Remote {
 
-    override fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>) {
+    override fun loginByEmailAndPassword(email: String?, password: String?, callback: RemoteCallback<Boolean>) {
         remoteDataSource.loginByEmailAndPassword(email, password, callback)
     }
 
@@ -63,7 +63,7 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
         remoteDataSource.cancelInviteMoreFriends(userId, friendId, callback)
     }
 
-    override fun updateUserStatus(userId: String, isOnline: Int) {
-        remoteDataSource.updateUserStatus(userId, isOnline)
+    override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
+        remoteDataSource.updateUserStatus(userId, isOnline, callback)
     }
 }
