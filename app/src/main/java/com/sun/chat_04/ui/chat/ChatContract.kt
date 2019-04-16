@@ -17,5 +17,6 @@ interface ChatContract {
         fun compressBitmap(inputStream: InputStream?): ByteArray
         fun getMessages()
         fun handleMessage(message: Message)
+        fun onChatScreenVisible(isVisible: Boolean)
     }
 }

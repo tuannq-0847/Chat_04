@@ -6,12 +6,12 @@
     android:background="@color/color_white">
 
     <ImageView
-        android:id="@+id/imageAvatarUser"
+        android:id="@+id/imageSearchMessage"
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_16"
-        android:src="@drawable/avatar"
+        android:src="@drawable/ic_search"
         app:layout_constraintBottom_toBottomOf="@+id/editSearch"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editSearch" />
@@ -30,7 +30,7 @@
         android:paddingBottom="@dimen/dp_8"
         android:paddingStart="@dimen/dp_8"
         android:paddingTop="@dimen/dp_8"
-        app:layout_constraintLeft_toRightOf="@+id/imageAvatarUser"
+        app:layout_constraintLeft_toRightOf="@+id/imageSearchMessage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

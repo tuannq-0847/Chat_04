@@ -1,10 +1,12 @@
 package com.sun.chat_04.data.remote
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.sun.chat_04.data.model.Friend
+import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.FriendDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
@@ -14,25 +16,23 @@ class FriendRemoteDataSource(
 ) : FriendDataSource.Remote {
 
     override fun getFriends(userId: String?, callback: RemoteCallback<ArrayList<Friend>>) {
-        val Friends: ArrayList<Friend> = ArrayList()
+        val friends: ArrayList<Friend> = ArrayList()
         userId?.let {
             database.reference.child(Constants.FRIENDS)
                 .child(it).addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        callback.onFailure(error.toException())
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                         if (!dataSnapshot.hasChildren()) {
                             callback.onFailure(null)
                         }
-                        Friends.clear()
+                        friends.clear()
                         for (data in dataSnapshot.children) {
-                            val lastMessage = data.getValue(Friend::class.java)
-                            lastMessage?.let {
-                                Friends.add(it)
-                                callback.onSuccessfuly(Friends)
+                            val friend = data.getValue(Friend::class.java)
+                            friend?.let { fr ->
+                                friends.add(fr)
+                                callback.onSuccessfuly(friends)
                             }
                         }
                     }

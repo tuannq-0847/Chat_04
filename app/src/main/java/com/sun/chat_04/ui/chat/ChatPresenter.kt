@@ -2,6 +2,7 @@ package com.sun.chat_04.ui.chat
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.data.repositories.MessageRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
@@ -15,7 +16,7 @@ class ChatPresenter(
 ) : ChatContract.Presenter {
 
     override fun getMessages() {
-        repository.getMessages(object : RemoteCallback<ArrayList<com.sun.chat_04.data.model.Message>> {
+        repository.getMessages(object : RemoteCallback<ArrayList<Message>> {
             override fun onSuccessfuly(data: ArrayList<Message>) {
                 view.onGetMessagesSuccessfully(data)
             }
@@ -60,5 +61,9 @@ class ChatPresenter(
                     }
                 })
         }
+    }
+
+    override fun onChatScreenVisible(isVisible: Boolean) {
+        repository.onChatScreenVisible(isVisible)
     }
 }

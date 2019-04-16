@@ -8,6 +8,10 @@ class MessageRepository(
     private val remoteDataSource: MessageRemoteDataSource
 ) : MessageDataSource.Remote {
 
+    override fun onChatScreenVisible(isVisible: Boolean) {
+        remoteDataSource.onChatScreenVisible(isVisible)
+    }
+
     override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
         remoteDataSource.updateImageMessage(message, callback)
     }

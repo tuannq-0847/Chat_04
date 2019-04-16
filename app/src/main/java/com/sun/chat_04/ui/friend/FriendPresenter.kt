@@ -10,12 +10,6 @@ class FriendPresenter(
     private val repository: FriendRepository
 ) : FriendContract.Presenter {
 
-    override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
-    }
-
-    override fun onGetFriendsFailed(exception: java.lang.Exception?) {
-    }
-
     override fun getFriends() {
         val userId = Global.firebaseAuth.currentUser?.uid
         repository.getFriends(userId, object : RemoteCallback<ArrayList<Friend>> {

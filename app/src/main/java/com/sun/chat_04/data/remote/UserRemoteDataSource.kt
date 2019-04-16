@@ -115,7 +115,7 @@ class UserRemoteDataSource(
                         val user = data.getValue(User::class.java)
                         if (user?.idUser.equals(auth.currentUser?.uid))
                             continue
-                        user?.let { users.add(user) }
+                        user?.let { users.add(it) }
                     }
                     callback.onSuccessfuly(users)
                 }
@@ -138,7 +138,7 @@ class UserRemoteDataSource(
     }
 
     override fun insertUserImage(userId: String, uri: Uri, field: String, callback: RemoteCallback<Uri>) {
-        val pathImage = "${userId}/${uri.path}"
+        val pathImage = "$userId/${uri.path}"
         val storageRef = firebaseStorage.getReference(pathImage)
         storageRef.putFile(uri)
             .addOnSuccessListener {
@@ -262,6 +262,6 @@ class UserRemoteDataSource(
     companion object {
         private const val LATITUDE = "lat"
         private const val LONGITUDE = "lgn"
-        private const val ONLINE = "online"
+        private const val ONLINE = "isOnline"
     }
 }

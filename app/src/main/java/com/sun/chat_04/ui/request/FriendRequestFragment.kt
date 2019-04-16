@@ -21,17 +21,21 @@ class FriendRequestFragment : Fragment(), FriendRequestContract.View {
 
     override fun onGetListFriendRequest(friendRequests: ArrayList<User>) {
         if (friendRequests.size == FRIENDS_INDEX_0) {
-            imageEmpty.visibility = View.VISIBLE
-            recyclerFriendRequest.visibility = View.GONE
+            imageEmpty?.let {
+                it.visibility = View.VISIBLE
+                recyclerFriendRequest.visibility = View.GONE
+            }
         } else {
-            imageEmpty.visibility = View.GONE
-            recyclerFriendRequest.visibility = View.VISIBLE
-            adapter =
-                FriendRequestAdapter(friendRequests) { user, buttonId -> onClickListener(user, buttonId) }
-            if (::adapter.isInitialized) {
-                recyclerFriendRequest.layoutManager = LinearLayoutManager(context)
-                recyclerFriendRequest.adapter = adapter
-                adapter.refreshFriendRequest()
+            imageEmpty?.let {
+                it.visibility = View.GONE
+                recyclerFriendRequest.visibility = View.VISIBLE
+                adapter =
+                    FriendRequestAdapter(friendRequests) { user, buttonId -> onClickListener(user, buttonId) }
+                if (::adapter.isInitialized) {
+                    recyclerFriendRequest.layoutManager = LinearLayoutManager(context)
+                    recyclerFriendRequest.adapter = adapter
+                    adapter.refreshFriendRequest()
+                }
             }
         }
     }

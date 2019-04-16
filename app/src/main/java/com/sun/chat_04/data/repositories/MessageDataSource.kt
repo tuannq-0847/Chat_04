@@ -8,5 +8,6 @@ interface MessageDataSource {
         fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>)
         fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>)
         fun getMessages(callback: RemoteCallback<ArrayList<Message>>)
+        fun onChatScreenVisible(isVisible: Boolean)
     }
 }

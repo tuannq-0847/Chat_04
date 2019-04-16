@@ -131,18 +131,26 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View {
     }
 
     private fun showProgress() {
-        progressLoading.visibility = View.VISIBLE
+        progressLoading?.let {
+            progressLoading.visibility = View.VISIBLE
+        }
     }
 
     private fun hideProgress() {
-        progressLoading.visibility = View.GONE
+        progressLoading?.let {
+            progressLoading.visibility = View.GONE
+        }
     }
 
     private fun showIconSearchAroundHere() {
-        groupAroundHere.visibility = View.VISIBLE
+        groupAroundHere?.let {
+            groupAroundHere.visibility = View.VISIBLE
+        }
     }
 
     private fun hideIconSearchAroundHere() {
-        groupAroundHere.visibility = View.GONE
+        groupAroundHere?.let {
+            groupAroundHere.visibility = View.GONE
+        }
     }
 }

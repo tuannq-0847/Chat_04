@@ -63,7 +63,6 @@ class ProfilePresenter(val view: ProfileContract.View, val repository: UserRepos
 
     override fun updateUserStatus(online: Int) {
         val userId = Global.firebaseAuth.currentUser?.uid.toString()
-        Log.d("TAG", userId)
         if (userId.isNotEmpty()) {
             repository.updateUserStatus(userId, online, object : RemoteCallback<Boolean> {
                 override fun onSuccessfuly(data: Boolean) {

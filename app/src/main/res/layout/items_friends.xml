@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -32,7 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
         android:singleLine="true"
+        android:textColor="@color/color_grey"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/imageUserLastMessage"
+        app:layout_constraintRight_toLeftOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textUserRec" />
 
     <ImageView
@@ -42,4 +46,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/textLastMessage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textUserRec" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
 </android.support.constraint.ConstraintLayout>
