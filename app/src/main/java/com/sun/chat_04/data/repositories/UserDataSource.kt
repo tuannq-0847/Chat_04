@@ -16,7 +16,7 @@ interface UserDataSource {
             callbackLogin: RemoteCallback<Boolean>
         )
 
-        fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>)
+        fun loginByEmailAndPassword(email: String?, password: String?, callback: RemoteCallback<Boolean>)
 
         fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>)
 
@@ -37,5 +37,7 @@ interface UserDataSource {
         fun inviteMoreFriend(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
 
         fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
+
+        fun updateUserStatus(userId: String, isOnline: Int,callback: RemoteCallback<Boolean>)
     }
 }

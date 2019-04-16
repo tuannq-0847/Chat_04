@@ -13,6 +13,8 @@ interface ProfileContract {
         fun onUpdateUserAvatarSuccess(uri: Uri)
 
         fun onUpdateUserCoverSuccess(uri: Uri)
+
+        fun onSignOutSuccessfully()
     }
 
     interface Presenter {
@@ -21,5 +23,7 @@ interface ProfileContract {
         fun updateUserAvatar(uri: Uri)
 
         fun updateUserCover(uri: Uri)
+
+        fun updateUserStatus(online: Int)
     }
 }

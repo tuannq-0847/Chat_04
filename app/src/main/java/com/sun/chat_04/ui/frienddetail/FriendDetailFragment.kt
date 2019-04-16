@@ -61,15 +61,21 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     override fun showButtonChat() {
-        buttonAddFriend.text = resources.getString(R.string.button_chat)
+        buttonAddFriend?.let {
+            buttonAddFriend.text = resources.getString(R.string.button_chat)
+        }
     }
 
     override fun showButtonInviteMoreFriends() {
-        buttonAddFriend.text = resources.getString(R.string.invite_more_friends)
+        buttonAddFriend?.let {
+            buttonAddFriend.text = resources.getString(R.string.invite_more_friends)
+        }
     }
 
     override fun showButtonCancelInviteMoreFriends() {
-        buttonAddFriend.text = resources.getString(R.string.cancel_invite_more_friends)
+        buttonAddFriend?.let {
+            buttonAddFriend.text = resources.getString(R.string.cancel_invite_more_friends)
+        }
     }
 
     override fun onFailure(exception: Exception?) {

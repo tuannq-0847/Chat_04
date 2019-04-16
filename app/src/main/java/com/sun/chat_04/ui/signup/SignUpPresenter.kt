@@ -60,6 +60,7 @@ class SignUpPresenter(val view: SignUpContract.View, val repository: UserReposit
             }
 
             override fun onFailure(exception: Exception?) {
+                view.onSignUpFailure()
             }
         })
     }

@@ -23,14 +23,20 @@ class UserRemoteDataSource(
 ) :
     UserDataSource.Remote {
 
-    override fun loginByEmailAndPassword(email: String, password: String, callback: RemoteCallback<Boolean>) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                callback.onSuccessfuly(true)
-            }
-            .addOnFailureListener {
-                callback.onFailure(it)
-            }
+    override fun loginByEmailAndPassword(email: String?, password: String?, callback: RemoteCallback<Boolean>) {
+        if (!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    val userId = auth.currentUser?.uid
+                    userId?.let {
+                        updateUserStatus(it, Constants.ONLINE, callback)
+                    }
+
+                }
+                .addOnFailureListener {
+                    callback.onFailure(it)
+                }
+        }
     }
 
     override fun handleFbLogin(
@@ -46,7 +52,7 @@ class UserRemoteDataSource(
                 }
                 val currentUser = auth.currentUser
                 if (currentUser != null) {
-                    val user = User(currentUser.uid, currentUser.displayName, isOnline = 1)
+                    val user = User(currentUser.uid, currentUser.displayName, isOnline = Constants.ONLINE)
                     database.reference.child(Constants.USERS)
                         .child(user.idUser)
                         .setValue(user)
@@ -65,6 +71,7 @@ class UserRemoteDataSource(
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     user.idUser = auth.currentUser?.uid.toString()
+                    user.isOnline = Constants.ONLINE
                     if (!it.isSuccessful) {
                         callback.onFailure(it.exception!!)
                         return@addOnCompleteListener
@@ -85,9 +92,9 @@ class UserRemoteDataSource(
             return
         }
         try {
-            database.getReference(USERS).child(auth.currentUser?.uid.toString()).child(LATITUDE)
+            database.getReference(Constants.USERS).child(auth.currentUser?.uid.toString()).child(LATITUDE)
                 .setValue(location.latitude)
-            database.getReference(USERS).child(auth.currentUser?.uid.toString()).child(LONGITUDE)
+            database.getReference(Constants.USERS).child(auth.currentUser?.uid.toString()).child(LONGITUDE)
                 .setValue(location.longitude)
             callback.onSuccessfuly(true)
         } catch (databaseException: DatabaseException) {
@@ -96,7 +103,7 @@ class UserRemoteDataSource(
     }
 
     override fun getUsers(callback: RemoteCallback<List<User>>) {
-        database.getReference(USERS).addValueEventListener(object : ValueEventListener {
+        database.getReference(Constants.USERS).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 callback.onFailure(error.toException())
             }
@@ -117,7 +124,7 @@ class UserRemoteDataSource(
     }
 
     override fun getUserInfo(userId: String, callback: RemoteCallback<User>) {
-        database.getReference(USERS).child(userId)
+        database.getReference(Constants.USERS).child(userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     callback.onFailure(error.toException())
@@ -201,14 +208,14 @@ class UserRemoteDataSource(
 
     override fun checkInvitedMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>) {
         database.getReference(Constants.REQUEST_FRIEND)
-            .child(userId)
+            .child(friendId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
                     callback.onFailure(databaseError.toException())
                 }
 
                 override fun onDataChange(databasSnapshot: DataSnapshot) {
-                    if (!databasSnapshot.child(friendId).exists()) {
+                    if (!databasSnapshot.child(userId).exists()) {
                         callback.onSuccessfuly(false)
                     } else {
                         callback.onSuccessfuly(true)
@@ -243,11 +250,18 @@ class UserRemoteDataSource(
             }
     }
 
+    override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
+        database.reference.child(Constants.USERS)
+            .child(userId)
+            .child(ONLINE)
+            .setValue(isOnline)
+            .addOnSuccessListener { callback.onSuccessfuly(true) }
+            .addOnFailureListener { callback.onFailure(it) }
+    }
+
     companion object {
-        private const val USERS = "Users"
-        private const val USER_NAME = "userName"
         private const val LATITUDE = "lat"
         private const val LONGITUDE = "lgn"
-        private const val USER_ID = "idUser"
+        private const val ONLINE = "online"
     }
 }

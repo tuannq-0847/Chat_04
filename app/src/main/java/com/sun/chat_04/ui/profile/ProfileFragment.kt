@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
 class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRefreshListener {
-
     private lateinit var presenter: ProfileContract.Presenter
     private lateinit var user: User
 
@@ -81,6 +80,9 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     override fun onUpdateUserCoverSuccess(uri: Uri) {
         displayUserImage(uri, imageCover)
         Global.showMessage(context, resources.getString(R.string.update_cover_success))
+    }
+
+    override fun onSignOutSuccessfully() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
@@ -137,12 +139,14 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 else -> resources.getString(R.string.female)
             }
             context?.let {
-                Geocoder(it, Locale.getDefault())
-                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
-                    .get(0)
-                    .locality.let {
-                    textAddressProfile.text = it
+                if (user.lat != 0.0 && user.lgn != 0.0) {
+                    Geocoder(it, Locale.getDefault())
+                        .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0]
+                        .locality.let {
+                        textAddressProfile.text = it
+                    }
                 }
+
             }
             hideSwipeRefreshUserProfile()
         }
@@ -190,6 +194,8 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 .setTitle(resources.getString(R.string.sign_out))
                 .setMessage(resources.getString(R.string.sign_out_notify))
                 .setPositiveButton(resources.getString(R.string.yes)) { dialog, which ->
+                    if (::presenter.isInitialized)
+                        presenter.updateUserStatus(Constants.OFFLINE)
                     Global.firebaseAuth.signOut()
                     activity?.finish()
                 }
