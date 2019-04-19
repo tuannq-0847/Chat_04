@@ -52,16 +52,17 @@ class UserRemoteDataSource(
                 }
                 val currentUser = auth.currentUser
                 if (currentUser != null) {
-                    val user = User(currentUser.uid, currentUser.displayName, isOnline = Constants.ONLINE)
-                    database.reference.child(Constants.USERS)
-                        .child(user.idUser)
-                        .setValue(user)
-                        .addOnSuccessListener { callbackLogin.onSuccessfuly(true) }
-                        .addOnFailureListener {
-                            callbackLogin.onFailure(it)
-                        }
+                    currentUser.displayName?.let { name ->
+                        val user = User(currentUser.uid, name, isOnline = Constants.ONLINE)
+                        database.reference.child(Constants.USERS)
+                            .child(user.idUser)
+                            .setValue(user)
+                            .addOnSuccessListener { callbackLogin.onSuccessfuly(true) }
+                            .addOnFailureListener {
+                                callbackLogin.onFailure(it)
+                            }
+                    }
                 }
-
             }
         }
     }
