@@ -1,6 +1,5 @@
 package com.sun.chat_04.data.remote
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -9,7 +8,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.Message
-import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.MessageDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
@@ -34,23 +32,14 @@ class MessageRemoteDataSource(
         val bytes = message.bytes
         uploadImage(bytes, object : RemoteCallback<String> {
             override fun onSuccessfuly(data: String) {
-                val imageLink = data
-                getAvatarUser(object : RemoteCallback<String> {
-                    override fun onSuccessfuly(data: String) {
-                        insertMessages(
-                            idMessage?.let {
-                                Message(
-                                    it, imageLink, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
-                                    avatar = data
-                                )
-                            }, callback
+                insertMessages(
+                    idMessage?.let {
+                        Message(
+                            it, Constants.NONE, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
+                            avatar = data
                         )
-                    }
-
-                    override fun onFailure(exception: Exception?) {
-                        callback.onFailure(exception)
-                    }
-                })
+                    }, callback
+                )
             }
 
             override fun onFailure(exception: Exception?) {
@@ -59,9 +48,9 @@ class MessageRemoteDataSource(
         })
     }
 
-    override fun onChatScreenVisible(isVisible: Boolean) {
+    override fun updateSeenStatusFriend(isSeen: Boolean) {
         val friendSendRef = "${Constants.FRIENDS}/$uid/$uidUserRec"
-        val status = when (isVisible) {
+        val status = when (isSeen) {
             true -> Constants.SEEN
             else -> Constants.NOT_SEEN
         }
@@ -78,42 +67,14 @@ class MessageRemoteDataSource(
 
     override fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>) {
         val idMessage = generateIdMessage()
-        getAvatarUser(object : RemoteCallback<String> {
-            override fun onSuccessfuly(data: String) {
-                Log.d("wow1", data)
-                insertMessages(
-                    idMessage?.let {
-                        Message(
-                            it, message.contents, uid, Constants.TEXT_MESSAGE, seen = Constants.SEEN,
-                            avatar = data
-                        )
-                    }, callback
+        insertMessages(
+            idMessage?.let {
+                Message(
+                    it, message.contents, uid, Constants.TEXT_MESSAGE, seen = Constants.SEEN,
+                    avatar = Constants.NONE
                 )
-            }
-
-            override fun onFailure(exception: Exception?) {
-                callback.onFailure(exception)
-            }
-        })
-    }
-
-    private fun getAvatarUser(callback: RemoteCallback<String>) {
-        database.reference
-            .child(Constants.USERS)
-            .child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    callback.onFailure(error.toException())
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val user = dataSnapshot.getValue(User::class.java)
-                    user?.let {
-                        val avatarLink = it.pathAvatar
-                        callback.onSuccessfuly(avatarLink)
-                    }
-                }
-            })
+            }, callback
+        )
     }
 
     private fun uploadImage(bytes: ByteArray?, callback: RemoteCallback<String>) {
@@ -157,82 +118,57 @@ class MessageRemoteDataSource(
         message?.let {
             val friendSendRef = "${Constants.FRIENDS}/$uid/$uidUserRec"
             val friendRecRef = "${Constants.FRIENDS}/$uidUserRec/$uid"
-            updateFriendSend(message, friendSendRef, callback)
-            updateFriendRec(message, friendRecRef, callback)
+            updateSenderStatusMessage(message, friendSendRef, callback)
+            updateReceiverStatusMessage(message, friendRecRef, callback)
         }
     }
 
-    private fun updateFriendRec(message: Message, friendRecRef: String, callback: RemoteCallback<Boolean>) {
-
-        getUserInformation(uid, object : RemoteCallback<User> {
-            override fun onSuccessfuly(data: User) {
-                database.reference.child(friendRecRef)
-                    .child(Constants.CONTENTS)
-                    .setValue(message.contents)
+    private fun updateReceiverStatusMessage(
+        message: Message,
+        friendRecRef: String,
+        callback: RemoteCallback<Boolean>
+    ) {
+        database.reference.child(friendRecRef)
+            .child(Constants.CONTENTS)
+            .setValue(message.contents)
+            .addOnSuccessListener {
                 database.reference.child(friendRecRef)
                     .child(Constants.MESSAGE_SEEN)
                     .setValue(Constants.NOT_SEEN)
-                database.reference.child(friendRecRef)
-                    .child(AVATAR_LINK)
-                    .setValue(data.pathAvatar)
-                database.reference.child(friendRecRef)
-                    .child(Constants.IS_ONLINE)
-                    .setValue(data.isOnline)
-                database.reference.child(friendRecRef)
-                    .child(Constants.USER_NAME)
-                    .setValue(data.userName)
-                callback.onSuccessfuly(true)
-            }
-
-            override fun onFailure(exception: Exception?) {
-                callback.onFailure(exception)
-            }
-        })
-    }
-
-    private fun getUserInformation(from: String, callback: RemoteCallback<User>) {
-        database.reference.child(Constants.USERS)
-            .child(from)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    callback.onFailure(error.toException())
-                }
-
-                override fun onDataChange(data: DataSnapshot) {
-                    val user = data.getValue(User::class.java)
-                    user?.let {
-                        callback.onSuccessfuly(it)
+                    .addOnSuccessListener {
+                        callback.onSuccessfuly(true)
                     }
-                }
-            })
+                    .addOnFailureListener {
+                        callback.onFailure(it)
+                    }
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
     }
 
-    private fun updateFriendSend(message: Message, friendSendRef: String, callback: RemoteCallback<Boolean>) {
-
-        getUserInformation(uidUserRec, object : RemoteCallback<User> {
-            override fun onSuccessfuly(data: User) {
-                database.reference.child(friendSendRef)
-                    .child(Constants.CONTENTS)
-                    .setValue(message.contents)
+    private fun updateSenderStatusMessage(
+        message: Message,
+        friendSendRef: String,
+        callback: RemoteCallback<Boolean>
+    ) {
+        database.reference.child(friendSendRef)
+            .child(Constants.CONTENTS)
+            .setValue(message.contents)
+            .addOnSuccessListener {
                 database.reference.child(friendSendRef)
                     .child(Constants.MESSAGE_SEEN)
                     .setValue(Constants.SEEN)
-                database.reference.child(friendSendRef)
-                    .child(AVATAR_LINK)
-                    .setValue(data.pathAvatar)
-                database.reference.child(friendSendRef)
-                    .child(Constants.IS_ONLINE)
-                    .setValue(data.isOnline)
-                database.reference.child(friendSendRef)
-                    .child(Constants.USER_NAME)
-                    .setValue(data.userName)
-                callback.onSuccessfuly(true)
+                    .addOnSuccessListener {
+                        callback.onSuccessfuly(true)
+                    }
+                    .addOnFailureListener {
+                        callback.onFailure(it)
+                    }
             }
-
-            override fun onFailure(exception: Exception?) {
-                callback.onFailure(exception)
+            .addOnFailureListener {
+                callback.onFailure(it)
             }
-        })
     }
 
     override fun getMessages(callback: RemoteCallback<ArrayList<Message>>) {

@@ -5,7 +5,7 @@ import java.lang.Exception
 
 interface FriendRequestContract {
     interface View {
-        fun onGetListFriendRequest(friendRequests: ArrayList<User>)
+        fun onFriendRequestsAvailable(friendRequests: ArrayList<User>)
         fun onFailure(exception: Exception?)
         fun onApproveSuccessfully()
         fun onCancelSuccessfully()

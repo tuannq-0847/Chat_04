@@ -12,7 +12,6 @@ import com.sun.chat_04.data.remote.FriendRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRepository
 import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.friend.search.SearchFragment
-import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_friends.editSearch
 import kotlinx.android.synthetic.main.fragment_friends.progressLoadFriend

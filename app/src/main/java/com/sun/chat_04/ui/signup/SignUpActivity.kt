@@ -67,7 +67,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
     override fun onSignUpSuccessfuly() {
         this.notification(resources.getString(R.string.sign_up_success))
         hideProgess()
-        this.finish()
+        finish()
     }
 
     override fun onEmptyUserName() {
@@ -116,7 +116,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            this.finish()
+            finish()
         }
     }
 

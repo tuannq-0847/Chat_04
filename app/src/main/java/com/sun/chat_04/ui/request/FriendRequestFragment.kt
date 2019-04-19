@@ -19,7 +19,7 @@ class FriendRequestFragment : Fragment(), FriendRequestContract.View {
     private lateinit var presenter: FriendRequestContract.Presenter
     private lateinit var adapter: FriendRequestAdapter
 
-    override fun onGetListFriendRequest(friendRequests: ArrayList<User>) {
+    override fun onFriendRequestsAvailable(friendRequests: ArrayList<User>) {
         if (friendRequests.size == FRIENDS_INDEX_0) {
             imageEmpty?.let {
                 it.visibility = View.VISIBLE

@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.sun.chat_04.data.model.Message
+import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.MessageRepository
+import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
 import java.io.ByteArrayOutputStream
@@ -12,17 +14,26 @@ import java.io.InputStream
 
 class ChatPresenter(
     private val view: ChatContract.View,
-    private val repository: MessageRepository
+    private val repository: MessageRepository,
+    private val userRepository: UserRepository
 ) : ChatContract.Presenter {
 
-    override fun getMessages() {
-        repository.getMessages(object : RemoteCallback<ArrayList<Message>> {
-            override fun onSuccessfuly(data: ArrayList<Message>) {
-                view.onGetMessagesSuccessfully(data)
+    override fun getFriendInformation(idUser: String) {
+        userRepository.getUserInfo(idUser, object : RemoteCallback<User> {
+            override fun onSuccessfuly(data: User) {
+                view.getFriendInformationSuccessfully(data)
+                repository.getMessages(object : RemoteCallback<ArrayList<Message>> {
+                    override fun onSuccessfuly(data: ArrayList<Message>) {
+                        view.onGetMessagesSuccessfully(data)
+                    }
+
+                    override fun onFailure(exception: Exception?) {
+                        view.onGetMessagesFailure(exception)
+                    }
+                })
             }
 
             override fun onFailure(exception: Exception?) {
-                view.onGetMessagesFailure(exception)
             }
         })
     }
@@ -64,6 +75,6 @@ class ChatPresenter(
     }
 
     override fun onChatScreenVisible(isVisible: Boolean) {
-        repository.onChatScreenVisible(isVisible)
+        repository.updateSeenStatusFriend(isVisible)
     }
 }

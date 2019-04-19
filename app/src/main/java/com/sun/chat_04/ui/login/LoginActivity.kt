@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
 
     private lateinit var presenter: LoginContract.Presenter
     private lateinit var callbackManager: CallbackManager
-    private var isFlag: Boolean = false
+    private var isValid: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
             val isLogin = presenter.isLogin(Global.firebaseAuth.currentUser)
             if (isLogin) {
                 gotoHomeActivity()
-                this.finish()
+                finish()
             }
         }
     }
@@ -100,7 +100,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     }
 
     private fun loginWithEmailAndPass() {
-        if (isFlag) {
+        if (isValid) {
             progressbarSignIn.visibility = View.VISIBLE
         }
         val email = editEmailLogin.text.toString()
@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     }
 
     override fun invalidLogin() {
-        isFlag = false
+        isValid = false
         buttonLoginEmailPass.isClickable = false
         buttonLoginEmailPass.setBackgroundColor(
             ContextCompat.getColor(
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
     }
 
     override fun validLogin() {
-        isFlag = true
+        isValid = true
         buttonLoginEmailPass.isClickable = true
         buttonLoginEmailPass.setBackgroundColor(
             ContextCompat.getColor(
@@ -170,6 +170,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, LoginContract.V
         Intent(this@LoginActivity, MainActivity::class.java).also {
             startActivity(it)
         }
-        this.finish()
+        finish()
     }
 }

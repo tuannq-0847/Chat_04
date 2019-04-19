@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,11 @@ import android.widget.Toast
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.Message
+import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.MessageRemoteDataSource
+import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.MessageRepository
+import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_chat_message.buttonSend
@@ -25,6 +29,8 @@ import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
 class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     private lateinit var adapter: ChatAdapter
     private lateinit var presenter: ChatContract.Presenter
+    private lateinit var friendChat: User
+    private lateinit var friendId: String
 
     companion object {
         @JvmStatic
@@ -40,7 +46,9 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
 
     override fun onGetMessagesSuccessfully(messages: ArrayList<Message>) {
         val linearLayoutManager = LinearLayoutManager(context)
-        adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, messages)
+        if (::friendChat.isInitialized) {
+            adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, friendChat.pathAvatar, messages)
+        }
         recyclerChat?.let {
             it.layoutManager = linearLayoutManager
             if (::adapter.isInitialized) {
@@ -90,6 +98,10 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     }
 
     override fun insertMessageFailure(exception: Exception?) {
+    }
+
+    override fun getFriendInformationSuccessfully(user: User) {
+        friendChat = user
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -145,11 +157,19 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                                 Global.firebaseDatabase, friends,
                                 Global.firebaseStorage
                             )
+                        ),
+                        UserRepository(
+                            UserRemoteDataSource(
+                                Global.firebaseAuth,
+                                Global.firebaseDatabase,
+                                Global.firebaseStorage
+                            )
                         )
                     )
                 toolbarMessage.title = friends.userName
                 if (::presenter.isInitialized) {
-                    presenter.getMessages()
+                    friendId = friends.idUser
+                    presenter.getFriendInformation(friendId)
                 }
             }
         }

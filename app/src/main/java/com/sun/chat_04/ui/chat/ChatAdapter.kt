@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.items_image_send.view.imageSend
 
 class ChatAdapter(
     private val idUser: String?,
+    private val friendAvatar: String,
     private val messages: ArrayList<Message>
 ) :
     RecyclerView.Adapter<BaseViewHolder>() {
@@ -87,7 +88,7 @@ class ChatAdapter(
                 textMessageReceiver.text = message.contents
                 imageAvatarUserReceiver?.let {
                     Glide.with(context)
-                        .load(message.avatar)
+                        .load(friendAvatar)
                         .centerCrop()
                         .placeholder(R.drawable.avatar)
                         .into(it)
@@ -123,7 +124,7 @@ class ChatAdapter(
                 }
                 imageUserRec?.let {
                     Glide.with(context)
-                        .load(message.avatar)
+                        .load(friendAvatar)
                         .centerCrop()
                         .placeholder(R.drawable.avatar)
                         .into(it)
