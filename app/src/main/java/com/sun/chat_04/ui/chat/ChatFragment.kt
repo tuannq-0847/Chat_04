@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,11 @@ import android.widget.Toast
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.Message
+import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.MessageRemoteDataSource
+import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.MessageRepository
+import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_chat_message.buttonSend
@@ -23,9 +27,10 @@ import kotlinx.android.synthetic.main.fragment_chat_message.recyclerChat
 import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
 
 class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
-
     private lateinit var adapter: ChatAdapter
     private lateinit var presenter: ChatContract.Presenter
+    private lateinit var friendChat: User
+    private lateinit var friendId: String
 
     companion object {
         @JvmStatic
@@ -41,9 +46,11 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
 
     override fun onGetMessagesSuccessfully(messages: ArrayList<Message>) {
         val linearLayoutManager = LinearLayoutManager(context)
+        if (::friendChat.isInitialized) {
+            adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, friendChat.pathAvatar, messages)
+        }
         recyclerChat?.let {
             it.layoutManager = linearLayoutManager
-            adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, messages)
             if (::adapter.isInitialized) {
                 it.adapter = adapter
                 it.scrollToPosition(messages.size - INDEX_MESSAGES_1)
@@ -59,7 +66,10 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
         when (v?.id) {
             R.id.buttonSend -> {
                 val message =
-                    Message(Constants.NONE, contents = editMessage.text.toString(), type = Constants.TEXT_MESSAGE)
+                    Message(
+                        Constants.NONE, contents = editMessage.text.toString(), type = Constants.TEXT_MESSAGE,
+                        seen = Constants.SEEN
+                    )
                 if (::presenter.isInitialized) {
                     presenter.handleMessage(message)
                     editMessage.setText(Constants.NONE)
@@ -67,7 +77,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
             }
             R.id.imageAdd -> {
                 val intent = Intent()
-                intent.action = android.content.Intent.ACTION_GET_CONTENT
+                intent.action = Intent.ACTION_GET_CONTENT
                 intent.type = Constants.INTENT_GALLERY
                 startActivityForResult(
                     Intent.createChooser(
@@ -90,6 +100,10 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     override fun insertMessageFailure(exception: Exception?) {
     }
 
+    override fun getFriendInformationSuccessfully(user: User) {
+        friendChat = user
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initComponents()
@@ -108,10 +122,18 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                     Constants.NONE,
                     type = Constants.IMAGE_MESSAGE,
                     contents = it.toString(),
-                    bytes = presenter.compressBitmap(inputStream)
+                    bytes = presenter.compressBitmap(inputStream),
+                    seen = Constants.NOT_SEEN
                 )
                 presenter.handleMessage(message)
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (::presenter.isInitialized) {
+            presenter.onChatScreenVisible(true)
         }
     }
 
@@ -135,11 +157,19 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
                                 Global.firebaseDatabase, friends,
                                 Global.firebaseStorage
                             )
+                        ),
+                        UserRepository(
+                            UserRemoteDataSource(
+                                Global.firebaseAuth,
+                                Global.firebaseDatabase,
+                                Global.firebaseStorage
+                            )
                         )
                     )
                 toolbarMessage.title = friends.userName
                 if (::presenter.isInitialized) {
-                    presenter.getMessages()
+                    friendId = friends.idUser
+                    presenter.getFriendInformation(friendId)
                 }
             }
         }

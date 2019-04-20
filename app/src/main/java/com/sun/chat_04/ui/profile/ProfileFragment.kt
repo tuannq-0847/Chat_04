@@ -14,12 +14,15 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.facebook.login.LoginManager
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.ui.login.LoginActivity
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
+import kotlinx.android.synthetic.main.fragment_edit_user_profile.textBioProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
 import kotlinx.android.synthetic.main.fragment_profile.imageCover
 import kotlinx.android.synthetic.main.fragment_profile.imageEditAvatar
@@ -128,16 +131,31 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
 
     private fun displayUserProfile() {
         ::user.isInitialized.let {
-            displayUserImage(Uri.parse(user.pathAvatar), imageAvatarProfile)
-            displayUserImage(Uri.parse(user.pathBackground), imageCover)
-            textNameProfile.text = user.userName.toString()
-            textAgeProfile.text = user.birthday.toString()
-            textUserBioProfile.text = user.bio
-            textNameToolbarProfile.text = user.userName.toString()
-            textGenderProfile.text = when (user.gender) {
-                Constants.MALE -> resources.getString(R.string.male)
-                else -> resources.getString(R.string.female)
+            imageAvatarProfile?.let {
+                displayUserImage(Uri.parse(user.pathAvatar), it)
             }
+            imageCover?.let {
+                displayUserImage(Uri.parse(user.pathBackground), it)
+            }
+            textNameProfile?.let {
+                it.text = user.userName.toString()
+            }
+            textAgeProfile?.let {
+                it.text = user.birthday.toString()
+            }
+            textBioProfile?.let {
+                it.text = user.bio
+            }
+            textNameToolbarProfile?.let {
+                it.text = user.userName.toString()
+            }
+            textGenderProfile?.let {
+                it.text = when (user.gender) {
+                    Constants.MALE -> resources.getString(R.string.male)
+                    else -> resources.getString(R.string.female)
+                }
+            }
+
             context?.let {
                 if (user.lat != 0.0 && user.lgn != 0.0) {
                     Geocoder(it, Locale.getDefault())
@@ -197,6 +215,9 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                     if (::presenter.isInitialized)
                         presenter.updateUserStatus(Constants.OFFLINE)
                     Global.firebaseAuth.signOut()
+                    LoginManager.getInstance().logOut()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
                     activity?.finish()
                 }
                 .setNeutralButton(resources.getString(R.string.no)) { dialog, which -> }
@@ -205,6 +226,8 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     }
 
     private fun hideSwipeRefreshUserProfile() {
-        swipeRefreshUserProfile.isRefreshing = false
+        swipeRefreshUserProfile?.let {
+            swipeRefreshUserProfile.isRefreshing = false
+        }
     }
 }

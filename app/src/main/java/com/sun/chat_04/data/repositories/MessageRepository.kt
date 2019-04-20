@@ -8,6 +8,10 @@ class MessageRepository(
     private val remoteDataSource: MessageRemoteDataSource
 ) : MessageDataSource.Remote {
 
+    override fun updateSeenStatusFriend(isSeen: Boolean) {
+        remoteDataSource.updateSeenStatusFriend(isSeen)
+    }
+
     override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
         remoteDataSource.updateImageMessage(message, callback)
     }

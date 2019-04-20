@@ -13,7 +13,6 @@ import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.remote.FriendRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRepository
 import com.sun.chat_04.ui.chat.ChatFragment
-import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_search_chat.imageBack
 import kotlinx.android.synthetic.main.fragment_search_chat.recyclerSearch
@@ -29,9 +28,11 @@ class SearchFragment : Fragment(), SearchConstract.View, View.OnClickListener, O
 
     override fun onGetUsersSuccessfully(friends: ArrayList<Friend>) {
         searchAdapter = SearchAdapter(friends) { friend -> listener(friend) }
-        recyclerSearch.layoutManager = LinearLayoutManager(context)
-        if (::searchAdapter.isInitialized) {
-            recyclerSearch.adapter = searchAdapter
+        recyclerSearch?.let {
+            it.layoutManager = LinearLayoutManager(context)
+            if (::searchAdapter.isInitialized) {
+                it.adapter = searchAdapter
+            }
         }
     }
 

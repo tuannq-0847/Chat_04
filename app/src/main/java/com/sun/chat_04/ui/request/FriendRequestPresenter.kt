@@ -36,7 +36,7 @@ class FriendRequestPresenter(
     override fun getFriendRequests() {
         repository.showFriendRequests(object : RemoteCallback<ArrayList<User>> {
             override fun onSuccessfuly(data: ArrayList<User>) {
-                view.onGetListFriendRequest(data)
+                view.onFriendRequestsAvailable(data)
             }
 
             override fun onFailure(exception: Exception?) {

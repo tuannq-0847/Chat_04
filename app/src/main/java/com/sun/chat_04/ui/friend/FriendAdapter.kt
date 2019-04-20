@@ -50,6 +50,9 @@ class FriendAdapter(
                 } else {
                     imageStatusUser.setBackgroundResource(R.drawable.background_offline)
                 }
+                if (friend.seen == Constants.NOT_SEEN) {
+                    textLastMessage.setTextColor(resources.getColor(R.color.color_black))
+                }
                 setOnClickListener { listener(friend) }
 
             }

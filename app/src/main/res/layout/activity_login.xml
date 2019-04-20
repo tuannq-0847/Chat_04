@@ -53,7 +53,7 @@
             android:id="@+id/buttonLoginEmailPass"
             style="@style/ButtonBeforeLogin"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_56"
+            android:layout_height="@dimen/dp_48"
             android:clickable="false"
             android:text="@string/login" />
 
@@ -86,7 +86,7 @@
         android:id="@+id/buttonLoginFace"
         style="@style/ButtonLoginFace"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp_56"
+        android:layout_height="@dimen/dp_48"
         android:layout_marginTop="@dimen/dp_16"
         android:text="@string/login_with_face"
         app:layout_constraintLeft_toLeftOf="parent"

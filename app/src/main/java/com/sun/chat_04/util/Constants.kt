@@ -43,4 +43,9 @@ object Constants {
     const val FEMALE = "1"
     const val REQUEST_FRIEND = "Requests"
     const val OFFLINE = 0
+    const val IS_ONLINE = "isonline"
+    const val SEEN = 1
+    const val NOT_SEEN = 0
+    const val MESSAGE_SEEN = "seen"
+    const val AVATAR = "avatar"
 }

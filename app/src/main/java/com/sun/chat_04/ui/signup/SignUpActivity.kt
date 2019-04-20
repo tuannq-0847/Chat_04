@@ -2,6 +2,7 @@ package com.sun.chat_04.ui.signup
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -66,6 +67,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
     override fun onSignUpSuccessfuly() {
         this.notification(resources.getString(R.string.sign_up_success))
         hideProgess()
+        finish()
     }
 
     override fun onEmptyUserName() {
@@ -114,7 +116,7 @@ class SignUpActivity : AppCompatActivity(), OnClickListener, SignUpContract.View
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            this.finish()
+            finish()
         }
     }
 

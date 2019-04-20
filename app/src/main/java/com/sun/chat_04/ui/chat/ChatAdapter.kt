@@ -9,6 +9,7 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Message
 import com.sun.chat_04.ui.chat.ChatAdapter.Companion.BaseViewHolder
 import com.sun.chat_04.util.Constants
+import kotlinx.android.synthetic.main.items_chat_rec.view.imageAvatarUserReceiver
 import kotlinx.android.synthetic.main.items_chat_rec.view.textMessageReceiver
 import kotlinx.android.synthetic.main.items_chat_send.view.textMessageSend
 import kotlinx.android.synthetic.main.items_image_rec.view.imageRec
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.items_image_send.view.imageSend
 
 class ChatAdapter(
     private val idUser: String?,
+    private val friendAvatar: String,
     private val messages: ArrayList<Message>
 ) :
     RecyclerView.Adapter<BaseViewHolder>() {
@@ -84,6 +86,14 @@ class ChatAdapter(
         override fun onBind(message: Message) {
             with(itemView) {
                 textMessageReceiver.text = message.contents
+                imageAvatarUserReceiver?.let {
+                    Glide.with(context)
+                        .load(friendAvatar)
+                        .centerCrop()
+                        .placeholder(R.drawable.avatar)
+                        .into(it)
+                }
+
             }
         }
     }
@@ -91,11 +101,13 @@ class ChatAdapter(
     inner class SendViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
             with(itemView) {
-                Glide.with(context)
-                    .load(message.contents)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imageSend)
+                imageSend?.let {
+                    Glide.with(context)
+                        .load(message.contents)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .into(imageSend)
+                }
             }
         }
     }
@@ -103,12 +115,21 @@ class ChatAdapter(
     inner class RecViewHolderImage(itemView: View) : BaseViewHolder(itemView) {
         override fun onBind(message: Message) {
             with(itemView) {
-                Glide.with(context)
-                    .load(message.contents)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imageRec)
-                imageUserRec.setBackgroundResource(R.drawable.avatar)
+                imageRec?.let {
+                    Glide.with(context)
+                        .load(message.contents)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .into(imageRec)
+                }
+                imageUserRec?.let {
+                    Glide.with(context)
+                        .load(friendAvatar)
+                        .centerCrop()
+                        .placeholder(R.drawable.avatar)
+                        .into(it)
+                }
+
             }
         }
     }

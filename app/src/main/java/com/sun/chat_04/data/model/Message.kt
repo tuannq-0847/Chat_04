@@ -5,5 +5,7 @@ data class Message(
     var contents: String = "",
     var from: String = "",
     var type: String = "",
-    var bytes: ByteArray? = null
+    var bytes: ByteArray? = null,
+    var seen: Int = 0,
+    var avatar: String = ""
 )
