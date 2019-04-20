@@ -11,6 +11,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginStart="@dimen/dp_4"
+        android:background="@drawable/border_item_click"
         android:src="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,17 +27,18 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/imageBackProfile"
-        app:layout_constraintRight_toLeftOf="@id/imageSignOutProfile"
+        app:layout_constraintRight_toLeftOf="@id/imageSignOut"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageSignOutProfile"
+        android:id="@+id/imageSignOut"
         android:layout_width="@dimen/dp_24"
         android:layout_height="@dimen/dp_24"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginStart="@dimen/dp_8"
-        android:background="@drawable/ic_sign_out"
+        android:background="@drawable/border_item_click"
         android:gravity="center"
+        android:src="@drawable/ic_logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

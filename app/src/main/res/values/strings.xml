@@ -45,7 +45,7 @@
     <string name="other_error">unknown error</string>
     <string name="choose_image">Choose Image</string>
     <string name="discovery_search">Tìm kiếm bạn bè</string>
-    <string name="discovery_around_here">Tìm kiếm xung quanh</string>
+    <string name="discovery_title_suggest">Gợi ý kết bạn</string>
     <string name="requireGPS">Turn on GPS and Internet</string>
     <string name="search_message">Search</string>
     <string name="profile_background">Background</string>
@@ -75,4 +75,5 @@
     <string name="friend_request">Friend Request</string>
     <string name="accept_request">Accept</string>
     <string name="cancel_request">Cancel</string>
+    <string name="result_search">Kết quả tìm thấy</string>
 </resources>
