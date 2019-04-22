@@ -11,6 +11,16 @@ interface DiscoveryContract {
         fun onFindUserFailure(exception: Exception?)
 
         fun onGetUserInfoSuccess(user: User)
+
+        fun showProgress()
+
+        fun hideProgress()
+
+        fun hideSwipeRefreshDiscovery()
+
+        fun showTitleSuggestFriends()
+
+        fun showTitleFindFriendsByName()
     }
 
     interface Presenter {
@@ -20,6 +30,6 @@ interface DiscoveryContract {
 
         fun findUserAroundHere(@NonNull user: User)
 
-        fun isNearbyUser(location: Location?, @NonNull friend: User): Boolean
+        fun isNearByUser(location: Location?, @NonNull friend: User): Boolean
     }
 }

@@ -41,10 +41,7 @@ class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User
             with(itemView) {
                 displayUserAvatar(user.pathAvatar, imageUserDiscovery)
                 textNameUserDiscovery.text = user.userName
-                textGenderDiscovery.text = when (user.gender) {
-                    Constants.MALE -> resources.getString(R.string.male)
-                    else -> resources.getString(R.string.female)
-                }
+                displayGender(user.gender)
                 imageGender.setImageResource(
                     when (user.gender) {
                         Constants.MALE -> R.drawable.ic_male
@@ -52,6 +49,17 @@ class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User
                     }
                 )
                 setOnClickListener { userClickListener(user) }
+            }
+        }
+
+        private fun displayGender(gender: String?) {
+            if (!gender.isNullOrEmpty()) {
+                with(itemView) {
+                    textGenderDiscovery.text = when (gender) {
+                        Constants.MALE -> resources.getString(R.string.male)
+                        else -> resources.getString(R.string.female)
+                    }
+                }
             }
         }
 

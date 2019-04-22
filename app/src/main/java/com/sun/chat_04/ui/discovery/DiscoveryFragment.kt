@@ -43,25 +43,19 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         if (::adapter.isInitialized) {
             adapter.refreshUsers(users)
         }
-        hideSwipeRefreshDiscovery()
-        hideProgress()
     }
 
     override fun onGetUserInfoSuccess(user: User) {
         if (::presenter.isInitialized) {
             presenter.findUserAroundHere(user)
-            showTitleSuggestFriends()
         }
     }
 
     override fun onFindUserFailure(exception: Exception?) {
-        hideProgress()
-        hideSwipeRefreshDiscovery()
         Global.showMessage(context, resources.getString(R.string.user_not_found))
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        showProgress()
         query?.let {
             findUsersbyName(query)
         }
@@ -80,6 +74,18 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         when {
             !searchDiscovery.query.isNullOrEmpty() -> findUsersbyName(searchDiscovery.query.toString())
             else -> findUsersAroundHere()
+        }
+    }
+
+    override fun showProgress() {
+        progressLoading?.let {
+            progressLoading.visibility = View.VISIBLE
+        }
+    }
+
+    override fun hideProgress() {
+        progressLoading?.let {
+            progressLoading.visibility = View.GONE
         }
     }
 
@@ -121,7 +127,6 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
     private fun findUsersbyName(query: String) {
         if (::presenter.isInitialized) {
             presenter.findUserByName(query)
-            showTitleFindFriendsByName()
         }
     }
 
@@ -134,13 +139,10 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
     }
 
     private fun checkPermissions() {
-        context?.let {
-            if (Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
-                Global.checkGrantedPermission(it, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)
-            ) {
-                showProgress()
-                if (!::presenter.isInitialized) {
-                } else {
+        context?.apply {
+            if (Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
+                Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
+                if (::presenter.isInitialized) {
                     presenter.getUserInfo()
                 }
             } else {
@@ -151,31 +153,19 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
         }
     }
 
-    private fun showProgress() {
-        progressLoading?.let {
-            progressLoading.visibility = View.VISIBLE
-        }
-    }
-
-    private fun hideProgress() {
-        progressLoading?.let {
-            progressLoading.visibility = View.GONE
-        }
-    }
-
-    private fun hideSwipeRefreshDiscovery() {
+    override fun hideSwipeRefreshDiscovery() {
         swipeRefreshDiscovery?.let {
             it.isRefreshing = false
         }
     }
 
-    private fun showTitleSuggestFriends() {
+    override fun showTitleSuggestFriends() {
         textNotifyResult?.let {
             textNotifyResult.text = resources.getString(R.string.discovery_title_suggest)
         }
     }
 
-    private fun showTitleFindFriendsByName() {
+    override fun showTitleFindFriendsByName() {
         textNotifyResult?.let {
             textNotifyResult.text = resources.getString(R.string.result_search)
         }

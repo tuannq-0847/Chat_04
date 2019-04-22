@@ -13,16 +13,22 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val repository: UserR
     DiscoveryContract.Presenter {
 
     override fun findUserByName(@NonNull userName: String) {
+        view.showProgress()
+        view.showTitleFindFriendsByName()
         repository.getUsers(object : RemoteCallback<List<User>> {
             override fun onSuccessfuly(data: List<User>) {
                 val users = data.filter {
                     it.userName.toLowerCase().contains(userName.toLowerCase())
                 }
                 view.onFindUsersSuccess(users)
+                view.hideSwipeRefreshDiscovery()
+                view.hideProgress()
             }
 
             override fun onFailure(exception: Exception?) {
                 view.onFindUserFailure(exception)
+                view.hideProgress()
+                view.hideSwipeRefreshDiscovery()
             }
         })
     }
@@ -35,20 +41,24 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val repository: UserR
             override fun onSuccessfuly(data: List<User>) {
                 val users = ArrayList<User>()
                 for (friend in data) {
-                    if (isNearbyUser(locationUser, friend)) {
+                    if (isNearByUser(locationUser, friend)) {
                         users.add(friend)
                     }
                 }
                 view.onFindUsersSuccess(users)
+                view.hideSwipeRefreshDiscovery()
+                view.hideProgress()
             }
 
             override fun onFailure(exception: Exception?) {
                 view.onFindUserFailure(exception)
+                view.hideProgress()
+                view.hideSwipeRefreshDiscovery()
             }
         })
     }
 
-    override fun isNearbyUser(location: Location?, @NonNull friend: User): Boolean {
+    override fun isNearByUser(location: Location?, @NonNull friend: User): Boolean {
         val locationB = Location("")
         locationB.latitude = friend.lat
         locationB.longitude = friend.lgn
@@ -58,19 +68,25 @@ class DiscoveryPresenter(val view: DiscoveryContract.View, val repository: UserR
     }
 
     override fun getUserInfo() {
+        view.showProgress()
         val userId = Global.firebaseAuth.currentUser?.uid
         if (userId != null) {
             repository.getUserInfo(userId, object : RemoteCallback<User> {
                 override fun onSuccessfuly(data: User) {
                     view.onGetUserInfoSuccess(data)
+                    view.showTitleSuggestFriends()
                 }
 
                 override fun onFailure(exception: Exception?) {
                     view.onFindUserFailure(exception)
+                    view.hideProgress()
+                    view.hideSwipeRefreshDiscovery()
                 }
             })
             return
         }
         view.onFindUserFailure(DatabaseException(""))
+        view.hideProgress()
+        view.hideSwipeRefreshDiscovery()
     }
 }
