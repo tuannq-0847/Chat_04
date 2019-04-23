@@ -48,4 +48,5 @@ object Constants {
     const val NOT_SEEN = 0
     const val MESSAGE_SEEN = "seen"
     const val AVATAR = "avatar"
+    const val ZERO=0
 }

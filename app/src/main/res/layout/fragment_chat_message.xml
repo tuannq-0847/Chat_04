@@ -14,6 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp_1"
         android:background="@color/color_grey"
@@ -43,6 +44,30 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbarMessage" />
 
     <ImageView
+        android:id="@+id/imageChat"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_200"
+        android:src="@drawable/ic_chatting"
+        app:layout_constraintBottom_toTopOf="@+id/textNotice"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/textNotice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notice"
+        android:textAlignment="center"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/sp_20"
+        app:layout_constraintBottom_toTopOf="@+id/viewBelow"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageChat" />
+
+    <ImageView
         android:id="@+id/imageAdd"
         android:layout_width="@dimen/dp_22"
         android:layout_height="@dimen/dp_22"
@@ -53,6 +78,7 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <View
+        android:id="@+id/viewBelow"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp_1"
         android:background="@color/color_grey"
@@ -82,5 +108,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/editMessage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editMessage" />
+
+    <android.support.constraint.Group
+        android:id="@+id/groupMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="imageChat,textNotice" />
 
 </android.support.constraint.ConstraintLayout>

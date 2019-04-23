@@ -12,23 +12,36 @@ import com.sun.chat_04.data.remote.FriendRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRepository
 import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.friend.search.SearchFragment
+import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_friends.editSearch
+import kotlinx.android.synthetic.main.fragment_friends.group
+import kotlinx.android.synthetic.main.fragment_friends.imageSearch
 import kotlinx.android.synthetic.main.fragment_friends.progressLoadFriend
 import kotlinx.android.synthetic.main.fragment_friends.recyclerListChat
 
 class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
     private lateinit var adapter: FriendAdapter
     private lateinit var presenter: FriendContract.Presenter
+    private lateinit var friendCallBack: FriendCallBack
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
         progressLoadFriend?.let {
-            progressLoadFriend.visibility = View.INVISIBLE
-            adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
-            recyclerListChat.layoutManager = LinearLayoutManager(context)
-            if (::adapter.isInitialized) {
-                recyclerListChat.adapter = adapter
+            if (friends.size == Constants.ZERO) {
+                group.visibility = View.VISIBLE
+                recyclerListChat.visibility = View.GONE
+                progressLoadFriend.visibility = View.INVISIBLE
+            } else {
+                group.visibility = View.GONE
+                recyclerListChat.visibility = View.VISIBLE
+                progressLoadFriend.visibility = View.INVISIBLE
+                adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
+                recyclerListChat.layoutManager = LinearLayoutManager(context)
+                if (::adapter.isInitialized) {
+                    recyclerListChat.adapter = adapter
+                }
             }
+
         }
     }
 
@@ -46,6 +59,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
             presenter.getFriends()
         }
         editSearch.setOnClickListener(this)
+        imageSearch.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -57,7 +71,14 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
                     ?.addToBackStack(null)
                     ?.commit()
             }
+            R.id.imageSearch -> {
+                friendCallBack.openSearchScreen()
+            }
         }
+    }
+
+    fun setOnFriendCallBack(friendCallBack: FriendCallBack) {
+        this.friendCallBack = friendCallBack
     }
 
     override fun onGetFriendsFailed(exception: Exception?) {

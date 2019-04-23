@@ -181,6 +181,9 @@ class MessageRemoteDataSource(
 
                 override fun onDataChange(data: DataSnapshot) {
                     messages.clear()
+                    if (!data.hasChildren()) {
+                        callback.onSuccessfuly(messages)
+                    }
                     for (dataSnapshot in data.children) {
                         val messaage = dataSnapshot.getValue(Message::class.java)
                         messaage?.let {

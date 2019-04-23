@@ -30,5 +30,6 @@
     <dimen name="dp_135">135dp</dimen>
     <dimen name="dp_3">3dp</dimen>
     <dimen name="max_line">1</dimen>
+    <dimen name="dp_6">6dp</dimen>
 </resources>
 

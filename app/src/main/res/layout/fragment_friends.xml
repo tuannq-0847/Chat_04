@@ -70,4 +70,60 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editSearch" />
+
+    <TextView
+        android:id="@+id/textGetStarted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/get_started"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSearch" />
+
+    <TextView
+        android:id="@+id/textTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:text="@string/Tap"
+        android:textColor="@color/color_black"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/imageSearch"
+        app:layout_constraintTop_toBottomOf="@+id/textGetStarted" />
+
+    <ImageView
+        android:id="@+id/imageSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_6"
+        android:src="@drawable/ic_search"
+        app:layout_constraintEnd_toStartOf="@+id/textFind"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textTap"
+        app:layout_constraintTop_toTopOf="@+id/textTap" />
+
+    <TextView
+        android:id="@+id/textFind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_4"
+        android:text="@string/find_people"
+        android:textColor="@color/color_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageSearch"
+        app:layout_constraintTop_toTopOf="@+id/textTap" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="imageSearch,textGetStarted,textTap,textFind" />
 </android.support.constraint.ConstraintLayout>

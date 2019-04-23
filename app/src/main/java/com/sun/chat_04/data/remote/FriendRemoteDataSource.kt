@@ -25,7 +25,7 @@ class FriendRemoteDataSource(
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (!dataSnapshot.hasChildren()) {
-                            callback.onFailure(null)
+                            callback.onSuccessfuly(friends)
                         }
                         friends.clear()
                         for (data in dataSnapshot.children) {
