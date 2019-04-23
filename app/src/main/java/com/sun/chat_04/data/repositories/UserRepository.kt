@@ -66,5 +66,4 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
     override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
         remoteDataSource.updateUserStatus(userId, isOnline, callback)
     }
-
 }

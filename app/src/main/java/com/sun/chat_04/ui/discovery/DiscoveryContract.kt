@@ -1,6 +1,7 @@
 package com.sun.chat_04.ui.discovery
 
 import android.location.Location
+import android.support.annotation.NonNull
 import com.sun.chat_04.data.model.User
 
 interface DiscoveryContract {
@@ -9,16 +10,26 @@ interface DiscoveryContract {
 
         fun onFindUserFailure(exception: Exception?)
 
-        fun onGetInfoUserSuccess(user: User)
+        fun onGetUserInfoSuccess(user: User)
+
+        fun showProgress()
+
+        fun hideProgress()
+
+        fun hideSwipeRefreshDiscovery()
+
+        fun showTitleSuggestFriends()
+
+        fun showTitleFindFriendsByName()
     }
 
     interface Presenter {
-        fun findUserByName(userName: String)
+        fun findUserByName(@NonNull userName: String)
 
         fun getUserInfo()
 
-        fun findUserAroundHere(location: Location?)
+        fun findUserAroundHere(@NonNull user: User)
 
-        fun isNearbyUser(location: Location?, user: User): Boolean
+        fun isNearByUser(location: Location?, @NonNull friend: User): Boolean
     }
 }

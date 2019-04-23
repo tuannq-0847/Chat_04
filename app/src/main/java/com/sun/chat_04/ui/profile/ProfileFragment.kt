@@ -28,13 +28,14 @@ import kotlinx.android.synthetic.main.fragment_profile.imageCover
 import kotlinx.android.synthetic.main.fragment_profile.imageEditAvatar
 import kotlinx.android.synthetic.main.fragment_profile.imageEditCover
 import kotlinx.android.synthetic.main.fragment_profile.imageEditProfile
+import kotlinx.android.synthetic.main.fragment_profile.progressBarUpdateUserAvatar
+import kotlinx.android.synthetic.main.fragment_profile.progressBarUpdateUserCover
 import kotlinx.android.synthetic.main.fragment_profile.swipeRefreshUserProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
 import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
-import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
-import kotlinx.android.synthetic.main.toolbar_profile.imageSignOutProfile
+import kotlinx.android.synthetic.main.fragment_profile.toolbarUserProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
@@ -57,32 +58,27 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
         getUserProfile()
     }
 
-    private fun initComponent() {
-        imageEditAvatar.setOnClickListener(this)
-        imageEditCover.setOnClickListener(this)
-        imageEditProfile.setOnClickListener(this)
-        imageSignOutProfile.setOnClickListener(this)
-        swipeRefreshUserProfile.setOnRefreshListener(this)
-    }
-
     override fun onGetUserProfileSuccess(user: User) {
         this.user = user
         displayUserProfile()
+        hideSwipeRefreshUserProfile()
     }
 
     override fun onFailure(exception: Exception?) {
-        hideSwipeRefreshUserProfile()
         Global.showMessage(context, resources.getString(R.string.no_internet))
+        hideSwipeRefreshUserProfile()
     }
 
     override fun onUpdateUserAvatarSuccess(uri: Uri) {
         displayUserImage(uri, imageAvatarProfile)
         Global.showMessage(context, resources.getString(R.string.update_avatar_success))
+        hideProgressUpdateUserAvatar()
     }
 
     override fun onUpdateUserCoverSuccess(uri: Uri) {
         displayUserImage(uri, imageCover)
         Global.showMessage(context, resources.getString(R.string.update_cover_success))
+        hideProgressUpdateUserCover()
     }
 
     override fun onSignOutSuccessfully() {
@@ -92,8 +88,18 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
         resultIntent?.data?.let { uri ->
             if (resultCode == RESULT_OK) {
                 when (requestCode) {
-                    Constants.REQUEST_CODE_AVATAR -> ::presenter.isInitialized.let { presenter.updateUserAvatar(uri) }
-                    Constants.REQUEST_CODE_COVER -> ::presenter.isInitialized.let { presenter.updateUserCover(uri) }
+                    Constants.REQUEST_CODE_AVATAR -> {
+                        if (::presenter.isInitialized) {
+                            presenter.updateUserAvatar(uri)
+                            showProgressUpdateUserAvatar()
+                        }
+                    }
+                    Constants.REQUEST_CODE_COVER -> {
+                        if (::presenter.isInitialized) {
+                            presenter.updateUserCover(uri)
+                            showProgressUpdateUserCover()
+                        }
+                    }
                 }
             }
         }
@@ -103,7 +109,7 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
         when (v?.id) {
             R.id.imageEditAvatar -> handleUpdateUserAvatar()
             R.id.imageEditCover -> handleUpdateUserCover()
-            R.id.imageSignOutProfile -> handleSignOut()
+            R.id.imageSignOut -> handleSignOut()
             R.id.imageEditProfile -> handleEditUserProfile()
         }
     }
@@ -125,8 +131,20 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
         )
     }
 
+    private fun initComponent() {
+        showIconSignOut()
+        hideIconBackToolbar()
+        imageEditAvatar.setOnClickListener(this)
+        imageEditCover.setOnClickListener(this)
+        imageEditProfile.setOnClickListener(this)
+        toolbarUserProfile.findViewById<ImageView>(R.id.imageSignOut)?.setOnClickListener(this)
+        swipeRefreshUserProfile.setOnRefreshListener(this)
+    }
+
     private fun getUserProfile() {
-        ::presenter.isInitialized.let { presenter.getUserProfile() }
+        if (::presenter.isInitialized) {
+            presenter.getUserProfile()
+        }
     }
 
     private fun displayUserProfile() {
@@ -155,7 +173,6 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                     else -> resources.getString(R.string.female)
                 }
             }
-
             context?.let {
                 if (user.lat != 0.0 && user.lgn != 0.0) {
                     Geocoder(it, Locale.getDefault())
@@ -166,7 +183,6 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 }
 
             }
-            hideSwipeRefreshUserProfile()
         }
     }
 
@@ -201,7 +217,7 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     private fun handleEditUserProfile() {
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.add(R.id.parentLayout, EditProfileFragment.newInstance(user))
+            ?.replace(R.id.parentLayout, EditProfileFragment.newInstance(user))
             ?.addToBackStack("")
             ?.commit()
     }
@@ -228,6 +244,42 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     private fun hideSwipeRefreshUserProfile() {
         swipeRefreshUserProfile?.let {
             swipeRefreshUserProfile.isRefreshing = false
+        }
+    }
+
+    private fun hideProgressUpdateUserAvatar() {
+        progressBarUpdateUserAvatar?.let {
+            progressBarUpdateUserAvatar.visibility = View.GONE
+        }
+    }
+
+    private fun showProgressUpdateUserAvatar() {
+        progressBarUpdateUserAvatar?.let {
+            progressBarUpdateUserAvatar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideProgressUpdateUserCover() {
+        progressBarUpdateUserCover?.let {
+            progressBarUpdateUserCover.visibility = View.GONE
+        }
+    }
+
+    private fun showProgressUpdateUserCover() {
+        progressBarUpdateUserCover?.let {
+            progressBarUpdateUserCover.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideIconBackToolbar() {
+        toolbarUserProfile?.let {
+            toolbarUserProfile.findViewById<ImageView>(R.id.imageBackProfile).visibility = View.INVISIBLE
+        }
+    }
+
+    private fun showIconSignOut() {
+        toolbarUserProfile.findViewById<ImageView>(R.id.imageSignOut)?.let {
+            it.findViewById<ImageView>(R.id.imageSignOut).visibility = View.VISIBLE
         }
     }
 }
