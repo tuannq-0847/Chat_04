@@ -27,21 +27,14 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
         progressLoadFriend?.let {
-            if (friends.isEmpty()) {
-                group.visibility = View.VISIBLE
-                recyclerListChat.visibility = View.GONE
-                progressLoadFriend.visibility = View.INVISIBLE
-            } else {
-                group.visibility = View.GONE
-                recyclerListChat.visibility = View.VISIBLE
-                progressLoadFriend.visibility = View.INVISIBLE
-                adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
-                recyclerListChat.layoutManager = LinearLayoutManager(context)
-                if (::adapter.isInitialized) {
-                    recyclerListChat.adapter = adapter
-                }
+            group.visibility = View.GONE
+            recyclerListChat.visibility = View.VISIBLE
+            progressLoadFriend.visibility = View.INVISIBLE
+            adapter = FriendAdapter(friends) { friend -> onFriendSelectedListener(friend) }
+            recyclerListChat.layoutManager = LinearLayoutManager(context)
+            if (::adapter.isInitialized) {
+                recyclerListChat.adapter = adapter
             }
-
         }
     }
 
@@ -79,6 +72,12 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     fun setOnFriendCallBack(friendCallBack: FriendCallBack) {
         this.friendCallBack = friendCallBack
+    }
+
+    override fun showEmptyData() {
+        group.visibility = View.VISIBLE
+        recyclerListChat.visibility = View.GONE
+        progressLoadFriend.visibility = View.INVISIBLE
     }
 
     override fun onGetFriendsFailed(exception: Exception?) {

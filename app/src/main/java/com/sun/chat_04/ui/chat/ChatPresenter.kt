@@ -24,7 +24,11 @@ class ChatPresenter(
                 view.getFriendInformationSuccessfully(data)
                 repository.getMessages(object : RemoteCallback<ArrayList<Message>> {
                     override fun onSuccessfuly(data: ArrayList<Message>) {
-                        view.onGetMessagesSuccessfully(data)
+                        if (data.isEmpty()) {
+                            view.showEmptyData()
+                        } else {
+                            view.onGetMessagesSuccessfully(data)
+                        }
                     }
 
                     override fun onFailure(exception: Exception?) {

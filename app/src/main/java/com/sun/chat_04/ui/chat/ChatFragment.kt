@@ -50,18 +50,18 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
         if (::friendChat.isInitialized) {
             adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, friendChat.pathAvatar, messages)
         }
-        if (messages.size == Constants.ZERO) {
-            groupMessage.visibility = View.VISIBLE
-        } else {
-            recyclerChat?.let {
-                groupMessage.visibility = View.GONE
-                it.layoutManager = linearLayoutManager
-                if (::adapter.isInitialized) {
-                    it.adapter = adapter
-                    it.scrollToPosition(messages.size - INDEX_MESSAGES_1)
-                }
+        recyclerChat?.let {
+            groupMessage.visibility = View.GONE
+            it.layoutManager = linearLayoutManager
+            if (::adapter.isInitialized) {
+                it.adapter = adapter
+                it.scrollToPosition(messages.size - INDEX_MESSAGES_1)
             }
         }
+    }
+
+    override fun showEmptyData() {
+        groupMessage.visibility = View.VISIBLE
     }
 
     override fun onGetMessagesFailure(task: Exception?) {
