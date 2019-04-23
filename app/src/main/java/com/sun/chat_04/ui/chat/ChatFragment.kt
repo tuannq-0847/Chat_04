@@ -22,6 +22,7 @@ import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_chat_message.buttonSend
 import kotlinx.android.synthetic.main.fragment_chat_message.editMessage
+import kotlinx.android.synthetic.main.fragment_chat_message.groupMessage
 import kotlinx.android.synthetic.main.fragment_chat_message.imageAdd
 import kotlinx.android.synthetic.main.fragment_chat_message.recyclerChat
 import kotlinx.android.synthetic.main.fragment_chat_message.toolbarMessage
@@ -50,12 +51,17 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
             adapter = ChatAdapter(Global.firebaseAuth.currentUser?.uid, friendChat.pathAvatar, messages)
         }
         recyclerChat?.let {
+            groupMessage.visibility = View.GONE
             it.layoutManager = linearLayoutManager
             if (::adapter.isInitialized) {
                 it.adapter = adapter
                 it.scrollToPosition(messages.size - INDEX_MESSAGES_1)
             }
         }
+    }
+
+    override fun showEmptyData() {
+        groupMessage.visibility = View.VISIBLE
     }
 
     override fun onGetMessagesFailure(task: Exception?) {
