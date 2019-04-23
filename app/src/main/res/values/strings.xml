@@ -76,9 +76,8 @@
     <string name="accept_request">Accept</string>
     <string name="cancel_request">Cancel</string>
     <string name="result_search">Kết quả tìm thấy</string>
-    <string name="Tap">Tap</string>
+    <string name="tap">Tap</string>
     <string name="find_people">to find people.</string>
     <string name="get_started">Get started</string>
-    <string name="New">NEW</string>
     <string name="notice">Don\'t waste your time. \n Let\'s say hello</string>
 </resources>

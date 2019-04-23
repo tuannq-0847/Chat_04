@@ -27,7 +27,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
 
     override fun onGetFriendsSuccessfully(friends: ArrayList<Friend>) {
         progressLoadFriend?.let {
-            if (friends.size == Constants.ZERO) {
+            if (friends.isEmpty()) {
                 group.visibility = View.VISIBLE
                 recyclerListChat.visibility = View.GONE
                 progressLoadFriend.visibility = View.INVISIBLE
