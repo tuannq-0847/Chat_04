@@ -8,7 +8,10 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
+import com.sun.chat_04.util.Constants
+import kotlinx.android.synthetic.main.item_discovery.view.imageGender
 import kotlinx.android.synthetic.main.item_discovery.view.imageUserDiscovery
+import kotlinx.android.synthetic.main.item_discovery.view.textGenderDiscovery
 import kotlinx.android.synthetic.main.item_discovery.view.textNameUserDiscovery
 
 class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User) -> Unit) :
@@ -37,12 +40,30 @@ class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User
         fun bindView(user: User) {
             with(itemView) {
                 displayUserAvatar(user.pathAvatar, imageUserDiscovery)
-                textNameUserDiscovery.setText(user.userName)
+                textNameUserDiscovery.text = user.userName
+                displayGender(user.gender)
+                imageGender.setImageResource(
+                    when (user.gender) {
+                        Constants.MALE -> R.drawable.ic_male
+                        else -> R.drawable.ic_female
+                    }
+                )
                 setOnClickListener { userClickListener(user) }
             }
         }
 
-        fun displayUserAvatar(pathImage: String, imageView: ImageView) {
+        private fun displayGender(gender: String?) {
+            if (!gender.isNullOrEmpty()) {
+                with(itemView) {
+                    textGenderDiscovery.text = when (gender) {
+                        Constants.MALE -> resources.getString(R.string.male)
+                        else -> resources.getString(R.string.female)
+                    }
+                }
+            }
+        }
+
+        private fun displayUserAvatar(pathImage: String, imageView: ImageView) {
             Glide.with(imageView)
                 .load(pathImage)
                 .centerCrop()

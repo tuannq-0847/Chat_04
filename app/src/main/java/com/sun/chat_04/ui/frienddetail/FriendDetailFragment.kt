@@ -4,8 +4,10 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -25,9 +27,8 @@ import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
 import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
 import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
-import kotlinx.android.synthetic.main.fragment_user_information.buttonAddFriend
-import kotlinx.android.synthetic.main.fragment_user_information.buttonBack
-import kotlinx.android.synthetic.main.toolbar_profile.imageBackProfile
+import kotlinx.android.synthetic.main.fragment_user_information.floatingAddFriend
+import kotlinx.android.synthetic.main.fragment_user_information.toolbarFriendDetail
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
@@ -54,27 +55,32 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.buttonAddFriend -> handleButtonAddFriend()
-            R.id.buttonBack -> handleBackPrevious()
+            R.id.floatingAddFriend -> handleFloatingClick()
             R.id.imageBackProfile -> handleBackPrevious()
         }
     }
 
     override fun showButtonChat() {
-        buttonAddFriend?.let {
-            buttonAddFriend.text = resources.getString(R.string.button_chat)
+        context?.let {
+            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_blue)
+            floatingAddFriend.setImageResource(R.drawable.ic_chat)
+            floatingAddFriend.tag = resources.getString(R.string.button_chat)
         }
     }
 
     override fun showButtonInviteMoreFriends() {
-        buttonAddFriend?.let {
-            buttonAddFriend.text = resources.getString(R.string.invite_more_friends)
+        context?.let {
+            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_green)
+            floatingAddFriend.setImageResource(R.drawable.ic_invite_more_friends)
+            floatingAddFriend.tag = resources.getString(R.string.invite_more_friends)
         }
     }
 
     override fun showButtonCancelInviteMoreFriends() {
-        buttonAddFriend?.let {
-            buttonAddFriend.text = resources.getString(R.string.cancel_invite_more_friends)
+        context?.let {
+            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_red)
+            floatingAddFriend.setImageResource(R.drawable.ic_cancel)
+            floatingAddFriend.tag = resources.getString(R.string.cancel_invite_more_friends)
         }
     }
 
@@ -90,9 +96,9 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     private fun initComponent() {
-        buttonAddFriend.setOnClickListener(this)
-        buttonBack.setOnClickListener(this)
-        imageBackProfile.setOnClickListener(this)
+        floatingAddFriend.setOnClickListener(this)
+        toolbarFriendDetail.findViewById<ImageView>(R.id.imageBackProfile)?.setOnClickListener(this)
+        hideIconSignOut()
     }
 
     private fun displayUserProfile() {
@@ -123,13 +129,13 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     private fun checkIsFriend() {
-        ::presenter.isInitialized.let {
+        if (::presenter.isInitialized) {
             presenter.checkIsFriend(user.idUser)
         }
     }
 
-    private fun handleButtonAddFriend() {
-        when (buttonAddFriend.text) {
+    private fun handleFloatingClick() {
+        when (floatingAddFriend.tag) {
             resources.getString(R.string.button_chat) -> handleChat()
             resources.getString(R.string.invite_more_friends) -> handleInviteMoreFriends()
             resources.getString(R.string.cancel_invite_more_friends) -> handleCancelInviteMoreFriends()
@@ -141,25 +147,31 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     private fun handleChat() {
-        user.userName?.let {
+        user.userName.let {
             val friend = Friend(user.idUser, user.pathAvatar, user.isOnline, userName = it)
             activity?.supportFragmentManager
                 ?.beginTransaction()
-                ?.add(R.id.parentLayout, ChatFragment.newInstance(friend))
+                ?.replace(R.id.parentLayout, ChatFragment.newInstance(friend))
                 ?.addToBackStack("")
                 ?.commit()
         }
     }
 
     private fun handleInviteMoreFriends() {
-        ::presenter.isInitialized.let {
+        if (::presenter.isInitialized) {
             presenter.inviteMoreFriends(user.idUser)
         }
     }
 
     private fun handleCancelInviteMoreFriends() {
-        ::presenter.isInitialized.let {
+        if (::presenter.isInitialized) {
             presenter.cancelInviteMoreFriends(user.idUser)
+        }
+    }
+
+    private fun hideIconSignOut() {
+        toolbarFriendDetail.findViewById<ImageView>(R.id.imageSignOut)?.let {
+            it.visibility = INVISIBLE
         }
     }
 

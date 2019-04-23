@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
 import com.sun.chat_04.R
@@ -21,19 +22,18 @@ import kotlinx.android.synthetic.main.fragment_edit_user_profile.progessEditUser
 import kotlinx.android.synthetic.main.fragment_edit_user_profile.radioFemaleEditUserProfile
 import kotlinx.android.synthetic.main.fragment_edit_user_profile.radioGroupEditUserProfile
 import kotlinx.android.synthetic.main.fragment_edit_user_profile.radioMaleEditUserProfile
-import kotlinx.android.synthetic.main.toolbar_profile.imageBackProfile
-import kotlinx.android.synthetic.main.toolbar_profile.imageSignOutProfile
+import kotlinx.android.synthetic.main.fragment_edit_user_profile.toolbarEditUserProfile
+import kotlinx.android.synthetic.main.toolbar_profile.imageSignOut
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 
 class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListener, OnCheckedChangeListener {
 
-    private lateinit var user: User
+    private val user by lazy { arguments?.get(Constants.ARGUMENT_USER) as User }
     private lateinit var presenter: EditProfileContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initPresenter()
-        getUser()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,7 +47,7 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.imageSignOutProfile -> handleEditUserProfile()
+            R.id.imageSignOut -> handleEditUserProfile()
             R.id.imageBackProfile -> handleBackPrevious()
         }
     }
@@ -83,19 +83,18 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
     }
 
     private fun initComponents() {
-        ::user.isInitialized.let {
-            editNameProfile.setText(user.userName.toString())
-            editAgeProfile.setText(user.birthday.toString())
-            editBioEditUser.setText(user.bio)
-            when (user.gender.toString()) {
-                Constants.MALE -> radioMaleEditUserProfile.isChecked = true
-                Constants.FEMALE -> radioFemaleEditUserProfile.isChecked = true
-            }
+        editNameProfile.setText(user.userName.toString())
+        editAgeProfile.setText(user.birthday.toString())
+        editBioEditUser.setText(user.bio)
+        when (user.gender.toString()) {
+            Constants.MALE -> radioMaleEditUserProfile.isChecked = true
+            Constants.FEMALE -> radioFemaleEditUserProfile.isChecked = true
         }
         textNameToolbarProfile.setText(resources.getString(R.string.title_modify_info_user))
-        imageSignOutProfile.setBackgroundResource(R.drawable.ic_done)
-        imageSignOutProfile.setOnClickListener(this)
-        imageBackProfile.setOnClickListener(this)
+        imageSignOut.setImageResource(R.drawable.ic_done)
+
+        toolbarEditUserProfile.findViewById<ImageView>(R.id.imageSignOut).setOnClickListener(this)
+        toolbarEditUserProfile.findViewById<ImageView>(R.id.imageBackProfile).setOnClickListener(this)
         radioGroupEditUserProfile.setOnCheckedChangeListener(this)
     }
 
@@ -104,10 +103,6 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
             this,
             UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase, Global.firebaseStorage))
         )
-    }
-
-    private fun getUser() {
-        user = arguments?.get(Constants.ARGUMENT_USER) as User
     }
 
     private fun handleEditUserProfile() {
@@ -126,11 +121,15 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
     }
 
     private fun showProgress() {
-        progessEditUserProfile.visibility = View.VISIBLE
+        progessEditUserProfile?.let {
+            progessEditUserProfile.visibility = View.VISIBLE
+        }
     }
 
     private fun hideProgress() {
-        progessEditUserProfile.visibility = View.GONE
+        progessEditUserProfile?.let {
+            progessEditUserProfile.visibility = View.GONE
+        }
     }
 
     companion object {
