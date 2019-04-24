@@ -82,4 +82,5 @@
     <string name="notice">Don\'t waste your time. \n Let\'s say hello</string>
     <string name="newFriend">NEW</string>
     <string name="notice_friend">You are now friends with</string>
+    <string name="notice_connect">You are now connected on EzChat</string>
 </resources>

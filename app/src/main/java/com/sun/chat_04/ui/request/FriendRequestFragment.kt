@@ -64,8 +64,10 @@ class FriendRequestFragment : Fragment(), FriendRequestContract.View {
     }
 
     override fun onApproveSuccessfully(userName: String?) {
-        Toast.makeText(context, resources.getString(R.string.notice_friend) + userName, Toast.LENGTH_SHORT).show()
-        friendCallBack.openFriendScreen()
+        Toast.makeText(context, resources.getString(R.string.notice_friend) + " $userName", Toast.LENGTH_SHORT).show()
+        if (::friendCallBack.isInitialized) {
+            friendCallBack.openFriendScreen()
+        }
     }
 
     override fun onCancelSuccessfully() {

@@ -1,5 +1,6 @@
 package com.sun.chat_04.ui.friend
 
+import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
@@ -39,8 +40,13 @@ class FriendAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun onBind(friend: Friend) {
             with(itemView) {
+                if (friend.contents == Constants.NONE) {
+                    textLastMessage.text = resources.getString(R.string.notice_connect)
+                    textNewFriend.visibility = View.VISIBLE
+                } else {
+                    textLastMessage.text = friend.contents
+                }
                 textUserRec.text = friend.userName
-                textLastMessage.text = friend.contents
                 Glide.with(context)
                     .load(friend.avatarLink)
                     .centerCrop()
@@ -53,9 +59,6 @@ class FriendAdapter(
                 }
                 if (friend.seen == Constants.NOT_SEEN) {
                     textLastMessage.setTextColor(resources.getColor(R.color.color_black))
-                }
-                if (friend.contents == Constants.CONNECTED_MESSAGE) {
-                    textNewFriend.visibility = View.VISIBLE
                 }
                 setOnClickListener { listener(friend) }
 

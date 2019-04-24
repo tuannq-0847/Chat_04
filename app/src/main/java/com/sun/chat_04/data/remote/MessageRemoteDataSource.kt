@@ -35,7 +35,7 @@ class MessageRemoteDataSource(
                 insertMessages(
                     idMessage?.let {
                         Message(
-                            it, Constants.NONE, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
+                            it, message.contents, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
                             avatar = data
                         )
                     }, callback
