@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
@@ -141,7 +142,8 @@ class DiscoveryFragment : Fragment(), DiscoveryContract.View, SearchView.OnQuery
     private fun checkPermissions() {
         context?.apply {
             if (Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_COARSE_LOCATION) &&
-                Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)) {
+                Global.checkGrantedPermission(this, Constants.INDEX_PERMISSION_ACCESS_FINE_LOCATION)
+            ) {
                 if (::presenter.isInitialized) {
                     presenter.getUserInfo()
                 }

@@ -24,10 +24,10 @@ class FriendRemoteDataSource(
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        friends.clear()
                         if (!dataSnapshot.hasChildren()) {
                             callback.onSuccessfuly(friends)
                         }
-                        friends.clear()
                         for (data in dataSnapshot.children) {
                             val friend = data.getValue(Friend::class.java)
                             friend?.let { fr ->

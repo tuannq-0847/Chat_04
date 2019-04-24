@@ -5,11 +5,11 @@ import com.sun.chat_04.data.remote.FriendRequestRemoteDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 
 class FriendRequestRepository(private val remote: FriendRequestRemoteDataSource) : FriendRequestDataSource.Remote {
-    override fun approveFriendRequest(user: User, callback: RemoteCallback<Boolean>) {
+    override fun approveFriendRequest(user: User, callback: RemoteCallback<String>) {
         remote.approveFriendRequest(user, callback)
     }
 
-    override fun cancelFriendRequest(user: User, callback: RemoteCallback<Boolean>) {
+    override fun cancelFriendRequest(user: User, callback: RemoteCallback<String>) {
         remote.cancelFriendRequest(user, callback)
     }
 

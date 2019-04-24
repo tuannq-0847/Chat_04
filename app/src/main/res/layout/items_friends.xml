@@ -28,6 +28,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/textNewFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_8"
+        android:background="@drawable/background_new"
+        android:padding="@dimen/dp_1"
+        android:text="@string/newFriend"
+        android:textColor="@color/color_white"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@+id/textUserRec"
+        app:layout_constraintTop_toTopOf="@+id/imageUserLastMessage" />
+
+    <TextView
         android:id="@+id/textLastMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
