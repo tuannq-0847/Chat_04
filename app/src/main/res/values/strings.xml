@@ -45,7 +45,7 @@
     <string name="other_error">unknown error</string>
     <string name="choose_image">Choose Image</string>
     <string name="discovery_search">Tìm kiếm bạn bè</string>
-    <string name="discovery_title_suggest">Gợi ý kết bạn</string>
+    <string name="discovery_title_suggest">Tìm bạn: </string>
     <string name="requireGPS">Turn on GPS and Internet</string>
     <string name="search_message">Search</string>
     <string name="profile_background">Background</string>
@@ -83,4 +83,13 @@
     <string name="newFriend">NEW</string>
     <string name="notice_friend">You are now friends with</string>
     <string name="notice_connect">You are now connected on EzChat</string>
+    <string name="dialog_all_gender">All</string>
+    <string name="dialog_age">Độ tuổi</string>
+    <string name="dialog_age_separate"> - </string>
+    <string name="dialog_distance">Khoảng cách</string>
+    <string name="dialog_from_distance">0m</string>
+    <string name="dialog_to_distance">10km</string>
+    <string name="dialog_apply">Áp dụng</string>
+    <string name="dialog_unit_distance">km</string>
+    <string name="dialog_title">Tìm kiếm nâng cao</string>
 </resources>

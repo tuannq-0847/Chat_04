@@ -61,26 +61,32 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     override fun showButtonChat() {
-        context?.let {
-            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_blue)
-            floatingAddFriend.setImageResource(R.drawable.ic_chat)
-            floatingAddFriend.tag = resources.getString(R.string.button_chat)
+        context?.let { context ->
+            floatingAddFriend?.let {
+                it.supportBackgroundTintList = ContextCompat.getColorStateList(context, R.color.color_blue)
+                it.setImageResource(R.drawable.ic_chat)
+                it.tag = resources.getString(R.string.button_chat)
+            }
         }
     }
 
     override fun showButtonInviteMoreFriends() {
-        context?.let {
-            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_green)
-            floatingAddFriend.setImageResource(R.drawable.ic_invite_more_friends)
-            floatingAddFriend.tag = resources.getString(R.string.invite_more_friends)
+        context?.let { context ->
+            floatingAddFriend?.let {
+                it.supportBackgroundTintList = ContextCompat.getColorStateList(context, R.color.color_green)
+                it.setImageResource(R.drawable.ic_invite_more_friends)
+                it.tag = resources.getString(R.string.invite_more_friends)
+            }
         }
     }
 
     override fun showButtonCancelInviteMoreFriends() {
-        context?.let {
-            floatingAddFriend.supportBackgroundTintList = ContextCompat.getColorStateList(it, R.color.color_red)
-            floatingAddFriend.setImageResource(R.drawable.ic_cancel)
-            floatingAddFriend.tag = resources.getString(R.string.cancel_invite_more_friends)
+        context?.let { context ->
+            floatingAddFriend?.let {
+                it.supportBackgroundTintList = ContextCompat.getColorStateList(context, R.color.color_red)
+                it.setImageResource(R.drawable.ic_cancel)
+                it.tag = resources.getString(R.string.cancel_invite_more_friends)
+            }
         }
     }
 
@@ -123,10 +129,12 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     private fun displayUserImage(uri: Uri, imageView: ImageView) {
+        var resourceId = R.drawable.gradient_header_background
+        if (imageView == imageAvatarProfile) resourceId = R.drawable.avatar
         Glide.with(imageView)
             .load(uri)
             .centerCrop()
-            .placeholder(R.drawable.image_avatar)
+            .placeholder(resourceId)
             .into(imageView)
     }
 

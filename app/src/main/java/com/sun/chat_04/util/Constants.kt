@@ -13,7 +13,7 @@ object Constants {
     const val ARGUMENT_FRIENDS = "ARGUMENT_FRIENDS"
     const val CONNECTED = "Connected"
     const val CONVERT_KM = 1000
-    const val MAX_DISTANCE = 2
+    const val MIN_DISTANCE = 1
     const val REQUEST_PERMISSION_CODE = 100
     const val COLUMN = 2
     const val INDEX_PERMISSION_ACCESS_COARSE_LOCATION = 0
@@ -48,4 +48,11 @@ object Constants {
     const val NOT_SEEN = 0
     const val MESSAGE_SEEN = "seen"
     const val AVATAR = "avatar"
+    const val RATIO_WIDTH_DIALOG = 0.8
+    const val RATIO_HEIGHT_DIALOG = 0.6
+    const val REQUEST_CODE_DIALOG = 1000
+    const val BUNDLE_FILTER_DIALOG = "BUNDLE_FILTER_DIALOG"
+    const val CANCEL = -1
+    const val ROUNDING = 10
+    const val DISTANCE_NOT_EXIST = -1f
 }

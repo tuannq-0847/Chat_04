@@ -8,47 +8,57 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
+import com.sun.chat_04.data.model.UserDistanceWrapper
 import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.item_discovery.view.imageGender
 import kotlinx.android.synthetic.main.item_discovery.view.imageUserDiscovery
+import kotlinx.android.synthetic.main.item_discovery.view.textDistanceItem
 import kotlinx.android.synthetic.main.item_discovery.view.textGenderDiscovery
 import kotlinx.android.synthetic.main.item_discovery.view.textNameUserDiscovery
 
-class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User) -> Unit) :
-    RecyclerView.Adapter<DiscoveryAdapter.DiscoveryViewHoler>() {
+class DiscoveryAdapter(
+    var userDistanceWrappers: List<UserDistanceWrapper>,
+    val userClickListener: (user: User) -> Unit
+) :
+    RecyclerView.Adapter<DiscoveryAdapter.DiscoveryViewHolder>() {
 
-    fun refreshUsers(user: List<User>) {
-        users = user
+    fun refreshUsers(userDistanceWrappers: List<UserDistanceWrapper>) {
+        this.userDistanceWrappers = userDistanceWrappers
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): DiscoveryViewHoler {
-        return DiscoveryViewHoler(
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): DiscoveryViewHolder {
+        return DiscoveryViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_discovery, parent, false)
         )
     }
 
     override fun getItemCount(): Int {
-        return users.size
+        return userDistanceWrappers.size
     }
 
-    override fun onBindViewHolder(holder: DiscoveryViewHoler, position: Int) {
-        holder.bindView(users[position])
+    override fun onBindViewHolder(holder: DiscoveryViewHolder, position: Int) {
+        holder.bindView(userDistanceWrappers[position])
+        if (userDistanceWrappers[position].distance >= 0) {
+            holder.displayDistance(userDistanceWrappers[position].distance)
+        } else {
+            holder.hideDistance()
+        }
     }
 
-    inner class DiscoveryViewHoler(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(user: User) {
+    inner class DiscoveryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindView(userDistanceWrapper: UserDistanceWrapper) {
             with(itemView) {
-                displayUserAvatar(user.pathAvatar, imageUserDiscovery)
-                textNameUserDiscovery.text = user.userName
-                displayGender(user.gender)
+                displayUserAvatar(userDistanceWrapper.user.pathAvatar, imageUserDiscovery)
+                textNameUserDiscovery.text = userDistanceWrapper.user.userName
+                displayGender(userDistanceWrapper.user.gender)
                 imageGender.setImageResource(
-                    when (user.gender) {
+                    when (userDistanceWrapper.user.gender) {
                         Constants.MALE -> R.drawable.ic_male
                         else -> R.drawable.ic_female
                     }
                 )
-                setOnClickListener { userClickListener(user) }
+                setOnClickListener { userClickListener(userDistanceWrapper.user) }
             }
         }
 
@@ -69,6 +79,20 @@ class DiscoveryAdapter(var users: List<User>, val userClickListener: (user: User
                 .centerCrop()
                 .placeholder(R.drawable.avatar)
                 .into(imageView)
+        }
+
+        fun displayDistance(distance: Float) {
+            itemView.textDistanceItem?.let {
+                it.visibility = View.VISIBLE
+                val noti = "$distance km"
+                it.text = noti
+            }
+            itemView.textDistanceItem?.visibility = View.VISIBLE
+        }
+
+        fun hideDistance() {
+            itemView.textDistanceItem?.visibility = View.INVISIBLE
+            itemView.textDistanceItem?.visibility = View.INVISIBLE
         }
     }
 }

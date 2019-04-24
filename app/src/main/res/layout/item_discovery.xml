@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
+            app:layout_constraintGuide_percent="0.15" />
 
         <ImageView
             android:id="@+id/imageUserDiscovery"
@@ -65,7 +65,7 @@
             app:layout_constraintTop_toTopOf="@id/imageGender" />
 
         <TextView
-            android:id="@+id/textUsersDistance"
+            android:id="@+id/textDistanceItem"
             style="@style/Common"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
