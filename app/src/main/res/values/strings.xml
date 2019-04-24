@@ -92,4 +92,5 @@
     <string name="dialog_apply">Áp dụng</string>
     <string name="dialog_unit_distance">km</string>
     <string name="dialog_title">Tìm kiếm nâng cao</string>
+    <string name="lable_user_images">Ảnh</string>
 </resources>
