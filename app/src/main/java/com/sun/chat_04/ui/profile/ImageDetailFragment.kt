@@ -5,23 +5,29 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.sun.chat_04.R
 import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.fragment_image_detail.imageViewAvatar
 
-class ImageDetailFragment : Fragment() {
+class ImageDetailFragment : Fragment(), OnClickListener {
 
     private val uri by lazy { Uri.parse(arguments?.getString(Constants.ARGUMENT_IMAGE_URI, "")) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_image_detail, container, false)
+        val view = inflater.inflate(R.layout.fragment_image_detail, container, false)
+        view.setOnClickListener(this)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayImage()
+    }
+
+    override fun onClick(v: View?) {
     }
 
     private fun displayImage() {

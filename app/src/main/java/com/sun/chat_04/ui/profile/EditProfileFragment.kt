@@ -1,5 +1,8 @@
 package com.sun.chat_04.ui.profile
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -37,7 +40,9 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_edit_user_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_user_profile, container, false)
+        view.setOnClickListener(this)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,9 +115,12 @@ class EditProfileFragment : Fragment(), EditProfileContract.View, OnClickListene
         user.userName = editNameProfile.text.toString()
         user.birthday = editAgeProfile.text.toString()
         user.bio = editBioEditUser.text.toString()
-
-        ::presenter.isInitialized.let {
+        if (::presenter.isInitialized) {
             presenter.editUserProfile(user)
+        }
+        Intent().apply {
+            data = Uri.parse("")
+            targetFragment?.onActivityResult(Constants.REQUEST_CODE_EDIT_INFO, RESULT_OK, this)
         }
     }
 

@@ -76,4 +76,24 @@ class FriendDetailPresenter(private val view: FriendDetailContract.View, private
         }
         view.onFailure(DatabaseException(""))
     }
+
+    override fun getFriendImages() {
+        val userId = Global.firebaseAuth.currentUser?.uid.toString()
+        if (userId.isNotEmpty()) {
+            view.showLoadingImages()
+            repository.getUserImages(userId, object : RemoteCallback<List<String>> {
+                override fun onSuccessfuly(data: List<String>) {
+                    view.onGetFriendImagesSuccess(data)
+                    view.hideLoadingImage()
+                }
+
+                override fun onFailure(exception: Exception?) {
+                    view.onFailure(exception)
+                    view.hideLoadingImage()
+                }
+            })
+            return
+        }
+        view.onFailure(DatabaseException(""))
+    }
 }

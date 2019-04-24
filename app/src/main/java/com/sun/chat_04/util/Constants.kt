@@ -57,4 +57,6 @@ object Constants {
     const val DISTANCE_NOT_EXIST = -1f
     const val ARGUMENT_IMAGE_URI = "ARGUMENT_IMAGE_URI"
     const val IMAGES = "Images"
+    const val REQUEST_CODE_EDIT_INFO = 13
+    const val KEY_EDIT_INFO = "KEY_EDIT_INFO"
 }

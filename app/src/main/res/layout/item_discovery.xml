@@ -3,15 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/dp_8"
-    app:cardCornerRadius="@dimen/dp_8"
-    app:cardElevation="@dimen/dp_8"
-    app:cardMaxElevation="@dimen/dp_8">
+    android:elevation="@dimen/dp_4"
+    app:cardCornerRadius="@dimen/dp_4">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_16">
+        android:padding="@dimen/dp_4">
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_vt1"

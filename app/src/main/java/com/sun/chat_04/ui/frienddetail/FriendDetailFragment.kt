@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -18,16 +19,22 @@ import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.chat.ChatFragment
+import com.sun.chat_04.ui.discovery.SpacesItemDecoration
+import com.sun.chat_04.ui.profile.ImageAdapter
+import com.sun.chat_04.ui.profile.ImageDetailFragment
 import com.sun.chat_04.util.Constants
 import com.sun.chat_04.util.Global
-import kotlinx.android.synthetic.main.fragment_profile.imageAvatarProfile
-import kotlinx.android.synthetic.main.fragment_profile.imageCover
-import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
-import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
-import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
-import kotlinx.android.synthetic.main.fragment_profile.textNameProfile
-import kotlinx.android.synthetic.main.fragment_profile.textUserBioProfile
 import kotlinx.android.synthetic.main.fragment_user_information.floatingAddFriend
+import kotlinx.android.synthetic.main.fragment_user_information.imageAvatarProfile
+import kotlinx.android.synthetic.main.fragment_user_information.imageCover
+import kotlinx.android.synthetic.main.fragment_user_information.imageGender
+import kotlinx.android.synthetic.main.fragment_user_information.progressLoadImages
+import kotlinx.android.synthetic.main.fragment_user_information.rcImages
+import kotlinx.android.synthetic.main.fragment_user_information.textAddressProfile
+import kotlinx.android.synthetic.main.fragment_user_information.textAgeProfile
+import kotlinx.android.synthetic.main.fragment_user_information.textGenderProfile
+import kotlinx.android.synthetic.main.fragment_user_information.textNameProfile
+import kotlinx.android.synthetic.main.fragment_user_information.textUserBioProfile
 import kotlinx.android.synthetic.main.fragment_user_information.toolbarFriendDetail
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
@@ -35,6 +42,7 @@ import java.util.Locale
 class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListener {
 
     private lateinit var presenter: FriendDetailContract.Presenter
+    private lateinit var adapter: ImageAdapter
     private val user: User by lazy { arguments?.getParcelable(Constants.ARGUMENT_FRIENDS) as User }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +54,11 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
         return inflater.inflate(R.layout.fragment_user_information, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         super.onActivityCreated(savedInstanceState)
         initComponent()
+        getFriendImages()
         displayUserProfile()
         checkIsFriend()
     }
@@ -57,6 +67,8 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
         when (v?.id) {
             R.id.floatingAddFriend -> handleFloatingClick()
             R.id.imageBackProfile -> handleBackPrevious()
+            R.id.imageAvatarProfile -> displayImageDetail(user.pathAvatar)
+            R.id.imageCover -> displayImageDetail(user.pathBackground)
         }
     }
 
@@ -90,8 +102,25 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
         }
     }
 
+    override fun onGetFriendImagesSuccess(images: List<String>?) {
+        if (images.isNullOrEmpty()) return
+        displayFriendImages(images)
+    }
+
     override fun onFailure(exception: Exception?) {
         Global.showMessage(context, resources.getString(R.string.no_internet))
+    }
+
+    override fun showLoadingImages() {
+        progressLoadImages?.apply {
+            visibility = View.VISIBLE
+        }
+    }
+
+    override fun hideLoadingImage() {
+        progressLoadImages?.apply {
+            visibility = View.GONE
+        }
     }
 
     private fun initPresenter() {
@@ -102,29 +131,86 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
     }
 
     private fun initComponent() {
+        imageAvatarProfile.setOnClickListener(this)
+        imageCover.setOnClickListener(this)
         floatingAddFriend.setOnClickListener(this)
         toolbarFriendDetail.findViewById<ImageView>(R.id.imageBackProfile)?.setOnClickListener(this)
         hideIconSignOut()
     }
 
     private fun displayUserProfile() {
-        displayUserImage(Uri.parse(user.pathAvatar), imageAvatarProfile)
-        displayUserImage(Uri.parse(user.pathBackground), imageCover)
-        textNameProfile.text = user.userName.toString()
-        textAgeProfile.text = user.birthday
-        textUserBioProfile.text = user.bio
-        textNameToolbarProfile.text = user.userName
-        textGenderProfile.text = when (user.gender) {
-            Constants.MALE -> resources.getString(R.string.male)
-            else -> resources.getString(R.string.female)
+        imageAvatarProfile?.let {
+            displayUserImage(Uri.parse(user.pathAvatar), it)
         }
-        if (user.lat != LAT_DEFAULT && user.lgn != LGN_DEFAULT) {
-            context?.let {
-                Geocoder(it, Locale.getDefault())
-                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0].locality.let { it1 ->
-                    textAddressProfile.text = it1
+        imageCover?.let {
+            displayUserImage(Uri.parse(user.pathBackground), it)
+        }
+        textNameProfile?.let {
+            it.text = user.userName.toString()
+        }
+        textAgeProfile?.let {
+            it.text = user.birthday.toString()
+        }
+        textUserBioProfile?.let {
+            it.text = user.bio
+        }
+        textNameToolbarProfile?.let {
+            it.text = user.userName.toString()
+        }
+        displayUserGender()
+        displayUserAddress()
+    }
+
+    private fun displayUserGender() {
+        textGenderProfile?.let {
+            when (user.gender) {
+                Constants.MALE -> {
+                    textGenderProfile.text = resources.getString(R.string.male)
+                    imageGender.setImageResource(R.drawable.ic_male)
+                }
+                else -> {
+                    textGenderProfile.text = resources.getString(R.string.female)
+                    imageGender.setImageResource(R.drawable.ic_female)
                 }
             }
+        }
+    }
+
+    private fun displayUserAddress() {
+        context?.let {
+            if (user.lat != LAT_DEFAULT && user.lgn != LGN_DEFAULT) {
+                val addressList = Geocoder(it, Locale.getDefault())
+                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)
+                if (!addressList.isNullOrEmpty()) {
+                    val address = addressList[0].getAddressLine(0)
+                    textAddressProfile.text = address ?: ""
+                }
+            }
+        }
+    }
+
+    private fun displayFriendImages(images: List<String>) {
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.dp_4)
+        adapter = ImageAdapter(images as ArrayList<String>) { uri -> imageOnClick(uri) }
+        rcImages?.apply {
+            layoutManager = GridLayoutManager(context, Constants.COLUMN)
+            addItemDecoration(SpacesItemDecoration(spacingInPixels))
+            adapter = adapter
+        }
+    }
+
+    private fun imageOnClick(uri: String) {
+        displayImageDetail(uri)
+    }
+
+    private fun displayImageDetail(uri: String?) {
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction ?: return
+        with(transaction) {
+            setCustomAnimations(R.anim.zoom_in, R.anim.translate_anim, R.anim.zoom_in, R.anim.translate_anim)
+            add(R.id.parentLayout, ImageDetailFragment.newInstance(uri))
+            addToBackStack("")
+            commit()
         }
     }
 
@@ -136,6 +222,12 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
             .centerCrop()
             .placeholder(resourceId)
             .into(imageView)
+    }
+
+    private fun getFriendImages() {
+        if (::presenter.isInitialized) {
+            presenter.getFriendImages()
+        }
     }
 
     private fun checkIsFriend() {
