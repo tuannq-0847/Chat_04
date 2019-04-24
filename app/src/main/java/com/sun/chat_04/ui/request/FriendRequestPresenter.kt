@@ -3,6 +3,7 @@ package com.sun.chat_04.ui.request
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.FriendRequestRepository
 import com.sun.chat_04.ui.signup.RemoteCallback
+import com.sun.chat_04.util.Constants
 
 class FriendRequestPresenter(
     private val view: FriendRequestContract.View,
@@ -10,9 +11,11 @@ class FriendRequestPresenter(
 ) : FriendRequestContract.Presenter {
 
     override fun approveFriendRequest(user: User) {
-        repository.approveFriendRequest(user, object : RemoteCallback<Boolean> {
-            override fun onSuccessfuly(data: Boolean) {
-                view.onApproveSuccessfully()
+        repository.approveFriendRequest(user, object : RemoteCallback<String> {
+            override fun onSuccessfuly(data: String) {
+                if (data != Constants.NONE) {
+                    view.onApproveSuccessfully(data)
+                }
             }
 
             override fun onFailure(exception: Exception?) {
@@ -22,8 +25,8 @@ class FriendRequestPresenter(
     }
 
     override fun cancelFriendRequest(user: User) {
-        repository.cancelFriendRequest(user, object : RemoteCallback<Boolean> {
-            override fun onSuccessfuly(data: Boolean) {
+        repository.cancelFriendRequest(user, object : RemoteCallback<String> {
+            override fun onSuccessfuly(data: String) {
                 view.onCancelSuccessfully()
             }
 

@@ -1,10 +1,12 @@
 package com.sun.chat_04.data.remote
 
+import android.content.res.Resources
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.FriendRequestDataSource
@@ -68,17 +70,17 @@ class FriendRequestRemoteDataSource(
             })
     }
 
-    override fun cancelFriendRequest(user: User, callback: RemoteCallback<Boolean>) {
+    override fun cancelFriendRequest(user: User, callback: RemoteCallback<String>) {
         deleteRequest(user, callback)
     }
 
-    private fun deleteRequest(user: User, callback: RemoteCallback<Boolean>) {
+    private fun deleteRequest(user: User, callback: RemoteCallback<String>) {
         currentUserId?.let {
             database.reference.child(Constants.REQUEST_FRIEND)
                 .child(currentUserId).child(user.idUser)
                 .removeValue()
                 .addOnSuccessListener {
-                    callback.onSuccessfuly(true)
+                    callback.onSuccessfuly(user.userName)
                 }
                 .addOnFailureListener {
                     callback.onFailure(it)
@@ -86,18 +88,18 @@ class FriendRequestRemoteDataSource(
         }
     }
 
-    override fun approveFriendRequest(user: User, callback: RemoteCallback<Boolean>) {
-        user.userName?.let {
+    override fun approveFriendRequest(user: User, callback: RemoteCallback<String>) {
+        user.userName.let {
             val friend = Friend(
                 user.idUser, user.pathAvatar, user.isOnline
-                , Constants.NONE, it
+                , contents = Constants.NONE, userName = it
             )
             insertFriend(friend, callback)
             getInformationUser(user, callback)
         }
     }
 
-    private fun getInformationUser(user: User, callback: RemoteCallback<Boolean>) {
+    private fun getInformationUser(user: User, callback: RemoteCallback<String>) {
 
         currentUserId?.let { uid ->
             database.reference.child(Constants.USERS)
@@ -110,10 +112,10 @@ class FriendRequestRemoteDataSource(
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val mainUser = dataSnapshot.getValue(User::class.java)
                         mainUser?.let { userMain ->
-                            userMain.userName?.let {
+                            userMain.userName.let {
                                 val friendInvert = Friend(
                                     mainUser.idUser, mainUser.pathAvatar, mainUser.isOnline
-                                    , Constants.NONE, it
+                                    , contents = Constants.NONE, userName = it
                                 )
                                 insertInvertFriend(user.idUser, friendInvert, callback)
                             }
@@ -125,13 +127,13 @@ class FriendRequestRemoteDataSource(
         }
     }
 
-    private fun insertInvertFriend(idUser: String, friend: Friend, callback: RemoteCallback<Boolean>) {
+    private fun insertInvertFriend(idUser: String, friend: Friend, callback: RemoteCallback<String>) {
         currentUserId?.let {
             friendRef.child(idUser)
                 .child(it)
                 .setValue(friend)
                 .addOnSuccessListener {
-                    callback.onSuccessfuly(true)
+                    callback.onSuccessfuly(Constants.NONE)
                 }
                 .addOnFailureListener {
                     callback.onFailure(it)
@@ -139,15 +141,15 @@ class FriendRequestRemoteDataSource(
         }
     }
 
-    private fun insertFriend(friend: Friend, callback: RemoteCallback<Boolean>) {
+    private fun insertFriend(friend: Friend, callback: RemoteCallback<String>) {
         currentUserId?.let {
             friendRef.child(it)
                 .child(friend.idUser)
                 .setValue(friend)
+                .addOnSuccessListener { callback.onSuccessfuly(friend.userName) }
                 .addOnFailureListener {
                     callback.onFailure(it)
                 }
-                .addOnFailureListener { callback.onFailure(it) }
         }
     }
 }

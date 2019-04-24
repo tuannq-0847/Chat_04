@@ -1,5 +1,6 @@
 package com.sun.chat_04.ui.friend
 
+import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.sun.chat_04.util.Constants
 import kotlinx.android.synthetic.main.items_friends.view.imageStatusUser
 import kotlinx.android.synthetic.main.items_friends.view.imageUserLastMessage
 import kotlinx.android.synthetic.main.items_friends.view.textLastMessage
+import kotlinx.android.synthetic.main.items_friends.view.textNewFriend
 import kotlinx.android.synthetic.main.items_friends.view.textUserRec
 
 class FriendAdapter(
@@ -38,8 +40,13 @@ class FriendAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun onBind(friend: Friend) {
             with(itemView) {
+                if (friend.contents == Constants.NONE) {
+                    textLastMessage.text = resources.getString(R.string.notice_connect)
+                    textNewFriend.visibility = View.VISIBLE
+                } else {
+                    textLastMessage.text = friend.contents
+                }
                 textUserRec.text = friend.userName
-                textLastMessage.text = friend.contents
                 Glide.with(context)
                     .load(friend.avatarLink)
                     .centerCrop()

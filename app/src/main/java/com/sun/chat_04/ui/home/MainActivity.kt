@@ -100,8 +100,16 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         tablayoutHome.setupWithViewPager(viewpagerHome)
         setIconTab()
         tablayoutHome.addOnTabSelectedListener(this)
-        val friendFragment: FriendFragment = fragments[TAB_MESSAGE] as FriendFragment
-        friendFragment.setOnFriendCallBack(this)
+        val friendFragment = fragments[TAB_MESSAGE]
+        if (friendFragment is FriendFragment) {
+            friendFragment as FriendFragment
+            friendFragment.setOnFriendCallBack(this)
+        }
+        val friendRequestFragment= fragments[TAB_REQUEST_FRIEND]
+        if (friendRequestFragment is FriendRequestFragment) {
+            friendRequestFragment as FriendRequestFragment
+            friendRequestFragment.setOnFriendRequestCallBack(this)
+        }
     }
 
     private fun setIconTab() {
@@ -146,6 +154,10 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
 
     override fun openSearchScreen() {
         viewpagerHome.currentItem = TAB_DISCOVERY
+    }
+
+    override fun openFriendScreen() {
+        viewpagerHome.currentItem = TAB_MESSAGE
     }
 
     private fun Context.message(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

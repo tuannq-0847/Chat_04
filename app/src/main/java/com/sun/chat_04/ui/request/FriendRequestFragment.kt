@@ -11,6 +11,7 @@ import com.sun.chat_04.R
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.remote.FriendRequestRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRequestRepository
+import com.sun.chat_04.ui.friend.FriendCallBack
 import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.fragment_friend_request.imageEmpty
 import kotlinx.android.synthetic.main.fragment_friend_request.recyclerFriendRequest
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_friend_request.recyclerFriendRequ
 class FriendRequestFragment : Fragment(), FriendRequestContract.View {
     private lateinit var presenter: FriendRequestContract.Presenter
     private lateinit var adapter: FriendRequestAdapter
+    private lateinit var friendCallBack: FriendCallBack
 
     override fun onFriendRequestsAvailable(friendRequests: ArrayList<User>) {
         if (friendRequests.size == FRIENDS_INDEX_0) {
@@ -57,7 +59,15 @@ class FriendRequestFragment : Fragment(), FriendRequestContract.View {
         }
     }
 
-    override fun onApproveSuccessfully() {
+    fun setOnFriendRequestCallBack(friendCallBack: FriendCallBack) {
+        this.friendCallBack = friendCallBack
+    }
+
+    override fun onApproveSuccessfully(userName: String?) {
+        Toast.makeText(context, resources.getString(R.string.notice_friend) + " $userName", Toast.LENGTH_SHORT).show()
+        if (::friendCallBack.isInitialized) {
+            friendCallBack.openFriendScreen()
+        }
     }
 
     override fun onCancelSuccessfully() {
