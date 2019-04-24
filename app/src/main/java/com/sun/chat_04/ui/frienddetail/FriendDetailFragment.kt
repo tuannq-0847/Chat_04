@@ -112,10 +112,12 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
             Constants.MALE -> resources.getString(R.string.male)
             else -> resources.getString(R.string.female)
         }
-        context?.let {
-            Geocoder(it, Locale.getDefault())
-                .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0].locality.let { it1 ->
-                textAddressProfile.text = it1
+        if (user.lat != LAT_DEFAULT && user.lgn != LGN_DEFAULT) {
+            context?.let {
+                Geocoder(it, Locale.getDefault())
+                    .getFromLocation(user.lat, user.lgn, Constants.MAX_ADDRESS)[0].locality.let { it1 ->
+                    textAddressProfile.text = it1
+                }
             }
         }
     }
@@ -182,5 +184,8 @@ class FriendDetailFragment : Fragment(), FriendDetailContract.View, OnClickListe
                 putParcelable(Constants.ARGUMENT_FRIENDS, user)
             }
         }
+
+        const val LAT_DEFAULT = 0.0
+        const val LGN_DEFAULT = 0.0
     }
 }

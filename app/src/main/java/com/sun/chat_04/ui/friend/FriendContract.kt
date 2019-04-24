@@ -9,6 +9,7 @@ interface FriendContract {
     interface View : BaseView {
         fun onGetFriendsSuccessfully(friends: ArrayList<Friend>)
         fun onGetFriendsFailed(exception: Exception?)
+        fun showEmptyData()
     }
 
     interface Presenter : BasePresenter {

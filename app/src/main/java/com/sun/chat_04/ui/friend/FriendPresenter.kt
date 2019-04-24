@@ -14,7 +14,11 @@ class FriendPresenter(
         val userId = Global.firebaseAuth.currentUser?.uid
         repository.getFriends(userId, object : RemoteCallback<ArrayList<Friend>> {
             override fun onSuccessfuly(data: ArrayList<Friend>) {
-                view.onGetFriendsSuccessfully(data)
+                if (data.isEmpty()) {
+                    view.showEmptyData()
+                } else {
+                    view.onGetFriendsSuccessfully(data)
+                }
             }
 
             override fun onFailure(exception: Exception?) {

@@ -12,11 +12,13 @@ import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.sun.chat_04.R
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.discovery.DiscoveryFragment
+import com.sun.chat_04.ui.friend.FriendCallBack
 import com.sun.chat_04.ui.friend.FriendFragment
 import com.sun.chat_04.ui.profile.ProfileFragment
 import com.sun.chat_04.ui.request.FriendRequestFragment
@@ -25,8 +27,7 @@ import com.sun.chat_04.util.Global
 import kotlinx.android.synthetic.main.activity_main.tablayoutHome
 import kotlinx.android.synthetic.main.activity_main.viewpagerHome
 
-class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListener {
-
+class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListener, FriendCallBack {
     private val TAB_ICON = arrayOf(
         R.drawable.ic_message, R.drawable.ic_message_req,
         R.drawable.ic_search, R.drawable.ic_profile
@@ -99,6 +100,8 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         tablayoutHome.setupWithViewPager(viewpagerHome)
         setIconTab()
         tablayoutHome.addOnTabSelectedListener(this)
+        val friendFragment: FriendFragment = fragments[TAB_MESSAGE] as FriendFragment
+        friendFragment.setOnFriendCallBack(this)
     }
 
     private fun setIconTab() {
@@ -139,6 +142,10 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
                     message(resources.getString(R.string.requireGPS))
                 }
             })
+    }
+
+    override fun openSearchScreen() {
+        viewpagerHome.currentItem = TAB_DISCOVERY
     }
 
     private fun Context.message(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

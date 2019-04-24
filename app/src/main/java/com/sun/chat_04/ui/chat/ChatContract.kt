@@ -14,6 +14,7 @@ interface ChatContract {
         fun insertMessageSuccessfully()
         fun insertMessageFailure(exception: Exception?)
         fun getFriendInformationSuccessfully(user: User)
+        fun showEmptyData()
     }
 
     interface Presenter : BasePresenter {
