@@ -9,5 +9,6 @@ interface MessageDataSource {
         fun updateTextMessage(message: Message, callback: RemoteCallback<Boolean>)
         fun getMessages(callback: RemoteCallback<ArrayList<Message>>)
         fun updateSeenStatusFriend(isSeen: Boolean)
+        fun onGetUserRecId(): String
     }
 }

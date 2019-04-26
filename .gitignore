@@ -13,3 +13,10 @@
 /captures
 .externalNativeBuild
 /app/google-services.json
+firebase.json
+functions/node_modules
+/functions/package.json
+/functions/package-lock.json
+/functions/.gitignore
+firebase.json
+.firebaserc

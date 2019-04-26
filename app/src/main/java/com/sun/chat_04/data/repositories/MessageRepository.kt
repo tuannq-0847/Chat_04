@@ -12,6 +12,10 @@ class MessageRepository(
         remoteDataSource.updateSeenStatusFriend(isSeen)
     }
 
+    override fun onGetUserRecId(): String {
+        return remoteDataSource.onGetUserRecId()
+    }
+
     override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
         remoteDataSource.updateImageMessage(message, callback)
     }

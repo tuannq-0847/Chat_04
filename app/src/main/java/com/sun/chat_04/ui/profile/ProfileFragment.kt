@@ -6,7 +6,6 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -34,7 +33,6 @@ import kotlinx.android.synthetic.main.fragment_profile.progressBarUpdateUserAvat
 import kotlinx.android.synthetic.main.fragment_profile.progressBarUpdateUserCover
 import kotlinx.android.synthetic.main.fragment_profile.progressLoadImages
 import kotlinx.android.synthetic.main.fragment_profile.rcImages
-import kotlinx.android.synthetic.main.fragment_profile.swipeRefreshUserProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAddressProfile
 import kotlinx.android.synthetic.main.fragment_profile.textAgeProfile
 import kotlinx.android.synthetic.main.fragment_profile.textGenderProfile
@@ -44,7 +42,7 @@ import kotlinx.android.synthetic.main.fragment_profile.toolbarUserProfile
 import kotlinx.android.synthetic.main.toolbar_profile.textNameToolbarProfile
 import java.util.Locale
 
-class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRefreshListener {
+class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener {
 
     private lateinit var presenter: ProfileContract.Presenter
     private lateinit var user: User
@@ -68,12 +66,10 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     override fun onGetUserProfileSuccess(user: User) {
         this.user = user
         displayUserProfile()
-        hideSwipeRefreshUserProfile()
     }
 
     override fun onFailure(exception: Exception?) {
         Global.showMessage(context, resources.getString(R.string.no_internet))
-        hideSwipeRefreshUserProfile()
     }
 
     override fun onUpdateUserAvatarSuccess(uri: Uri) {
@@ -112,6 +108,9 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                             showProgressUpdateUserCover()
                         }
                     }
+                    Constants.REQUEST_CODE_EDIT_INFO -> {
+                        getUserProfile()
+                    }
                 }
             }
         }
@@ -126,10 +125,6 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
             R.id.imageAvatarProfile -> displayImageDetail(user.pathAvatar)
             R.id.imageCover -> displayImageDetail(user.pathBackground)
         }
-    }
-
-    override fun onRefresh() {
-        getUserProfile()
     }
 
     override fun showLoadingImages() {
@@ -166,7 +161,6 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
         imageAvatarProfile.setOnClickListener(this)
         imageCover.setOnClickListener(this)
         toolbarUserProfile.findViewById<ImageView>(R.id.imageSignOut)?.setOnClickListener(this)
-        swipeRefreshUserProfile.setOnRefreshListener(this)
     }
 
     private fun getUserProfile() {
@@ -271,9 +265,11 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     }
 
     private fun handleEditUserProfile() {
+        val editProfileFragment = EditProfileFragment.newInstance(user)
+        editProfileFragment.setTargetFragment(this, Constants.REQUEST_CODE_EDIT_INFO)
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.replace(R.id.parentLayout, EditProfileFragment.newInstance(user))
+            ?.replace(R.id.parentLayout, editProfileFragment)
             ?.addToBackStack("")
             ?.commit()
     }
@@ -294,12 +290,6 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
                 }
                 .setNeutralButton(resources.getString(R.string.no)) { dialog, which -> }
                 .show()
-        }
-    }
-
-    private fun hideSwipeRefreshUserProfile() {
-        swipeRefreshUserProfile?.let {
-            swipeRefreshUserProfile.isRefreshing = false
         }
     }
 
@@ -340,11 +330,12 @@ class ProfileFragment : Fragment(), ProfileContract.View, OnClickListener, OnRef
     }
 
     private fun displayImages(images: List<String>) {
-        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.dp_4)
         imageAdapter = ImageAdapter(images as ArrayList<String>) { uri -> imageOnClick(uri) }
-        rcImages?.apply {
+        with(rcImages) {
             layoutManager = GridLayoutManager(context, Constants.COLUMN)
-            addItemDecoration(SpacesItemDecoration(spacingInPixels))
+            if (this.itemDecorationCount == 0) {
+                addItemDecoration(SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.dp_4)))
+            }
             adapter = imageAdapter
         }
     }

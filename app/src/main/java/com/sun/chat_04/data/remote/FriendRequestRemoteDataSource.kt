@@ -1,12 +1,10 @@
 package com.sun.chat_04.data.remote
 
-import android.content.res.Resources
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.FriendRequestDataSource
@@ -55,15 +53,16 @@ class FriendRequestRemoteDataSource(
         database.reference
             .child(Constants.USERS)
             .child(friendId)
-            .addValueEventListener(object : ValueEventListener {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     callback.onFailure(error.toException())
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    friendRequests.clear()
                     val friendsRequest = dataSnapshot.getValue(User::class.java)
                     friendsRequest?.let {
-                        friendRequests.add(friendsRequest)
+                        friendRequests.add(it)
                         callback.onSuccessfuly(friendRequests)
                     }
                 }
@@ -91,7 +90,7 @@ class FriendRequestRemoteDataSource(
     override fun approveFriendRequest(user: User, callback: RemoteCallback<String>) {
         user.userName.let {
             val friend = Friend(
-                user.idUser, user.pathAvatar, user.isOnline
+                user.idUser, user.pathAvatar, user.online
                 , contents = Constants.NONE, userName = it
             )
             insertFriend(friend, callback)
@@ -114,7 +113,7 @@ class FriendRequestRemoteDataSource(
                         mainUser?.let { userMain ->
                             userMain.userName.let {
                                 val friendInvert = Friend(
-                                    mainUser.idUser, mainUser.pathAvatar, mainUser.isOnline
+                                    mainUser.idUser, mainUser.pathAvatar, mainUser.online
                                     , contents = Constants.NONE, userName = it
                                 )
                                 insertInvertFriend(user.idUser, friendInvert, callback)

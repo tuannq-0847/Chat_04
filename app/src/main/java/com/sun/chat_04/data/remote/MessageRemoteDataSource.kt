@@ -8,6 +8,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.model.Message
+import com.sun.chat_04.data.model.Notification
+import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.MessageDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
@@ -26,6 +28,7 @@ class MessageRemoteDataSource(
     private val uidUserRec = friend.idUser
     private val userSendRef = "${Constants.MESSAGES}/$uid/$uidUserRec"
     private val userRecRef = "${Constants.MESSAGES}/$uidUserRec/$uid"
+    private var isVisible = false
 
     override fun updateImageMessage(message: Message, callback: RemoteCallback<Boolean>) {
         val idMessage = generateIdMessage()
@@ -35,8 +38,8 @@ class MessageRemoteDataSource(
                 insertMessages(
                     idMessage?.let {
                         Message(
-                            it, message.contents, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
-                            avatar = data
+                            it, data, uid, Constants.IMAGE_MESSAGE, seen = Constants.SEEN,
+                            avatar = Constants.NONE
                         )
                     }, callback
                 )
@@ -94,21 +97,31 @@ class MessageRemoteDataSource(
         }
     }
 
+    override fun onGetUserRecId(): String {
+        return uidUserRec
+    }
+
     private fun insertMessages(message: Message?, callback: RemoteCallback<Boolean>) {
-        message?.let {
+        message?.let { mess ->
+            val idNotification = database.reference
+                .child(Constants.NOTIFICATION)
+                .child(uidUserRec).push().key
+            database.reference
+                .child("${Constants.NOTIFICATION}/$uidUserRec/$idNotification")
+                .setValue(Notification(mess.contents, uid))
             val bodyMessage = HashMap<String, Any>()
             bodyMessage[Constants.FROM] = uid
-            bodyMessage[Constants.ID_MESSAGE] = it.id
-            bodyMessage[Constants.CONTENTS] = it.contents
-            bodyMessage[Constants.TYPE] = it.type
-            bodyMessage[Constants.MESSAGE_SEEN] = it.seen
-            bodyMessage[Constants.AVATAR] = it.avatar
+            bodyMessage[Constants.ID_MESSAGE] = mess.id
+            bodyMessage[Constants.CONTENTS] = mess.contents
+            bodyMessage[Constants.TYPE] = mess.type
+            bodyMessage[Constants.MESSAGE_SEEN] = mess.seen
+            bodyMessage[Constants.AVATAR] = mess.avatar
             val detailMessage = HashMap<String, Any>()
-            detailMessage["$userRecRef/${it.id}"] = bodyMessage
-            detailMessage["$userSendRef/${it.id}"] = bodyMessage
+            detailMessage["$userRecRef/${mess.id}"] = bodyMessage
+            detailMessage["$userSendRef/${mess.id}"] = bodyMessage
             database.reference.updateChildren(detailMessage)
                 .addOnSuccessListener {
-                    saveLastMessage(message, callback)
+                    saveLastMessage(mess, callback)
                 }
                 .addOnFailureListener { callback.onFailure(it) }
         }
@@ -193,9 +206,5 @@ class MessageRemoteDataSource(
                     }
                 }
             })
-    }
-
-    companion object {
-        const val AVATAR_LINK = "avatarLink"
     }
 }

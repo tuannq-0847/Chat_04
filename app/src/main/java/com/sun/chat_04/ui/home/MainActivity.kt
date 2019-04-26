@@ -2,6 +2,7 @@ package com.sun.chat_04.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -14,9 +15,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import com.google.firebase.iid.FirebaseInstanceId
 import com.sun.chat_04.R
+import com.sun.chat_04.data.model.Notification
 import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.UserRepository
+import com.sun.chat_04.service.NotificationService
 import com.sun.chat_04.ui.discovery.DiscoveryFragment
 import com.sun.chat_04.ui.friend.FriendCallBack
 import com.sun.chat_04.ui.friend.FriendFragment
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         R.drawable.ic_seach_selected, R.drawable.ic_profile_selected
     )
 
+    private lateinit var presenter: HomePresenter
     private var homePresenter: HomeContract.Presenter? = null
     private var homeAdapter: HomeAdapter? = null
     private var locationManager: LocationManager? = null
@@ -48,6 +53,13 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
         initComponents()
         initPresenter()
         checkPermissions()
+        updateStatus()
+    }
+
+    private fun updateStatus() {
+        if (::presenter.isInitialized) {
+            presenter.updateUserStatus(Constants.ONLINE)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -105,7 +117,7 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
             friendFragment as FriendFragment
             friendFragment.setOnFriendCallBack(this)
         }
-        val friendRequestFragment= fragments[TAB_REQUEST_FRIEND]
+        val friendRequestFragment = fragments[TAB_REQUEST_FRIEND]
         if (friendRequestFragment is FriendRequestFragment) {
             friendRequestFragment as FriendRequestFragment
             friendRequestFragment.setOnFriendRequestCallBack(this)
@@ -120,9 +132,15 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
     }
 
     private fun initPresenter() {
-        homePresenter = HomePresenter(
+        presenter = HomePresenter(
             this,
-            UserRepository(UserRemoteDataSource(Global.firebaseAuth, Global.firebaseDatabase, Global.firebaseStorage))
+            UserRepository(
+                UserRemoteDataSource(
+                    Global.firebaseAuth,
+                    Global.firebaseDatabase,
+                    Global.firebaseStorage
+                )
+            )
         )
     }
 
@@ -158,6 +176,26 @@ class MainActivity : AppCompatActivity(), HomeContract.View, OnTabSelectedListen
 
     override fun openFriendScreen() {
         viewpagerHome.currentItem = TAB_MESSAGE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (::presenter.isInitialized) {
+            presenter.updateUserStatus(Constants.OFFLINE)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (::presenter.isInitialized) {
+            presenter.updateUserStatus(Constants.ONLINE)
+        }
+    }
+
+    override fun onFailure(exception: Exception?) {
+    }
+
+    override fun onUpdateUserStatusSuccessful() {
     }
 
     private fun Context.message(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

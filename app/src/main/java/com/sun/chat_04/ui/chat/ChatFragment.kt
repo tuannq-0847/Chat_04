@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,9 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     }
 
     override fun showEmptyData() {
-        groupMessage.visibility = View.VISIBLE
+        groupMessage?.let {
+            groupMessage.visibility = View.VISIBLE
+        }
     }
 
     override fun onGetMessagesFailure(task: Exception?) {
@@ -145,7 +146,7 @@ class ChatFragment : Fragment(), ChatContract.View, View.OnClickListener {
     }
 
     private fun initComponents() {
-        toolbarMessage.setNavigationIcon(R.drawable.back)
+        toolbarMessage.setNavigationIcon(R.drawable.ic_back)
         toolbarMessage.setNavigationOnClickListener {
             activity?.onBackPressed()
         }

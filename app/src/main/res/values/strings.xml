@@ -93,4 +93,10 @@
     <string name="dialog_unit_distance">km</string>
     <string name="dialog_title">Tìm kiếm nâng cao</string>
     <string name="lable_user_images">Ảnh</string>
+    <string name="friend">Friends</string>
+    <string name="empty_request">No new requests</string>
+    <string name="vertical_dots">&#8942;</string>
+    <string name="delete">delete</string>
+    <string name="unfriend">You unfriended </string>
+    <string name="successfully">successfully</string>
 </resources>

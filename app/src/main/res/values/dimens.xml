@@ -31,6 +31,8 @@
     <dimen name="dp_3">3dp</dimen>
     <dimen name="max_line">1</dimen>
     <dimen name="dp_6">6dp</dimen>
+    <dimen name="dp_275">275dp</dimen>
+    <dimen name="dp_350">350dp</dimen>
 
     <integer name="length_max_two">2</integer>
     <integer name="max_distance">10000</integer>

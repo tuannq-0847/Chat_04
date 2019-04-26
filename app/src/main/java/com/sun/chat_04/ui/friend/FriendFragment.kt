@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import com.sun.chat_04.R
 import com.sun.chat_04.data.model.Friend
 import com.sun.chat_04.data.remote.FriendRemoteDataSource
+import com.sun.chat_04.data.remote.UserRemoteDataSource
 import com.sun.chat_04.data.repositories.FriendRepository
+import com.sun.chat_04.data.repositories.UserRepository
 import com.sun.chat_04.ui.chat.ChatFragment
 import com.sun.chat_04.ui.friend.search.SearchFragment
 import com.sun.chat_04.util.Global
@@ -34,6 +36,7 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
             if (::adapter.isInitialized) {
                 recyclerListChat.adapter = adapter
             }
+
         }
     }
 
@@ -44,6 +47,13 @@ class FriendFragment : Fragment(), FriendContract.View, View.OnClickListener {
             this, FriendRepository(
                 FriendRemoteDataSource(
                     Global.firebaseDatabase
+                )
+            ),
+            UserRepository(
+                UserRemoteDataSource(
+                    Global.firebaseAuth,
+                    Global.firebaseDatabase,
+                    Global.firebaseStorage
                 )
             )
         )

@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource
@@ -66,20 +67,42 @@ class UserRemoteDataSource(
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     user.idUser = auth.currentUser?.uid.toString()
-                    user.isOnline = Constants.ONLINE
+                    user.online = Constants.ONLINE
                     if (!it.isSuccessful) {
                         callback.onFailure(it.exception!!)
                         return@addOnCompleteListener
                     }
-                    database.reference.child(Constants.USERS)
-                        .child(user.idUser)
-                        .setValue(user)
-                        .addOnSuccessListener { callback.onSuccessfuly(true) }
-                        .addOnFailureListener {
-                            callback.onFailure(it)
+                    getInstanceIdUser(object : RemoteCallback<String> {
+                        override fun onSuccessfuly(data: String) {
+                            user.devicetoken = data
+                            database.reference.child(Constants.USERS)
+                                .child(user.idUser)
+                                .setValue(user)
+                                .addOnSuccessListener { callback.onSuccessfuly(true) }
+                                .addOnFailureListener {
+                                    callback.onFailure(it)
+                                }
                         }
+
+                        override fun onFailure(exception: Exception?) {
+                            callback.onFailure(exception)
+                        }
+                    })
+
                 }
         }
+    }
+
+    private fun getInstanceIdUser(callback: RemoteCallback<String>) {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result?.token
+                    callback.onSuccessfuly(token.toString())
+                } else {
+                    callback.onFailure(task.exception)
+                }
+            }
     }
 
     override fun upgradeLocationUser(location: Location, callback: RemoteCallback<Boolean>) {
@@ -246,12 +269,24 @@ class UserRemoteDataSource(
     }
 
     override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
-        database.reference.child(Constants.USERS)
-            .child(userId)
-            .child(ONLINE)
-            .setValue(isOnline)
-            .addOnSuccessListener { callback.onSuccessfuly(true) }
-            .addOnFailureListener { callback.onFailure(it) }
+        getInstanceIdUser(object : RemoteCallback<String> {
+            override fun onFailure(exception: Exception?) {
+                callback.onFailure(exception)
+            }
+
+            override fun onSuccessfuly(data: String) {
+                database.reference.child(Constants.USERS)
+                    .child(userId)
+                    .child(ONLINE)
+                    .setValue(isOnline)
+                database.reference.child(Constants.USERS)
+                    .child(userId)
+                    .child(DEVICE_TOKEN)
+                    .setValue(data)
+                    .addOnSuccessListener { callback.onSuccessfuly(true) }
+                    .addOnFailureListener { callback.onFailure(it) }
+            }
+        })
     }
 
     override fun updateUserImages(userId: String, uri: Uri, callback: RemoteCallback<Uri>) {
@@ -292,6 +327,7 @@ class UserRemoteDataSource(
     companion object {
         private const val LATITUDE = "lat"
         private const val LONGITUDE = "lgn"
-        private const val ONLINE = "isOnline"
+        private const val ONLINE = "online"
+        private const val DEVICE_TOKEN = "devicetoken"
     }
 }

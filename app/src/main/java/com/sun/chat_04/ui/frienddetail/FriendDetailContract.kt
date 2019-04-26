@@ -9,6 +9,12 @@ interface FriendDetailContract {
         fun showButtonCancelInviteMoreFriends()
 
         fun onFailure(exception: Exception?)
+
+        fun onGetFriendImagesSuccess(images: List<String>?)
+
+        fun showLoadingImages()
+
+        fun hideLoadingImage()
     }
 
     interface Presenter {
@@ -19,5 +25,7 @@ interface FriendDetailContract {
         fun inviteMoreFriends(friendId: String)
 
         fun cancelInviteMoreFriends(friendId: String)
+
+        fun getFriendImages()
     }
 }

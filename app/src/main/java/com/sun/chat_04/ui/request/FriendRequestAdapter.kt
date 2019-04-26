@@ -51,7 +51,7 @@ class FriendRequestAdapter(
                 }
                 Glide.with(context)
                     .load(user.pathAvatar)
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.avatar)
                     .centerCrop()
                     .into(imageAvatarUserRequest)
                 buttonAccept.setOnClickListener {
