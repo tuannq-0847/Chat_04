@@ -2,7 +2,6 @@ package com.sun.chat_04.ui.profile
 
 import android.net.Uri
 import com.sun.chat_04.data.model.User
-import java.lang.Exception
 
 interface ProfileContract {
     interface View {
@@ -15,6 +14,12 @@ interface ProfileContract {
         fun onUpdateUserCoverSuccess(uri: Uri)
 
         fun onSignOutSuccessfully()
+
+        fun onGetUserImagesSuccess(images: List<String>?)
+
+        fun showLoadingImages()
+
+        fun hideLoadingImage()
     }
 
     interface Presenter {
@@ -25,5 +30,7 @@ interface ProfileContract {
         fun updateUserCover(uri: Uri)
 
         fun updateUserStatus(online: Int)
+
+        fun getUserImages()
     }
 }

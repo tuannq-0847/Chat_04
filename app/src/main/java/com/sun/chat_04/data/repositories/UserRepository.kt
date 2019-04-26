@@ -66,4 +66,12 @@ class UserRepository(private val remoteDataSource: UserDataSource.Remote) : User
     override fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>) {
         remoteDataSource.updateUserStatus(userId, isOnline, callback)
     }
+
+    override fun updateUserImages(userId: String, uri: Uri, callback: RemoteCallback<Uri>) {
+        remoteDataSource.updateUserImages(userId, uri, callback)
+    }
+
+    override fun getUserImages(userId: String, callback: RemoteCallback<List<String>>) {
+        remoteDataSource.getUserImages(userId, callback)
+    }
 }

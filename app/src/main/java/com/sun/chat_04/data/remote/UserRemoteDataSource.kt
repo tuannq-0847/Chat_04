@@ -15,6 +15,7 @@ import com.sun.chat_04.data.model.User
 import com.sun.chat_04.data.repositories.UserDataSource
 import com.sun.chat_04.ui.signup.RemoteCallback
 import com.sun.chat_04.util.Constants
+import java.util.Date
 
 class UserRemoteDataSource(
     private val auth: FirebaseAuth,
@@ -152,7 +153,7 @@ class UserRemoteDataSource(
             .child(field)
             .setValue(uri.toString())
             .addOnSuccessListener {
-                callback.onSuccessfuly(uri)
+                updateUserImages(userId, uri, callback)
             }
             .addOnFailureListener {
                 callback.onFailure(it)
@@ -251,6 +252,41 @@ class UserRemoteDataSource(
             .setValue(isOnline)
             .addOnSuccessListener { callback.onSuccessfuly(true) }
             .addOnFailureListener { callback.onFailure(it) }
+    }
+
+    override fun updateUserImages(userId: String, uri: Uri, callback: RemoteCallback<Uri>) {
+        val timestamp = Date().time
+        database.getReference(Constants.IMAGES)
+            .child(userId)
+            .child(timestamp.toString())
+            .setValue(uri.toString())
+            .addOnSuccessListener {
+                callback.onSuccessfuly(uri)
+            }
+            .addOnFailureListener {
+                callback.onFailure(it)
+            }
+    }
+
+    override fun getUserImages(userId: String, callback: RemoteCallback<List<String>>) {
+        database.getReference(Constants.IMAGES)
+            .child(userId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.onFailure(databaseError.toException())
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    dataSnapshot.run {
+                        val images = ArrayList<String>()
+                        for (data in children) {
+                            val image = data.getValue(String::class.java)
+                            image?.let { images.add(it) }
+                        }
+                        callback.onSuccessfuly(images)
+                    }
+                }
+            })
     }
 
     companion object {

@@ -3,7 +3,6 @@ package com.sun.chat_04.data.repositories
 import android.location.Location
 import android.net.Uri
 import com.facebook.AccessToken
-import com.google.firebase.storage.FirebaseStorage
 import com.sun.chat_04.data.model.User
 import com.sun.chat_04.ui.signup.RemoteCallback
 
@@ -38,6 +37,10 @@ interface UserDataSource {
 
         fun cancelInviteMoreFriends(userId: String, friendId: String, callback: RemoteCallback<Boolean>)
 
-        fun updateUserStatus(userId: String, isOnline: Int,callback: RemoteCallback<Boolean>)
+        fun updateUserStatus(userId: String, isOnline: Int, callback: RemoteCallback<Boolean>)
+
+        fun updateUserImages(userId: String, uri: Uri, callback: RemoteCallback<Uri>)
+
+        fun getUserImages(userId: String, callback: RemoteCallback<List<String>>)
     }
 }

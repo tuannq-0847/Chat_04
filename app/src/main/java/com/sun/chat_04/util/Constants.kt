@@ -15,7 +15,7 @@ object Constants {
     const val CONVERT_KM = 1000
     const val MIN_DISTANCE = 1
     const val REQUEST_PERMISSION_CODE = 100
-    const val COLUMN = 2
+    const val COLUMN = 3
     const val INDEX_PERMISSION_ACCESS_COARSE_LOCATION = 0
     const val INDEX_PERMISSION_ACCESS_FINE_LOCATION = 1
     const val MESSAGES = "Messages"
@@ -55,4 +55,6 @@ object Constants {
     const val CANCEL = -1
     const val ROUNDING = 10
     const val DISTANCE_NOT_EXIST = -1f
+    const val ARGUMENT_IMAGE_URI = "ARGUMENT_IMAGE_URI"
+    const val IMAGES = "Images"
 }
